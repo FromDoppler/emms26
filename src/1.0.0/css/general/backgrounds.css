@@ -1,0 +1,73 @@
+/* Backgrounds */
+
+.emms__background-a {
+  background: url("../../../img/background-a.png") no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+
+.emms__background-b {
+  background: url("../../../img/background-b.png") no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+
+.emms__background-c {
+  background: url("../../../img/background-c.png") no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+
+.emms__bg-w {
+  background: #fff;
+}
+
+.emms__bg-dark-gradient {
+  background: linear-gradient(#0c0e25, #1b245b);
+}
+
+.emms__bg-dark-gradient--2 {
+  background: linear-gradient(#0c0e25, #1b245b, #0c0e25);
+}
+
+.emms__bg-section-1 {
+  background: url("../../../img/backgrounds/bg-section-1.png") #320e45 no-repeat;
+  background-size: contain;
+  background-position: top;
+}
+
+.emms__bg-section-2 {
+  background: url("../../../img/backgrounds/bg-section-2.png") #320e45 no-repeat;
+  background-size: cover;
+  background-position: top;
+}
+
+.emms__bg-section-3 {
+  background: url("../../../img/backgrounds/bg-section-3.png") #210b63 no-repeat;
+  background-size: 100%;
+  background-position: bottom;
+}
+
+.emms__bg-section-4 {
+  background: url("../../../img/backgrounds/bg-section-4.png") #0b0627 no-repeat;
+  background-size: 100%;
+  background-position: bottom;
+}
+
+.emms__bg-section-5 {
+  background: url("../../../img/backgrounds/bg-section-5.png") #0b0627 no-repeat;
+  background-size: 100%;
+  background-position: bottom;
+}
+
+.emms__bg-section-6 {
+  background: linear-gradient(180deg, #13092d 0%, #25096c 109.27%);
+  background-size: 100%;
+  background-position: bottom;
+}
+
+.emms__bg-section-10 {
+  background: url("../../../img/backgrounds/bg-section-10.png") #0b0627 no-repeat;
+  background-size: cover;
+  background-position: bottom;
+}

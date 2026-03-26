@@ -1,0 +1,31 @@
+.speaker-card__hour {
+  width: 100%;
+  margin-top: 5px;
+  display: flex;
+  flex-direction: column;
+  color: #333;
+}
+
+.speaker-card__hour span {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
+  color: #ffffff;
+}
+
+.speaker-card__hour a {
+  font-style: italic;
+  font-weight: 600;
+  font-size: 16.1918px;
+  line-height: 20px;
+  color: #79f66e;
+}
+
+.speaker-card__hour a:hover {
+  opacity: 0.5;
+}
+
+.speaker-card.speaker-card--workshop .speaker-card__hour a {
+  color: #efbf04;
+}

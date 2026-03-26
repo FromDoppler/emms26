@@ -1,0 +1,63 @@
+.emms__certificate-download {
+  padding: 177px 0 88px 0;
+  text-align: center;
+  min-height: calc(100vh - 108px);
+  box-sizing: border-box;
+  background: #000 url(../../../img/back-hero-sponsors--dk.png) no-repeat;
+  background-size: cover;
+  background-position: 70%;
+  display: flex;
+  align-items: center;
+}
+
+.emms__certificate-download .emms__container--md {
+  max-width: 480px;
+}
+
+.emms__certificate-download h1 {
+  font-size: 30px;
+  line-height: 32px;
+  font-weight: 700;
+  color: #ffffff;
+  animation-delay: 0.1s;
+}
+
+.emms__certificate-download p {
+  font-size: 16px;
+  line-height: 24px;
+  color: #fff;
+  margin: 30px 0 0 0;
+  animation-delay: 0.5s;
+}
+
+.emms__certificate-download form input {
+  font-family: "Proxima-Nova", "helvetica", "sans-serif";
+  font-size: 14px;
+  color: #333333;
+  width: 90%;
+  height: 40px;
+  max-width: 457px;
+  margin: 40px auto 0 auto;
+  padding: 0 16px;
+  box-sizing: border-box;
+  display: block;
+  border: solid 1px #838370;
+  border-radius: 3px;
+  animation-delay: 0.6s;
+}
+
+.emms__certificate-download form input::placeholder {
+  font-style: italic;
+  color: #838370;
+}
+
+.emms__certificate-download form .certificateError {
+  font-style: italic;
+  color: #ff5b5b;
+  margin: 10px 0 0 0;
+}
+
+.emms__certificate-download form .emms__cta {
+  margin: 50px 0 0 0;
+  animation-delay: 0.7s;
+}

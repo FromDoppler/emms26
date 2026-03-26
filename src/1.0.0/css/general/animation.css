@@ -1,0 +1,43 @@
+/* Scroll fade */
+
+.emms__fade-in {
+  opacity: 0;
+}
+
+.emms__fade-in-animation {
+  opacity: 0;
+  animation: fade-in 1s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.emms__fade-top {
+  opacity: 0;
+}
+
+.emms__fade-top-animation {
+  opacity: 0;
+  animation: fade-top 1s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fade-top {
+  0% {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}

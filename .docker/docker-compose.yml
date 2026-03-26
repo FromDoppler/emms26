@@ -1,0 +1,199 @@
+services:
+
+  web:
+    build:
+      context: ./config/php
+    container_name: web_${COMPOSE_PROJECT_NAME}
+    environment:
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      ID_SPREADSHEET: ${ID_SPREADSHEET}
+      ID_SPREADSHEET_VIP: ${ID_SPREADSHEET_VIP}
+      ID_SPREADSHEET_DT_VIP: ${ID_SPREADSHEET_DT_VIP}
+      ACCOUNT_DOPPLER: ${ACCOUNT_DOPPLER}
+      API_KEY_DOPPLER: ${API_KEY_DOPPLER}
+
+      ACCOUNT_RELAY: ${ACCOUNT_RELAY}
+      API_KEY_RELAY: ${API_KEY_RELAY}
+      CONSUMER_KEY: ${CONSUMER_KEY}
+      CONSUMER_SECRET: ${CONSUMER_SECRET}
+      OATH_TOKEN: ${OATH_TOKEN}
+      OATH_TOKEN_SECRET : ${OATH_TOKEN_SECRET}
+      BEARER_TOKEN : ${BEARER_TOKEN}
+      ADMIN_RESTRICTED_SERVERS: ${ADMIN_RESTRICTED_SERVERS}
+      ADMIN_ALLOW_IPS: ${ADMIN_ALLOW_IPS}
+      SECRET_REFRESH: ${SECRET_REFRESH}
+      STRIPE_PUBLIC_KEY: ${STRIPE_PUBLIC_KEY}
+      STRIPE_URL_SERVER: ${STRIPE_URL_SERVER}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+    volumes:
+      - ${REPO}:/var/www/html
+    depends_on:
+      - db
+      - redis
+    networks:
+      - emmsnetwork
+
+  db:
+    container_name: db_${COMPOSE_PROJECT_NAME}
+    image: mariadb:10.5.18
+    #command: --lower_case_table_names=1
+    volumes:
+      - ./db/:/docker-entrypoint-initdb.d
+      - ./db/data:/var/lib/mysql
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+        - ${MYSQL_PORT}:3306
+    networks:
+      - emmsnetwork
+
+  phpmyadmin:
+    container_name: phpmyadmin_${COMPOSE_PROJECT_NAME}
+    image: phpmyadmin/phpmyadmin:5.1.3
+    environment:
+      PMA_USER:  ${PMA_USER}
+    ports:
+      - ${PMA_PORT}:80
+    depends_on:
+      - db
+    networks:
+      - emmsnetwork
+
+  nginx:
+    build:
+      context: ./config/nginx
+      args:
+        WEB_PORT: ${WEB_PORT}
+    container_name: nginx_${COMPOSE_PROJECT_NAME}
+    depends_on:
+      - web
+    ports:
+      - ${WEB_PORT}:80
+    volumes:
+      - ${REPO}:/var/www/html
+      - ${NGINX_LOG_DIR}:/var/log/nginx
+      - ${CERTS_DIR}:/etc/letsencrypt
+    networks:  
+      emmsnetwork:
+        aliases:
+          - nginx
+  memcached:
+    container_name: memcached
+    image: memcached:latest
+    ports:
+        - "11211:11211"
+    networks:
+      - emmsnetwork
+
+  redis:
+    container_name: redis_${COMPOSE_PROJECT_NAME}
+    image: redis:7-alpine
+    ports:
+      - "${REDIS_PORT}:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - emmsnetwork
+    command: redis-server --appendonly yes
+
+  redisinsight:
+    container_name: redisinsight_${COMPOSE_PROJECT_NAME}
+    image: redis/redisinsight:latest
+    ports:
+      - "${REDISINSIGHT_PORT:-5540}:5540"
+    volumes:
+      - redisinsight_data:/data
+    environment:
+      REDIS_HOSTS: "local:${REDIS_HOST}:${REDIS_PORT},qa:${REDIS_HOST_QA}:6379,production:${REDIS_HOST_PROD}:6379"
+    networks:
+      - emmsnetwork
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+  # Workers
+  email-worker:
+    build:
+      context: ./config/php
+    container_name: email-worker_${COMPOSE_PROJECT_NAME}
+    command: php /var/www/html/stripe/workers/EmailWorker.php
+    environment:
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ""
+    volumes:
+      - ${REPO}:/var/www/html
+    depends_on:
+      - db
+      - redis
+    networks:
+      - emmsnetwork
+    restart: unless-stopped
+
+  list-worker:
+    build:
+      context: ./config/php
+    container_name: list-worker_${COMPOSE_PROJECT_NAME}
+    command: php /var/www/html/stripe/workers/ListWorker.php
+    environment:
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ""
+      ACCOUNT_DOPPLER: ${ACCOUNT_DOPPLER}
+      API_KEY_DOPPLER: ${API_KEY_DOPPLER}
+    volumes:
+      - ${REPO}:/var/www/html
+    depends_on:
+      - db
+      - redis
+    networks:
+      - emmsnetwork
+    restart: unless-stopped
+
+  spreadsheet-worker:
+    build:
+      context: ./config/php
+    container_name: spreadsheet-worker_${COMPOSE_PROJECT_NAME}
+    command: php /var/www/html/stripe/workers/SpreadsheetWorker.php
+    environment:
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ""
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      ID_SPREADSHEET_DT_VIP: ${ID_SPREADSHEET_DT_VIP}
+    volumes:
+      - ${REPO}:/var/www/html
+    depends_on:
+      - db
+      - redis
+    networks:
+      - emmsnetwork
+    restart: unless-stopped
+
+volumes:
+  redis_data:
+  redisinsight_data:
+
+networks:
+  emmsnetwork:
+    driver: bridge

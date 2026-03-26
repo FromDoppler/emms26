@@ -1,0 +1,98 @@
+.speaker-card__cta {
+  width: 100%;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.speaker-card__button.show--vip {
+  display: none;
+}
+
+.speaker-card__button.show--vip.show--vip--hidden {
+  display: block;
+  visibility: hidden;
+}
+
+.speaker-card__button.hidden--vip.toogle {
+  display: none;
+}
+
+.speaker-card__button.show--vip.toogle {
+  display: block;
+  visibility: visible;
+}
+
+.speaker-card__button {
+  background: linear-gradient(240.27deg, #7d04f6 -9.75%, #f604cf 155.76%);
+  border-radius: 28px;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 17px;
+  text-align: center;
+  color: #ffffff;
+  border: unset;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  padding: 17px;
+  width: 90%;
+}
+
+.speaker-card__button:hover {
+  opacity: 0.8;
+}
+
+/* CTa color */
+.speaker-card.speaker-card--conference .speaker-card__button {
+  color: #ffffff;
+  background: linear-gradient(240.27deg, #7d04f6 -9.75%, #f604cf 155.76%);
+}
+
+.speaker-card.speaker-card--successStory .speaker-card__button {
+  color: #000000;
+  background: linear-gradient(242.75deg, #246e8f -9.42%, #0aeaee 49.34%, #06fffe 59.27%, #276883 130.37%);
+}
+
+.speaker-card.speaker-card--networking .speaker-card__button,
+.speaker-card.speaker-card--workshop .speaker-card__button {
+  color: #0e0a03;
+  background: linear-gradient(242.55deg, #cd930d 8.54%, #dcc958 42.26%, #d59501 123.98%);
+}
+
+/* Shine Animation */
+.speaker-card.speaker-card--networking .speaker-card__button::after,
+.speaker-card.speaker-card--workshop .speaker-card__button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 100%);
+  transform: skewX(-25deg);
+  pointer-events: none;
+  animation: shine 2s infinite;
+  border-radius: 28px;
+}
+
+@keyframes shine {
+  0% {
+    left: -75%;
+  }
+
+  100% {
+    left: 125%;
+  }
+}
+
+.speaker-card__cta .speaker-card__button.speaker-card__button--inactive {
+  background: linear-gradient(240.27deg, rgba(246, 245, 247, 0.5) -9.75%, rgba(76, 74, 75, 0.5) 155.76%);
+  color: #ffffff;
+  pointer-events: none;
+  cursor: default;
+  opacity: 1;
+  transition: none;
+}

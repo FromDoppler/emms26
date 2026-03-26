@@ -1,0 +1,58 @@
+/* ========== Speaker Grid ========== */
+
+.speaker-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+@media (min-width: 768px) {
+  .speaker-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 620px) {
+  .speaker-grid__item {
+    max-width: 300px;
+    margin: 30px auto 10px auto;
+  }
+}
+
+/* ========== Carousel Layout ========== */
+
+.speaker-carousel .carousel-cell {
+  width: 85%;
+  margin: 0 35px;
+}
+
+/* ========== Carousel Arrows ========== */
+
+/* Ocultar flechas por defecto */
+.speaker-carousel .flickity-prev-next-button {
+  display: none;
+}
+
+/* Mostrar flechas en mobile */
+@media (max-width: 768px) {
+  .speaker-carousel .flickity-prev-next-button {
+    display: block;
+  }
+}
+
+/* Estilo flecha izquierda */
+.speaker-carousel .flickity-prev-next-button.previous {
+  top: 47%;
+  left: -12px;
+  width: 31px;
+  height: 45px;
+}
+
+/* Estilo flecha derecha */
+.speaker-carousel .flickity-prev-next-button.next {
+  top: 47%;
+  right: -13px;
+  width: 31px;
+  height: 45px;
+}

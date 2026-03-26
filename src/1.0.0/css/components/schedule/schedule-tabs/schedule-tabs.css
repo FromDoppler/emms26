@@ -1,0 +1,54 @@
+.schedule__tabs {
+  display: flex;
+  border-bottom: 3px solid #bd7aff;
+  border-radius: 8px 8px 0px 0px;
+}
+
+.schedule__tab {
+  font-size: 30px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #fff;
+  width: 100%;
+  background: transparent;
+  padding: 15px 0 15px 0;
+  border: none;
+  position: relative;
+  cursor: pointer;
+  line-height: 30px;
+  margin-right: 6px;
+  margin-left: 6px;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.schedule__tabs .schedule__tab[aria-selected="true"] {
+  color: #ffffff;
+  border-radius: 8px 8px 0px 0px;
+  background: linear-gradient(240.27deg, #5f08b5 -9.75%, #bd7aff 155.76%);
+}
+
+.gold-schedule .schedule__tabs #day3[aria-selected="false"] {
+  color: #ffffff;
+  background: linear-gradient(90deg, rgba(213, 149, 1, 0.4) 0%, rgba(220, 201, 88, 0.4) 100%);
+  border-radius: 8px 8px 0 0;
+  transition: background 0.3s ease;
+}
+
+.gold-schedule .schedule__tabs #day3[aria-selected="true"] {
+  color: #ffffff;
+  background: linear-gradient(90deg, #d59501 0%, #dcc958 100%);
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 0 10px rgba(220, 201, 88, 0.5);
+  transition:
+    background 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.schedule__tabs .schedule__tab[aria-selected="false"] {
+  color: #ffffff;
+  border-radius: 8px 8px 0px 0px;
+  background: linear-gradient(90deg, rgba(217, 217, 217, 0.5) 0%, rgba(115, 115, 115, 0.5) 100%);
+}

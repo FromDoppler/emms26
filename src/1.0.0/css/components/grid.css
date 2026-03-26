@@ -1,0 +1,144 @@
+.emms__grid {
+  padding: 60px 0;
+  background: linear-gradient(180deg, #14092f 0%, #230966 94.04%);
+}
+
+.emms__grid__title h2 {
+  font-size: var(--font-h2-size);
+  font-weight: 700;
+  line-height: var(--font-h2-line);
+  letter-spacing: -1px;
+  text-align: center;
+  color: #fff;
+  max-width: 800px;
+  margin: 20px auto;
+}
+
+.emms__grid .grid__footer {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  max-width: 730px;
+  margin: 0px auto;
+  margin-top: 20px;
+}
+
+.emms__grid .grid__footer .emms__cta {
+  max-width: 210px;
+  margin: 20px auto;
+  padding: 24px 88px;
+}
+
+.emms__grid .grid__footer strong {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 22px;
+}
+
+.emms__grid .emms__grid__content {
+  display: grid;
+}
+
+.emms__grid.emms__grid--3 .emms__grid__content {
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 10px;
+}
+
+.emms__grid.emms__grid--2 .emms__grid__content {
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 20px;
+}
+
+.emms__grid__item .emms__grid__item__image {
+  margin: 0 0 16px 0;
+}
+
+.emms__grid__item .emms__grid__item__image img {
+  width: 100%;
+}
+
+.emms__grid__item .emms__grid__item__text {
+  padding: 0 9px 30px 12px;
+}
+
+.emms__grid__item .emms__grid__item__text h3 {
+  font-size: 17px;
+  line-height: 22px;
+  font-weight: 700;
+  color: #fff;
+  display: none;
+}
+
+.emms__grid__item .emms__grid__item__text p {
+  margin: 12px 0 0 0;
+  font-style: normal;
+  font-size: var(--font-p-size);
+  line-height: var(--font-p-line);
+  color: #ffffff;
+}
+
+.emms__grid__bottom {
+  margin: 42px 0 0 0;
+  text-align: center;
+}
+
+.emms__grid__bottom p {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 27px;
+  line-height: 44px;
+  text-align: center;
+  color: #ffffff;
+  max-width: 950px;
+  margin: 0 auto;
+}
+
+.emms__grid__bottom small {
+  font-size: 16px;
+  line-height: 22px;
+  color: #fff;
+  display: block;
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+.emms__grid__bottom .emms__cta {
+  margin: 36px 0 0 0;
+  padding: 20px 100px;
+}
+
+.emms__grid .footer__block p {
+  font-weight: 700;
+  font-size: 27px;
+  line-height: 44px;
+  text-align: center;
+  color: #ffffff;
+}
+
+@media (max-width: 992px) {
+  .emms__grid.emms__grid--3 .emms__grid__content {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 620px) {
+  .emms__grid {
+    padding: 60px 0;
+  }
+
+  .emms__grid__title h2 {
+    font-size: 25px;
+    line-height: 30px;
+    margin: 0 0 50px 0;
+  }
+
+  .emms__grid.emms__grid--3 .emms__grid__content,
+  .emms__grid.emms__grid--2 .emms__grid__content {
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  .emms__grid__bottom {
+    margin: 10px 0 0 0;
+  }
+}

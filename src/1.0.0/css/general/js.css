@@ -1,0 +1,51 @@
+/* Hide */
+.hide {
+  display: none;
+}
+
+.show--vip {
+  display: none;
+}
+
+.show--vip.show--vip--hidden {
+  display: block;
+  visibility: hidden;
+}
+
+.hidden--vip.toogle {
+  display: none;
+}
+
+.show--vip.toogle {
+  display: block;
+  visibility: visible;
+}
+
+/* Hide in responsive */
+
+.mb,
+.mb--tablet__on {
+  display: none;
+}
+
+@media (max-width: 620px) {
+  .mb {
+    display: block;
+  }
+}
+
+@media (max-width: 620px) {
+  .dk {
+    display: none;
+  }
+}
+
+@media (max-width: 993px) {
+  .mb--tablet {
+    display: none;
+  }
+
+  .mb--tablet__on {
+    display: block;
+  }
+}

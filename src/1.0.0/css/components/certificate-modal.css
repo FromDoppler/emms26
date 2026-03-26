@@ -1,0 +1,143 @@
+#certificateModal.emms__certificate-modal {
+  position: fixed;
+  align-items: center;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(28, 3, 41, 0.86);
+  z-index: 1;
+  display: none;
+}
+
+#certificateModal.emms__certificate-modal.open {
+  display: flex;
+}
+
+#certificateModal.emms__certificate-modal .emms__certificate-modal__window {
+  text-align: center;
+  background: #fff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  max-width: 775px;
+  width: 90%;
+  margin: 0 auto;
+  padding: 112px 20px 70px 20px;
+  box-sizing: border-box;
+  position: relative;
+  animation: show-modal-certificate 0.4s;
+}
+
+#certificateModal.emms__certificate-modal .emms__certificate-modal__window img {
+  width: 178px;
+  height: 166px;
+  margin: 0 auto;
+}
+
+@keyframes show-modal-certificate {
+  0% {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
+
+#certificateModal.emms__certificate-modal .emms__certificate-modal__window h3 {
+  font-size: 30px;
+  line-height: 32px;
+  font-weight: 700;
+  color: #333333;
+  margin: 0 auto 20px auto;
+  max-width: 560px;
+}
+
+#certificateModal.emms__certificate-modal .emms__certificate-modal__window p {
+  font-size: 18px;
+  line-height: 22px;
+  margin: 0 auto;
+  color: #333333;
+}
+
+#certificateModal.emms__certificate-modal .emms__certificate-modal__window input {
+  font-family: "Proxima-Nova", "helvetica", "sans-serif";
+  font-size: 14px;
+  color: #333333;
+  width: 90%;
+  height: 40px;
+  max-width: 457px;
+  margin: 40px auto 0 auto;
+  padding: 0 16px;
+  box-sizing: border-box;
+  display: block;
+  border: solid 1px #838370;
+  border-radius: 3px;
+}
+
+#certificateModal.emms__certificate-modal .emms__certificate-modal__window input::placeholder {
+  font-size: 14px;
+  font-style: italic;
+  color: #838370;
+}
+
+.emms__certificate-modal .emms__certificate-modal__window span:not(.button__text) {
+  font-size: 13px;
+  color: #ff1010;
+  font-style: italic;
+  text-align: left;
+  display: block;
+  width: 90%;
+  max-width: 457px;
+  margin: 5px auto 0 auto;
+}
+
+#certificateModal.emms__certificate-modal .emms__certificate-modal__window .emms__cta {
+  margin: 30px auto 0 auto;
+  max-width: 280px;
+  display: block;
+  box-sizing: border-box;
+}
+
+#certificateModal.emms__certificate-modal .emms__certificate-modal__window__close {
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  width: 13px;
+  height: 13px;
+  border: none;
+  background: url("../../../img/icons/icon-close--bold.svg") no-repeat;
+  background-size: contain;
+  cursor: pointer;
+}
+
+/* ---------------------------------------------- Responsive ---------------------------------------------- */
+
+@media (max-width: 620px) {
+  #certificateModal.emms__certificate-modal .emms__certificate-modal__window {
+    padding: 66px 20px 57px 20px;
+  }
+
+  #certificateModal.emms__certificate-modal .emms__certificate-modal__window h3 {
+    font-size: 22px;
+    line-height: 24px;
+    margin: 0 auto 10px auto;
+    max-width: 330px;
+  }
+
+  #certificateModal.emms__certificate-modal .emms__certificate-modal__window p {
+    font-size: 16px;
+  }
+
+  #certificateModal.emms__certificate-modal .emms__certificate-modal__window input {
+    margin: 25px auto 0 auto;
+  }
+
+  #certificateModal.emms__certificate-modal .emms__certificate-modal__window .emms__cta {
+    font-size: 13px;
+    font-weight: 600;
+    padding: 12px 25px;
+    margin: 44px auto 0 auto;
+  }
+}

@@ -1,0 +1,67 @@
+.emms__hero-conference {
+  padding: 40px 0;
+}
+
+.emms__hero-conference.emms__hero-conference--recorded {
+  background: transparent;
+  padding: 40px 0;
+}
+
+.emms__hero-conference.emms__hero-conference--recorded .emms__container--lg {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 40px;
+}
+
+.emms__hero-conference.emms__hero-conference--recorded h1 {
+  width: 100%;
+  font-size: 2.5rem;
+  line-height: 1.2;
+  margin-bottom: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.emms__hero-conference.emms__hero-conference--recorded .emms__hero-conference__video {
+  flex: 3;
+}
+
+.emms__hero-conference.emms__hero-conference--recorded .emms__hero-conference__aside {
+  flex: 1;
+  padding-left: 2rem;
+}
+
+.emms__hero-conference.emms__hero-conference--recorded .emms__hero-conference__aside h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.emms__hero-conference.emms__hero-conference--recorded .emms__hero-conference__aside p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 1.5rem;
+}
+
+.emms__hero-conference.emms__hero-conference--recorded .emms__hero-conference__aside ul {
+  display: flex;
+  gap: 1rem;
+}
+
+@media (max-width: 768px) {
+  .emms__hero-conference.emms__hero-conference--recorded .emms__container--lg {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .emms__hero-conference.emms__hero-conference--recorded .emms__hero-conference__aside {
+    padding-left: 0;
+  }
+
+  .emms__hero-conference.emms__hero-conference--recorded h1 {
+    font-size: 2rem;
+  }
+}

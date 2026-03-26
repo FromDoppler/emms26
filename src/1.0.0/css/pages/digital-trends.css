@@ -1,0 +1,265 @@
+.emms__digitaltrends {
+  overflow-x: hidden;
+}
+
+/* Hero */
+
+.emms__digitaltrends .hero-registration .hero-registration__text {
+  max-width: 450px;
+  width: 90%;
+  padding: 60px 0 0 0;
+}
+
+/* Date Counter */
+
+.emms__digitaltrends .emms__counter {
+  margin: 40px 0 0 0;
+  height: 110px;
+}
+
+/* Calendar */
+
+.emms__digitaltrends .emms__calendar {
+  position: relative;
+  background: #fff;
+}
+
+.emms__digitaltrends .emms__calendar__title h2.lg {
+  font-size: 40px;
+  line-height: 44px;
+  letter-spacing: -1px;
+  margin: 0 auto 25px auto;
+  max-width: 360px;
+}
+
+.emms__digitaltrends .emms__calendar .emms__background-b {
+  width: 627px;
+  height: 445px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  transform: translate(52%, 5%);
+  z-index: -1;
+}
+
+/* Central Video */
+
+.emms__digitaltrends .emms__centralvideo .emms__background-b {
+  width: 905px;
+  height: 642px;
+  position: absolute;
+  transform: translate(-58%, 34%);
+  z-index: -1;
+}
+
+.emms__digitaltrends .emms__centralvideo .emms__background-a {
+  width: 893px;
+  height: 819px;
+  position: absolute;
+  right: 0;
+  transform: translate(70%, 5%) rotate(180deg);
+  z-index: -1;
+}
+
+/* Users comments */
+
+.emms__digitaltrends .emms__userscomments .emms__background-b:nth-child(1) {
+  width: 205px;
+  height: 146px;
+  position: absolute;
+  right: 0;
+  transform: translate(62%, -109%);
+}
+
+.emms__digitaltrends .emms__userscomments .emms__background-b:nth-child(2) {
+  width: 293px;
+  height: 208px;
+  position: absolute;
+  transform: translate(-50%, 172%);
+}
+
+/* Logueado */
+
+.emms__digitaltrends-logueado .hero-registration--registered .emms__container--md {
+  max-width: 400px;
+}
+
+.emms__digitaltrends-logueado .hero-registration .hero-registration__text {
+  max-width: 620px;
+}
+
+.emms__digitaltrends-logueado .emms__calendar__title {
+  max-width: 560px;
+  animation-delay: 0.6s;
+}
+
+.emms__digitaltrends-logueado .emms__calendar__list {
+  animation-delay: 0.7s;
+}
+
+.emms__digitaltrends-logueado .emms__calendar__bottom {
+  max-width: 460px;
+}
+
+.emms__digitaltrends-logueado .emms__plans {
+  padding: 30px 0 180px 0;
+}
+
+/* ---------------------------------------------- Responsive ---------------------------------------------- */
+
+@media (max-width: 1100px) {
+  .emms__digitaltrends .emms__centralvideo .emms__background-b,
+  .emms__digitaltrends .emms__centralvideo .emms__background-a {
+    display: none;
+  }
+}
+
+@media (max-width: 992px) {
+  .emms__digitaltrends .hero-registration .hero-registration__text {
+    padding: 0;
+  }
+
+  .emms__digitaltrends .emms__counter {
+    margin: 0;
+  }
+
+  .emms__digitaltrends .emms__calendar .emms__background-b {
+    display: none;
+  }
+}
+
+@media (max-width: 400px) {
+  .emms__digitaltrends .emms__userscomments .emms__background-b:nth-child(2) {
+    transform: translate(-60%, 188%);
+  }
+}
+
+/* ------------------------------------------------------------------------------------------- */
+/* ---------------------------------------- DURING ------------------------------------------- */
+/* ------------------------------------------------------------------------------------------- */
+
+/* No Logueado */
+
+.emms__digitaltrends--during .hero-registration .hero-registration__columns {
+  align-items: center;
+}
+
+.emms__digitaltrends--during .hero-registration__text p.hero-registration__text__live {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ed1e79;
+  position: relative;
+  padding: 0 0 0 28px;
+  margin: 0 0 30px 0;
+  display: none;
+}
+
+.emms__digitaltrends--during .hero-registration__text p.hero-registration__text__live::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 5px;
+  width: 24px;
+  height: 13px;
+  background: url("../../../img/icons/icon-live.svg") no-repeat;
+  background-size: contain;
+}
+
+.emms__digitaltrends--during .hero-registration.hero-registration--noform {
+  padding: 220px 0 158px 0;
+}
+
+.emms__digitaltrends--during .hero-registration.hero-registration--noform.hero-registration--with-counter {
+  padding: 220px 0 98px 0;
+}
+
+@media (max-width: 992px) {
+  .emms__digitaltrends--during .hero-registration__text p.hero-registration__text__live {
+    display: inline-block;
+  }
+}
+
+/* Logueado */
+
+.emms__digitaltrends-logueado--during .emms__premium-content .emms__background-a {
+  width: 893px;
+  height: 819px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-65%, 0%) rotate(180deg);
+}
+
+@media (max-width: 1280px) {
+  .emms__digitaltrends-logueado--during .emms__premium-content .emms__background-a {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------- */
+/* ---------------------------------------- POST ------------------------------------------- */
+/* ------------------------------------------------------------------------------------------- */
+
+/* No Logueado */
+
+.emms__digitaltrends--post .hero-registration .hero-registration__columns {
+  align-items: center;
+}
+
+.emms__digitaltrends--post .hero-registration__text p.hero-registration__text__live {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ed1e79;
+  position: relative;
+  padding: 0 0 0 28px;
+  margin: 0 0 30px 0;
+  display: none;
+}
+
+.emms__digitaltrends--post .hero-registration__text p.hero-registration__text__live::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 5px;
+  width: 24px;
+  height: 13px;
+  background: url("../../../img/icons/icon-live.svg") no-repeat;
+  background-size: contain;
+}
+
+.emms__digitaltrends--post .hero-registration.hero-registration--noform {
+  padding: 220px 0 158px 0;
+}
+
+.emms__digitaltrends--post .hero-registration.hero-registration--noform.hero-registration--with-counter {
+  padding: 220px 0 98px 0;
+}
+
+.emms__digitaltrends--post .emms__calendar {
+  padding: 90px 0 0 0;
+}
+
+.emms__digitaltrends--post .emms__calendar__vip {
+  margin: 0;
+  padding: 55px 0 50px 0;
+}
+
+@media (max-width: 992px) {
+  .emms__digitaltrends--post .hero-registration__text p.hero-registration__text__live {
+    display: inline-block;
+  }
+}
+
+/* Logueado */
+
+.emms__digitaltrends-logueado.emms__digitaltrends--post .hero-registration--registered {
+  background: #1c0329;
+}
+
+.emms__digitaltrends-logueado.emms__digitaltrends--post .emms__calendar {
+  padding: 60px 0 0 0;
+}
+
+.emms__digitaltrends-logueado.emms__digitaltrends--post .emms__calendar__subtitle {
+  padding: 0 20px;
+}

@@ -1,0 +1,14 @@
+logs/*
+.docker/.env
+.docker/db/data/*
+wix/logs/*
+admin/speakers/uploads/*
+!admin/speakers/uploads/.gitkeep
+
+# Windows Zone.Identifier files
+*Zone.Identifier
+**/*Zone.Identifier
+
+# Node.js dependencies
+node_modules/
+package-lock.json

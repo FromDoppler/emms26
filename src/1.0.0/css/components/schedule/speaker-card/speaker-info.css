@@ -1,0 +1,82 @@
+.speaker-card__info {
+  flex: 1.5;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+  margin-left: 20px;
+}
+
+.speaker-card__type {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 19px;
+  line-height: 28px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 15px;
+}
+
+.speaker-card__title {
+  font-style: normal;
+  font-weight: 800;
+  font-size: 26px;
+  line-height: 30px;
+  color: #ffffff;
+  max-width: 290px;
+  margin-top: 0px;
+}
+
+.speaker-card__more-info {
+  font-style: normal;
+  font-weight: 300;
+  font-size: 15px;
+  line-height: 18px;
+  color: #79f66e;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.speaker-card__more-info:hover {
+  opacity: 0.5;
+}
+
+/* Type color */
+.speaker-card.speaker-card--conference .speaker-card__type {
+  color: #bd7bff;
+}
+
+.speaker-card.speaker-card--successStory .speaker-card__type {
+  color: #1dffdd;
+}
+
+.speaker-card.speaker-card--networking .speaker-card__type,
+.speaker-card.speaker-card--workshop .speaker-card__type {
+  color: #efbf04;
+}
+
+/* MoreInfo color */
+
+.speaker-card.speaker-card--networking .speaker-card__more-info,
+.speaker-card.speaker-card--workshop .speaker-card__more-info {
+  color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .speaker-card__info {
+    text-align: center;
+    margin-left: 0px;
+    gap: 10px;
+  }
+
+  .speaker-card__type {
+    margin-bottom: 0px;
+    margin-top: 20px;
+  }
+
+  .speaker-card__title {
+    margin: 10px auto;
+  }
+}

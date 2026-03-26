@@ -1,0 +1,50 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Logs
+logs/
+*.log
+
+# Docker configuration
+.docker/**
+Dockerfile*
+
+# Uploads and user content
+admin/speakers/uploads/
+
+# Vendor files (if using Composer)
+vendor/
+
+# Configuration files that shouldn't be formatted
+.env*
+.gitignore
+.editorconfig
+.prettierignore
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+*Zone.Identifier
+
+# Scripts that Prettier doesn't handle well
+*.sh
+
+# Firebase service worker (external library)
+firebase-messaging-sw.js
+
+# PHP files (GitHub Actions doesn't support PHP plugin)
+*.php
+
+# Minified files and vendor libraries
+*.min.js
+*.min.css
+src/1.0.0/js/vendors/
+src/1.0.0/flickity/
+

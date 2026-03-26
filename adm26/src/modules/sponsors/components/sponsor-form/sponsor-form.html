@@ -1,0 +1,114 @@
+<section>
+  <div class="container">
+    <div class="row justify-content-md-center mt-5">
+      <div class="col-10">
+        <h3 id="sponsorTitle"></h3>
+      </div>
+    </div>
+    <div class="row">
+      <form method="post" enctype="multipart/form-data" class="row g-3 needs-validation" id="sponsor-form" novalidate>
+        <div class="col-md-6">
+          <label class="form-label">Nombre Empresa</label>
+          <input type="text" class="form-control" id="name_company" placeholder="Ingresa el nombre de la Empresa" required />
+          <div class="invalid-feedback">Ingresa el nombre de la Empresa.</div>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Logo de la Empresa</label>
+          <input type="file" class="form-control" id="logo_company" placeholder="Elige un logo de Empresa" required />
+          <div class="invalid-feedback">Elige un logo de Empresa.</div>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Alt Logo Empresa</label>
+          <input type="text" class="form-control" id="alt_logo_company" placeholder="Igresa un texto para el Logo" required />
+          <div class="invalid-feedback">Igresa un texto para el Logo.</div>
+        </div>
+        <div class="col-md-6" id="link_site_field_col">
+          <label class="form-label">Link del Sitio</label>
+          <input type="text" class="form-control" id="link_site" placeholder="Ingresa un Link del Sitio" />
+          <div class="invalid-feedback">Ingresa un Link del Sitio.</div>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Prioridad en Home</label>
+          <input type="number" class="form-control" id="priority_home" placeholder="ingresa una posición numerica" />
+          <div class="invalid-feedback">Ingresa una posición numerica.</div>
+        </div>
+
+        <div class="col-md-6" id="conference_name_field_col">
+          <label class="form-label">Nombre de la Conferencia</label>
+          <input type="text" class="form-control" id="conference_name" placeholder="Ingresa el Nombre de la Conferencia" />
+        </div>
+        <div class="col-md-6" id="title_field_col">
+          <label class="form-label">Titulo</label>
+          <input type="text" class="form-control" id="title" placeholder="Ingresa el Titulo" />
+        </div>
+        <div class="col-md-6" id="description_field_col">
+          <label class="form-label">Descripcion</label>
+          <textarea class="form-control" id="description"></textarea>
+        </div>
+        <div class="col-md-6" id="description_card_field_col">
+          <label class="form-label">Descripcion Abreviada</label>
+          <input type="text" class="form-control" id="description_card" placeholder="Description que aparece en la Card" />
+        </div>
+        <div class="col-md-6" id="slug_field_col">
+          <label class="form-label">Slug</label>
+          <input type="text" class="form-control" id="slug" placeholder="Slug" />
+        </div>
+        <div class="col-md-6" id="visible_card_field_col">
+          <input class="form-check-input" type="checkbox" value="" id="visible_card" />
+          <label class="form-check-label" for="flexCheckChecked"> Visible en Cards </label>
+        </div>
+        <div class="col-md-6" id="priority_card_field_col">
+          <label class="form-label">Prioridad en Cards</label>
+          <input type="number" class="form-control" id="priority_card" placeholder="ingresa una posición numerica" />
+        </div>
+        <div class="col-md-6" id="image_landing_field_col">
+          <label class="form-label">Imagen de Landing</label>
+          <input type="file" class="form-control" id="image_landing" placeholder="Selecciona una Imagen de Landing" />
+        </div>
+        <div class="col-md-6" id="alt_image_landing_field_col">
+          <label class="form-label">Alt imagen Langing</label>
+          <input type="text" class="form-control" id="alt_image_landing" name="alt_image_landing" placeholder="Alt imagen landing" />
+        </div>
+        <div class="col-md-6" id="youtube_field_col">
+          <label class="form-label">Youtube Link</label>
+          <input type="text" class="form-control" id="youtube" placeholder="Youtube" />
+        </div>
+        <div class="col-md-6" id="image_youtube_field_col">
+          <label class="form-label">Imagen Youtube</label>
+          <input type="file" class="form-control" id="image_youtube" placeholder="Image_youtube" />
+        </div>
+        <div class="col-md-6" id="alt_image_youtube_field_col">
+          <label class="form-label">Alt image Youtube</label>
+          <input type="text" class="form-control" id="alt_image_youtube" placeholder="Alt_image_youtube" />
+        </div>
+        <div class="col-md-6" id="title_magnet_field_col">
+          <label class="form-label">Titulo Magnet</label>
+          <input type="text" class="form-control" id="title_magnet" placeholder="Title_magnet" />
+        </div>
+        <div class="col-md-6" id="description_magnet_field_col">
+          <label class="form-label">Descripcion Magnet</label>
+          <textarea class="form-control" id="description_magnet"></textarea>
+        </div>
+        <div class="col-md-6" id="link_magnet_field_col">
+          <label class="form-label">Link Magnet</label>
+          <input type="text" class="form-control" id="link_magnet" placeholder="Link_magnet" />
+        </div>
+        <div class="col-md-6" id="title_promo_company_field_col">
+          <label class="form-label">title_promo_company</label>
+          <input type="text" class="form-control" id="title_promo_company" placeholder="title_promo_company" />
+        </div>
+        <div class="col-md-6" id="description_promo_company_field_col">
+          <label class="form-label">Descripcion Promo Empresa</label>
+          <textarea class="form-control" id="description_promo_company"></textarea>
+        </div>
+        <div class="col-md-6" id="link_promo_company_field_col">
+          <label class="form-label">link Promo Empresa</label>
+          <input type="text" class="form-control" id="link_promo_company" placeholder="link_promo_company" />
+        </div>
+        <div class="col-12">
+          <button class="btn btn-primary" type="submit">Submit form</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,309 @@
+.emms__header {
+  position: absolute;
+  width: 100%;
+  padding: 32px 0;
+  z-index: 1;
+  background-color: black;
+}
+
+.emms__header.emms__header-scroll {
+  position: fixed;
+  top: 0;
+  padding: 15px 0;
+  background: #000;
+  z-index: 10;
+  animation: header 0.5s;
+}
+
+@keyframes header {
+  0% {
+    top: -40px;
+  }
+
+  100% {
+    top: 0px;
+  }
+}
+
+.emms22__header-scroll {
+  padding: 16px 0;
+}
+
+.emms__header.hellobar-space {
+  top: 49px;
+}
+
+.emms__header.emms__header-scroll.hellobar-space {
+  top: 49px;
+  animation: header-hellobar 0.5s;
+}
+
+@keyframes header-hellobar {
+  0% {
+    top: 0px;
+  }
+
+  100% {
+    top: 49px;
+  }
+}
+
+.emms__header .emms__container--lg {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.emms__header__logo {
+  width: 101px;
+}
+
+.emms__header__logo--ecommerce {
+  width: 294px;
+}
+
+.emms__header__logo img {
+  width: 100%;
+  display: block;
+}
+
+.emms__header__live {
+  text-align: center;
+  position: initial;
+  transform: none;
+  max-width: 160px;
+}
+
+.emms__header__live p {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ef2aac;
+  animation: warning 1s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes warning {
+  0% {
+    color: #ff4fb6;
+  }
+
+  50% {
+    color: #f9b121;
+  }
+}
+
+.emms__header__nav .emms__header__nav__menu {
+  display: flex;
+}
+
+.emms__header__nav .emms__header__nav__menu li {
+  margin: 0 0 0 25px;
+  position: relative;
+}
+
+.emms__header__nav .emms__header__nav__menu li a {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #fff;
+  position: relative;
+}
+
+.emms__header__nav .emms__header__nav__menu li a.active {
+  position: relative;
+}
+
+.emms__header__nav .emms__header__nav__menu li a.active::after {
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: #bd7aff;
+  border-radius: 100px;
+}
+
+.emms__header__nav .emms__header__nav__menu li.emms__header__nav__menu__dropdown a {
+  padding: 0 10px 0 0;
+}
+
+.emms__header__nav .emms__header__nav__menu li.emms__header__nav__menu__dropdown a::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  right: 0;
+  width: 7px;
+  height: 5.5px;
+  background: url("../../../img/icons/icon-white-filled-arrow.svg") no-repeat;
+  background-size: contain;
+}
+
+.emms__header__nav .emms__header__nav__menu .emms__header__nav__submenu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 160px;
+  padding: 15px 0 0 0;
+  display: none;
+}
+
+.emms__header__nav .emms__header__nav__menu li.emms__header__nav__menu__dropdown:hover .emms__header__nav__submenu {
+  display: block;
+  animation: dropdown 0.2s;
+}
+
+@keyframes dropdown {
+  0% {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+}
+
+.emms__header__nav .emms__header__nav__menu .emms__header__nav__submenu li {
+  margin: 0;
+  border: solid 1px #bd7aff;
+  border-bottom: none;
+  background: #000000;
+}
+
+.emms__header__nav .emms__header__nav__menu .emms__header__nav__submenu li:last-child {
+  border-bottom: solid 1px #bd7aff;
+}
+
+.emms__header__nav .emms__header__nav__menu .emms__header__nav__submenu li a {
+  font-size: 12px;
+  font-weight: 400;
+  display: block;
+  padding: 10px;
+}
+
+.emms__header__nav .emms__header__nav__menu .emms__header__nav__submenu li a::before {
+  display: none;
+}
+
+.emms__header__nav .emms__header__nav__menu .emms__header__nav__submenu li a:hover {
+  color: #bd7aff;
+  transition-duration: 0.2s;
+}
+
+.emms__header__nav--mb {
+  display: none;
+}
+
+/* ---------------------------------------------------- Responsive ----------------------------------------------------- */
+
+@media (max-width: 992px) {
+  .emms__header {
+    position: fixed;
+    padding: 15px 0;
+    background: #000;
+    border-bottom: solid 2px #bd7aff;
+  }
+
+  .emms__header.emms__header-scroll {
+    /* animation: none; */
+  }
+
+  .emms__header__nav--hidden {
+    display: none;
+  }
+
+  .emms__header__nav--mb {
+    display: inline-block;
+    width: 27px;
+    height: 20px;
+    cursor: pointer;
+    background: url("../../../img/icons/icon-burguer.svg") no-repeat;
+    background-size: contain;
+  }
+
+  .emms__header__nav--mb.emms__header__nav--mb--active {
+    background: url("../../../img/icons/icon-close-white.png") no-repeat;
+    background-size: 20px;
+  }
+
+  .emms__header__nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    padding: 60px 30px 30px 30px;
+    margin: 60px 0 0 0;
+    box-sizing: border-box;
+  }
+
+  .emms__header__nav .emms__header__nav__menu {
+    display: block;
+  }
+
+  .emms__header__nav .emms__header__nav__menu li {
+    display: block;
+    text-align: center;
+    margin: 0 0 20px 0;
+  }
+
+  .emms__header__nav .emms__header__nav__menu .emms__header__nav__submenu {
+    position: initial;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .emms__header__nav .emms__header__nav__menu .emms__header__nav__submenu li,
+  .emms__header__nav .emms__header__nav__menu .emms__header__nav__submenu li:last-child {
+    border: none;
+  }
+
+  .emms__header__nav .emms__header__nav__menu li.emms__header__nav__menu__dropdown:hover .emms__header__nav__submenu {
+    animation: none;
+  }
+
+  .emms__header__nav .emms__header__nav__menu .emms__header__nav__submenu li a {
+    padding: 6px;
+  }
+}
+
+/* ---------------------------------------------- Responsive ---------------------------------------------- */
+
+@media (max-width: 992px) {
+  .emms__header__live {
+    display: none;
+  }
+}
+
+@media (max-width: 620px) {
+  .emms__header__logo--ecommerce {
+    width: 214px;
+  }
+
+  .emms__header.hellobar-space {
+    top: 89px;
+  }
+
+  .emms__header.emms__header-scroll.hellobar-space {
+    top: 89px;
+    animation: header-hellobar 0.5s;
+  }
+
+  @keyframes header-hellobar {
+    0% {
+      top: 0px;
+    }
+
+    100% {
+      top: 89px;
+    }
+  }
+}

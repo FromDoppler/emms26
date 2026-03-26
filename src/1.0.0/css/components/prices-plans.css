@@ -1,0 +1,230 @@
+.emms__plans {
+  padding: 80px 0 120px 0;
+}
+
+@media (max-width: 620px) {
+  .emms__plans {
+    padding: 40px 0 80px 0;
+  }
+}
+
+/* Title */
+
+.emms__plans__card__head__price__content {
+  min-width: 315px;
+}
+
+.emms__plans__title {
+  color: #fff;
+  text-align: center;
+  max-width: 1020px;
+  width: 100%;
+  margin: 0 auto 60px;
+}
+
+.emms__plans--landing .emms__plans__title {
+  max-width: unset;
+}
+
+.emms__plans__title h2 {
+  font-size: 40px;
+  line-height: 44px;
+  font-weight: 700;
+  margin-bottom: 35px;
+}
+
+.emms__plans__title p {
+  font-size: 20px;
+  line-height: 22px;
+  color: #fff;
+  margin: 0 auto;
+  margin-bottom: 24px;
+  font-weight: 500;
+}
+
+.emms__plans__title.emms__plans__title--live p {
+  max-width: 701px;
+}
+
+/* Cards */
+
+.emms__plans__cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.emms__plans__card.emms__plans__card-landing {
+  max-width: 584px;
+}
+
+.emms__plans__card-landing .emms__plans__card__head__price__content {
+  margin: 0 auto;
+}
+
+.emms__plans__card {
+  background: #fff;
+  max-width: 375px;
+  width: 100%;
+  padding: 37px 15px 50px 15px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.emms__plans__card__head {
+  text-align: center;
+  padding: 0 0 30px 0;
+  border-bottom: solid 1px #8f8d8d;
+}
+
+.emms__plans__card__head__top {
+  font-size: 20px;
+  line-height: 37px;
+  text-align: center;
+  color: #fff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.emms__plans__card--free .emms__plans__card__head__top {
+  background: #7d04f6;
+}
+
+.emms__plans__card--vip .emms__plans__card__head__top {
+  background: linear-gradient(90deg, #a67c00 0%, #d4af37 15%, #ffd700 50%, #d4af37 85%, #a67c00 100%);
+}
+
+.emms__plans__card__head__price {
+  min-height: 135px;
+  display: flex;
+  align-items: center;
+  padding: 0 15px;
+}
+
+.emms__plans__card__head__price p.emms__plans__card__head__price__sub-title {
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  align-items: center;
+  text-align: center;
+  color: #212121;
+  margin-bottom: 10px;
+}
+
+.emms__plans__card__head__price p.emms__plans__card__head__price__discount {
+  font-size: 20px;
+  line-height: 1;
+  font-weight: 700;
+  color: #7d04f6;
+  max-width: 200px;
+  margin: 0 auto 20px;
+}
+
+.emms__plans__card__head__price p.emms__plans__card__head__price__discount span {
+  font-size: 12px;
+  line-height: 14px;
+  font-weight: 400;
+  color: #808080;
+  display: block;
+}
+
+.emms__plans__card__head__price h4 {
+  font-size: 40px;
+  line-height: 1;
+  font-weight: 700;
+  color: #333333;
+}
+
+.emms__plans__card__head__price h4 small {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 22px;
+  line-height: 47px;
+  color: #333333;
+}
+
+.emms__plans__card__head__price h4 span {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  color: #808080;
+  display: block;
+}
+
+.emms__plans__card__head__price h4 span span {
+  display: inline-block;
+  text-decoration: line-through;
+}
+
+.emms__plans__card__head__price p {
+  font-size: 16px;
+  line-height: 19px;
+  font-weight: 400;
+  margin: 10px 0 0 0;
+}
+
+.emms__plans__card__head .emms__cta.inactive {
+  background: #cecece;
+  pointer-events: none;
+}
+
+.emms__plans__card__main {
+  padding: 45px 0 0 0;
+}
+
+.emms__plans__card__main h5 {
+  font-size: 20px;
+  line-height: 1;
+  font-weight: 600;
+  text-transform: uppercase;
+  text-align: center;
+  margin: 0 0 30px 0;
+}
+
+.emms__plans__card__main ul {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.emms__plans__card__main ul li {
+  font-size: 16px;
+  line-height: 19px;
+  margin: 0 0 20px 0;
+  padding: 0 0 0 40px;
+  position: relative;
+}
+
+.emms__plans__card__main ul li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -3px;
+  width: 24px;
+  height: 24px;
+  background: url("../../../img/icons/icon-check--green.svg") no-repeat;
+  background-size: contain;
+}
+
+.emms__plans__card__main ul li.exclude::before {
+  background: url("../../../img/icons/icon-exclude.svg") no-repeat;
+}
+
+.emms__plans__card__main ul li a {
+  font-weight: 700;
+  color: #008046;
+  text-decoration: underline;
+}
+
+.emms__plans__card__main ul li a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 620px) {
+  .emms__plans__card__main ul {
+    width: 100%;
+  }
+}

@@ -1,0 +1,116 @@
+.emms__golive-banner {
+  padding: 30px 0 83px 0;
+  position: relative;
+}
+
+.emms__golive-banner .emms__background-a {
+  position: absolute;
+  width: 838px;
+  height: 769px;
+  left: 0;
+  transform: rotate(180deg) translate(70%, 34%);
+}
+
+.emms__golive-banner .emms__container--md {
+  max-width: 856px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.emms__golive-banner__picture {
+  width: 20%;
+  animation-delay: 0.1s;
+}
+
+.emms__golive-banner__picture img {
+  width: 100%;
+  display: block;
+}
+
+.emms__golive-banner__text {
+  width: 60%;
+  animation-delay: 0.2s;
+}
+
+.emms__golive-banner__text span {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ed1e79;
+  display: block;
+  margin: 0 0 20px 0;
+  padding: 0 0 0 31px;
+  position: relative;
+}
+
+.emms__golive-banner__text span::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 5px;
+  width: 24px;
+  height: 13px;
+  background: url("../../../img/icons/icon-live.svg") no-repeat;
+  background-size: contain;
+}
+
+.emms__golive-banner__text h2 {
+  font-size: 27px;
+  line-height: 30px;
+  font-weight: 700;
+  color: #333333;
+  margin: 0 0 25px 0;
+}
+
+.emms__golive-banner__text p {
+  font-size: 16px;
+  line-height: 24px;
+  color: #333333;
+}
+
+.emms__golive-banner__text .emms__cta {
+  margin: 35px 0 0 0;
+}
+
+/* ---------------------------------------------- Responsive ---------------------------------------------- */
+
+@media (max-width: 1100px) {
+  .emms__golive-banner .emms__background-a {
+    display: none;
+  }
+}
+
+@media (max-width: 992px) {
+  .emms__golive-banner {
+    padding: 60px 0 70px 0;
+  }
+
+  .emms__golive-banner__picture {
+    display: none;
+  }
+
+  .emms__golive-banner__text {
+    width: 100%;
+  }
+}
+
+@media (max-width: 620px) {
+  .emms__golive-banner__text span {
+    font-size: 16px;
+  }
+
+  .emms__golive-banner__text span::before {
+    top: 3px;
+  }
+
+  .emms__golive-banner__text h2 {
+    font-size: 20px;
+    line-height: 23px;
+    margin: 0 0 18px 0;
+  }
+
+  .emms__golive-banner__text .emms__cta {
+    margin: 30px 0 0 0;
+    text-align: center;
+  }
+}

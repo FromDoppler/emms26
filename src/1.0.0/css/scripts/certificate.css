@@ -1,0 +1,53 @@
+#certificateForm .certificateError {
+  display: none;
+}
+
+#certificateForm .certificateError.showError {
+  display: block;
+}
+
+.loader-page--new {
+  position: fixed;
+  z-index: 25000;
+  background: rgb(255 255 255 / 80%);
+  left: 0px;
+  top: 0px;
+  height: 100%;
+  width: 100%;
+  opacity: 0;
+  visibility: hidden;
+  display: flex;
+  justify-content: center;
+  transition: all 1s ease-out;
+  align-items: center;
+}
+
+.loader-page--new img {
+  -webkit-animation: spin 1s linear infinite;
+  -moz-animation: spin 1s linear infinite;
+  animation: spin 1s linear infinite;
+}
+
+.loader-page--new.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+@-moz-keyframes spin {
+  100% {
+    -moz-transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+
+@keyframes spin {
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}

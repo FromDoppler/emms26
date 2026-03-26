@@ -1,0 +1,19 @@
+/* Containers */
+
+.emms__container--lg {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 90%;
+}
+
+.emms__container--md {
+  max-width: 990px;
+  margin: 0 auto;
+  width: 90%;
+}
+
+.emms__container--sm {
+  max-width: 680px;
+  margin: 0 auto;
+  width: 90%;
+}

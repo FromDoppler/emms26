@@ -1,0 +1,37 @@
+.emms__basic-section {
+  color: #fff;
+  text-align: center;
+  padding: 150px 0;
+}
+
+.emms__basic-section h3 {
+  font-size: 40px;
+  line-height: 46px;
+  letter-spacing: -1px;
+  font-weight: 700;
+  margin: 0 0 40px 0;
+  animation-delay: 0.2s;
+}
+
+.emms__basic-section p {
+  font-size: 16px;
+  line-height: 24px;
+  animation-delay: 0.3s;
+}
+
+.emms__basic-section .emms__cta {
+  margin: 40px 0 0 0;
+  animation-delay: 0.4s;
+}
+
+@media (max-width: 620px) {
+  .emms__basic-section {
+    padding: 80px 0;
+  }
+
+  .emms__basic-section h3 {
+    font-size: 30px;
+    line-height: 36px;
+    margin: 0 0 30px 0;
+  }
+}

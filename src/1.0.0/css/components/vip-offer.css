@@ -1,0 +1,120 @@
+.vip-offer {
+  position: relative;
+  background: url("../../../img/backgrounds/vip-background.png") no-repeat center center;
+  background-size: cover;
+  padding: 60px 20px 200px;
+  overflow: hidden;
+  color: #fff;
+  max-height: 270px;
+}
+
+.vip-offer__container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1000px;
+  margin: 0 auto;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.vip-offer__content {
+  max-width: 540px;
+}
+
+.vip-offer__title {
+  font-weight: 700;
+  font-size: var(--font-h2-size);
+  line-height: var(--font-h2-line);
+  color: var(--color-muted);
+}
+
+.vip-offer__description {
+  font-style: normal;
+  font-weight: 500;
+  font-size: var(--font-p-size);
+  line-height: var(--font-p-line);
+  color: var(--color-muted);
+  margin-bottom: 20px;
+}
+
+.vip-offer__benefits {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 20px 0;
+  font-style: normal;
+  font-weight: 400;
+  font-size: var(--font-p-size);
+  line-height: var(--font-p-line);
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.vip-offer__benefit {
+  position: relative;
+  padding-left: 30px;
+  margin-bottom: 12px;
+  font-weight: 400;
+}
+
+.vip-offer__benefit::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 3px;
+  width: 20px;
+  height: 20px;
+  background-image: url("../../../img/icons/icon-check--soft-green-simple.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.vip-offer__cta-note {
+  font-style: normal;
+  font-weight: 400;
+  font-size: var(--font-p-size);
+  line-height: var(--font-p-line);
+  color: var(--color-muted);
+  margin-bottom: 20px;
+}
+
+.vip-offer__image {
+  position: absolute;
+  bottom: 0;
+  right: 40;
+  max-width: 45%;
+  pointer-events: none;
+}
+
+.vip-offer__image img {
+  width: 100%;
+  height: auto;
+  max-height: 500px;
+  object-fit: contain;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .vip-offer__container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .vip-offer {
+    padding-bottom: 60px;
+    max-height: none;
+  }
+
+  .vip-offer__image {
+    display: none;
+  }
+
+  .vip-offer__benefits {
+    text-align: left;
+  }
+
+  .vip-offer__title {
+    font-size: 24px;
+    line-height: 30px;
+  }
+}

@@ -1,0 +1,27 @@
+/* Separator */
+
+.emms__separator {
+  background: url("../../../img/icons/icon-separator.svg") no-repeat;
+  background-size: contain;
+  width: 21px;
+  height: 12px;
+  margin: 0 auto;
+}
+
+.emms__separator.emms__separator--white {
+  background: url("../../../img/icons/separator-white.png") no-repeat;
+}
+
+.emms__separator.emms__separator--white.emms__separator--white--live {
+  margin-top: 40px;
+}
+
+.emms__border-separator {
+  width: 100%;
+  border-top: 2px solid white;
+}
+
+.emms__border-separator .emms__separator.emms__separator--white {
+  background-position: center;
+  transform: translateY(-7px);
+}

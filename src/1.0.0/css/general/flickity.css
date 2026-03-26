@@ -1,0 +1,51 @@
+/* Flickity styles */
+
+.flickity-prev-next-button .flickity-button-icon {
+  display: none;
+}
+
+.flickity-prev-next-button.previous {
+  background: url("../../../img/icons/icon-carousel-arrow-left--white.svg") no-repeat;
+  background-size: contain;
+  background-position: center;
+  top: 32%;
+  left: -30px;
+  width: 44px;
+  height: 44px;
+}
+
+.flickity-prev-next-button.next {
+  background: url("../../../img/icons/icon-carousel-arrow-right--white.svg") no-repeat;
+  background-size: contain;
+  background-position: center;
+  top: 32%;
+  right: -30px;
+  width: 44px;
+  height: 44px;
+}
+
+.flickity-page-dots {
+  bottom: -55px;
+}
+
+.flickity-page-dots .dot {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  margin: 0 6px;
+  background: #fff;
+  border: solid 1px #bd7aff;
+  opacity: 1;
+  box-shadow: 0px 2px 8px #000;
+}
+
+.flickity-page-dots .dot.is-selected::after {
+  content: "";
+  position: absolute;
+  left: 2.5px;
+  top: 2.5px;
+  width: 13px;
+  height: 13px;
+  background: #bd7aff;
+  border-radius: 100%;
+}

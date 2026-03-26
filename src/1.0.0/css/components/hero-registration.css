@@ -1,0 +1,694 @@
+.hero-registration {
+  padding: 145px 0 88px 0;
+  background: #000;
+  position: relative;
+  background: url("../../../img/backgrounds/bg-section-8.png") center/cover no-repeat;
+}
+
+.hero-registration__columns {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1022px;
+  margin: 0 auto;
+  width: 90%;
+}
+
+.hero-registration .hero-registration__text {
+  width: 48%;
+  color: #fff;
+  animation-delay: 0.2s;
+}
+
+.hero-registration .hero-registration__text a {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 25px;
+  color: #bd7aff;
+  transition: all 0.2s ease-in-out;
+}
+
+.hero-registration .hero-registration__text a:hover {
+  text-decoration: underline;
+}
+
+.hero-registration .emms_mobile-counter .hero-registration__text {
+  position: relative;
+  padding-bottom: 117px;
+}
+
+.hero-registration .hero-registration__text h1,
+.hero-registration .hero-registration__text.hero-registration__text--live h2 {
+  font-weight: 800;
+  font-size: 50px;
+  line-height: 52px;
+  letter-spacing: -1px;
+  color: #ffffff;
+  max-width: 445px;
+}
+
+.hero-registration.post .hero-registration__text h1,
+.hero-registration .hero-registration__text.hero-registration__text--live h2 {
+  font-size: 50px;
+  line-height: 52px;
+  font-weight: 800;
+  letter-spacing: -1px;
+}
+
+.hero-registration .hero-registration__text h1 em,
+.hero-registration .hero-registration__text.hero-registration__text--live h2 em {
+  font-size: 14px;
+  line-height: 20px;
+  font-style: normal;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin: 0 0 20px 0;
+  display: block;
+}
+
+.hero-registration .hero-registration__text h1 em small,
+.hero-registration--registered h1 em small {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.5px;
+  color: #79f66e;
+}
+
+@media screen and (max-width: 768px) {
+  .hero-registration .hero-registration__text h1 em {
+    font-size: 13px;
+    line-height: 18px;
+  }
+}
+
+.hero-registration .hero-registration__text.hero-registration__text--live h1 span {
+  margin-bottom: 40px;
+}
+
+.hero-registration .hero-registration__text.hero-registration__text--live h1 span:nth-child(1) {
+  font-style: normal;
+  font-weight: 800;
+  font-size: 48px;
+  line-height: 32px;
+  color: #ffffff;
+}
+
+.hero-registration .hero-registration__text.hero-registration__text--live h1 span:nth-child(2) {
+  font-style: normal;
+  font-weight: 800;
+  font-size: 72px;
+  line-height: 32px;
+  color: #ffffff;
+}
+
+.hero-registration .hero-registration__text.hero-registration__text--live h1 span:nth-child(3) {
+  font-style: normal;
+  font-weight: 800;
+  font-size: 48px;
+  line-height: 32px;
+  color: #ffffff;
+}
+
+.hero-registration .hero-registration__text.hero-registration__text--live h1 span:nth-child(4) {
+  font-style: normal;
+  font-weight: 300;
+  font-size: 129px;
+  line-height: 101px;
+  color: #ffffff;
+}
+
+.hero-registration .hero-registration__text.hero-registration__text--live h2 em span {
+  color: #79f66e;
+  display: inline-block;
+}
+
+.hero-registration .hero-registration__text h1 span {
+  display: block;
+}
+
+.hero-registration .hero-registration__text h1 span.green {
+  display: inline-block;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.5px;
+}
+
+.hero-registration .hero-registration__text h1 span.top {
+  font-weight: 800;
+  font-size: 56px;
+  line-height: 37px;
+  letter-spacing: 9px;
+  color: #ffffff;
+}
+
+.hero-registration .hero-registration__text h1 span.top.top--transition {
+  letter-spacing: 1px;
+  line-height: 46px;
+}
+
+.hero-registration .hero-registration__text h1 span.bottom {
+  letter-spacing: 4px;
+  font-style: normal;
+  font-weight: 800;
+  font-size: 53px;
+  line-height: 58px;
+  background: var(--gradient-secondary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-registration .hero-registration__text h1 span.main {
+  letter-spacing: 4px;
+  font-style: normal;
+  font-weight: 800;
+  font-size: 123px;
+  line-height: 37px;
+  line-height: 110px;
+  background: var(--gradient-secondary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-registration .hero-registration__text p {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 700;
+  margin: 24px 0 0 0;
+  max-width: 404px;
+}
+
+.hero-registration .hero-registration__text p .text--highlighted {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+  color: #18ff8c;
+}
+
+.hero-registration .hero-registration__text .hero-registration__text__checklist {
+  max-width: 380px;
+  margin: 30px 0 0 0;
+}
+
+.hero-registration .hero-registration__text .hero-registration__text__checklist li {
+  font-size: 16px;
+  line-height: 24px;
+  margin: 0 0 10px 0;
+  padding: 0 0 0 28px;
+  position: relative;
+  text-transform: uppercase;
+}
+
+.hero-registration .hero-registration__text .hero-registration__text__checklist li:last-child {
+  margin: 0;
+}
+
+.hero-registration .hero-registration__text .hero-registration__text__checklist li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 1px;
+  width: 20px;
+  height: 20px;
+  background: url("../../../img/icons/icon-check--soft-green.svg") no-repeat;
+  background-size: contain;
+}
+
+.hero-registration .hero-registration__text .hero-registration__text__strong {
+  margin: 32px 0 0 0;
+}
+
+.hero-registration .hero-registration__text .hero-registration__text__strong__icon {
+  width: 48px;
+  height: 48px;
+  background: url("../../../img/icons/icon-arrow--white.svg") no-repeat;
+  background-size: 25px;
+  background-position: center;
+  border-radius: 100%;
+  border: solid 1px #fff;
+  margin: 0 auto;
+  transform: rotate(90deg);
+}
+
+.hero-registration .hero-registration__text .hero-registration__text__strong p {
+  font-size: 22px;
+  line-height: 34px;
+  font-weight: 700;
+  margin: 35px 0 0 0;
+}
+
+.hero-registration .emms__form__btn .emms__cta {
+  width: 100%;
+}
+
+/* Center checklist in desktop */
+
+@media (min-width: 992px) {
+  .hero-registration .hero-registration__text .hero-registration__text__checklist.checklist--center {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .hero-registration .hero-registration__text .hero-registration__text__checklist.checklist--center li {
+    padding: 48px 0 0 0px;
+  }
+
+  .hero-registration .hero-registration__text .hero-registration__text__checklist.checklist--center li::before {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 30px;
+  }
+}
+
+.hero-registration .hero-registration__form {
+  max-width: 530px;
+  width: 50%;
+  animation-delay: 0.4s;
+}
+
+.hero-registration__bottom {
+  position: absolute;
+  bottom: 30px;
+  left: 0;
+  overflow: hidden;
+  width: 100%;
+  padding: 10px 0;
+  animation-delay: 0.4s;
+}
+
+.hero-registration__bottom p {
+  font-size: 22px;
+  line-height: 20px;
+  font-weight: 700;
+  color: #ef2aac;
+  white-space: nowrap;
+  margin: 0 5px 0 0;
+  animation: text-bottom 20s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes text-bottom {
+  0% {
+    transform: translateX(0%);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.hero-registration__bottom.images p {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin: 0;
+}
+
+.hero-registration__bottom.images p img {
+  height: 30px;
+}
+
+.hero-registration__bottom.images p img.sm {
+  height: 20px;
+}
+
+/* Registered */
+
+.hero-registration--registered {
+  text-align: center;
+  background: url("../../../img/backgrounds/bg-section-8.png") #0b0627 no-repeat;
+  background-position: center;
+  background-size: cover;
+  padding: 190px 0 200px 0;
+  position: relative;
+}
+
+.hero-registration--registered .text-with-icon-container {
+  max-width: 900px;
+  margin: 20px auto;
+}
+
+.hero-registration--registered .emms__container--md {
+  max-width: 540px;
+}
+
+.hero-registration--registered h1 {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 50px;
+  line-height: 52px;
+  text-align: center;
+  letter-spacing: -1px;
+  color: #ffffff;
+  max-width: 930px;
+  margin: 0 auto;
+}
+
+.hero-registration--registered h1 em {
+  font-style: normal;
+  text-transform: uppercase;
+  display: block;
+  margin: 0 0 30px 0;
+  font-weight: 700;
+  font-size: 21px;
+  line-height: 23px;
+  text-align: center;
+}
+
+.hero-registration--registered.hero-registration--withoutform h1 em {
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: 0.5px;
+  color: #ffffff;
+}
+
+.hero-registration--registered h1 span {
+  background: var(--gradient-secondary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+.hero-registration--registered p {
+  margin: 30px 0;
+  animation-delay: 0.5s;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+  color: #ffffff;
+  max-width: 640px;
+  margin: 30px auto;
+}
+
+.hero-registration--registered p a {
+  font-weight: 700;
+  color: #33ad73;
+}
+
+.hero-registration--registered p a:hover {
+  text-decoration: underline;
+}
+
+.hero-registration--registered .hero-registration__add-event {
+  position: relative;
+  width: 425px;
+  padding: 0 0 0 50px;
+  margin: 30px auto 0 auto;
+  font-weight: 700;
+  display: block;
+  cursor: pointer;
+  transition-duration: 0.2s;
+  animation-delay: 0.7s;
+}
+
+.hero-registration--registered .hero-registration__add-event span {
+  font-size: 16px;
+  line-height: 20px;
+  color: #fff;
+  background: linear-gradient(-140deg, #7d04f6 50%, #f604cf 120%);
+  display: block;
+  padding: 20px 0;
+  border-radius: 100px;
+}
+
+.hero-registration--registered .hero-registration__add-event span a {
+  color: #ffffff;
+}
+
+.hero-registration--registered .hero-registration__add-event::before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: 0;
+  width: 44px;
+  height: 55px;
+  background: url("../../../img/icons/icon-calendar.svg") no-repeat;
+  background-size: contain;
+}
+
+.hero-registration--registered .emms__cta {
+  animation-delay: 0.6s;
+}
+
+.hero-registration--registered #emmsCounter {
+  animation-delay: 0.8s;
+}
+
+.hero-registration__icon {
+  width: 84px;
+  height: 84px;
+  vertical-align: middle;
+  margin-right: -13px;
+}
+
+.hero-registration__buttons p {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 21px;
+  line-height: 23px;
+  text-align: center;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin-bottom: 20px;
+}
+
+.hero-registration__buttons a {
+  display: inline-block;
+  margin: 10px 8px;
+}
+
+@media (max-width: 768px) {
+  .hero-registration__icon {
+    width: 40px;
+    height: 40px;
+    margin-right: 4px;
+  }
+
+  .hero-registration__buttons p {
+    font-size: 16px;
+    line-height: 20px;
+  }
+
+  .hero-registration__buttons {
+    text-align: center;
+  }
+
+  .hero-registration__buttons a {
+    margin: 10px auto;
+    display: block;
+    max-width: 260px;
+  }
+}
+
+/* ---------------------------------------------- Responsive ---------------------------------------------- */
+
+@media (max-width: 992px) {
+  .hero-registration {
+    padding: 82px 0 88px 0;
+  }
+
+  .hero-registration.hero-registration--video.hellobar-space {
+    padding: 200px 0 88px 0;
+  }
+
+  .hero-registration.hero-registration--with-counter {
+    padding: 100px 0 88px 0;
+  }
+
+  .hero-registration__columns {
+    display: block;
+    max-width: 620px;
+  }
+
+  .hero-registration .hero-registration__text {
+    width: 100%;
+    text-align: center;
+    padding: 0;
+    margin: 0 0 50px 0;
+  }
+
+  .hero-registration .hero-registration__text p {
+    margin: 16px auto 0 auto;
+  }
+
+  .hero-registration .hero-registration__text .hero-registration__text__checklist {
+    margin: 30px auto 0 auto;
+  }
+
+  .hero-registration .hero-registration__text .hero-registration__text__checklist li {
+    margin: 0;
+    padding: 10px 0;
+    border-bottom: solid 1px #bd7aff;
+  }
+
+  .hero-registration .hero-registration__text .hero-registration__text__checklist li:last-child {
+    border-bottom: none;
+  }
+
+  .hero-registration .hero-registration__text .hero-registration__text__checklist li::before {
+    display: none;
+  }
+
+  .hero-registration .hero-registration__form {
+    max-width: initial;
+    width: 100%;
+  }
+}
+
+@media (max-width: 620px) {
+  .hero-registration--registered h1 em {
+    font-size: 14px;
+    margin: 0 auto;
+  }
+
+  .hero-registration .hero-registration__text h1 {
+    font-size: 34px;
+    line-height: 0.9;
+  }
+
+  .hero-registration--registered {
+    padding: 140px 0 110px 0;
+  }
+
+  .hero-registration--registered h1 {
+    font-size: 30px;
+    line-height: 32px;
+  }
+
+  .hero-registration--registered p {
+    margin: 18px 0 0 0;
+  }
+
+  .hero-registration .hero-registration__text h1 em {
+    max-width: 199px;
+    margin: 0 auto;
+  }
+
+  .hero-registration .hero-registration__text h1 span.top {
+    font-size: 38px;
+    line-height: 37px;
+  }
+
+  .hero-registration .hero-registration__text h1 span.main {
+    font-size: 94px;
+    line-height: 78px;
+  }
+
+  .hero-registration .hero-registration__text h1 span.bottom {
+    font-size: 79px;
+    line-height: 65px;
+  }
+
+  .hero-registration--registered .hero-registration__add-event {
+    width: 230px;
+    padding: 0;
+  }
+
+  .hero-registration--registered .hero-registration__add-event::before {
+    display: none;
+  }
+
+  .hero-registration--registered .hero-registration__add-event span {
+    font-size: 12px;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------- */
+/* ---------------------------------------- WITHOUT FORM ------------------------------------- */
+/* ------------------------------------------------------------------------------------------- */
+
+.hero-registration.hero-registration--noform {
+  padding: 220px 0 158px 0;
+}
+
+.hero-registration.hero-registration--noform .hero-registration__text {
+  text-align: center;
+  margin: 0 auto;
+  max-width: 690px;
+  width: 100%;
+}
+
+.hero-registration.hero-registration--noform .hero-registration__text p a {
+  font-weight: 700;
+  color: #33ad73;
+}
+
+.hero-registration.hero-registration--noform .hero-registration__text p a:hover {
+  text-decoration: underline;
+}
+
+.hero-registration.hero-registration--noform .hero-registration__text .emms__cta {
+  margin: 45px 0 0 0;
+}
+
+/* ------------------------------------------------------------------------------------------- */
+/* ---------------------------------------- BACK VIDEO ------------------------------------- */
+/* ------------------------------------------------------------------------------------------- */
+
+.hero-registration.hero-registration--video {
+  background: none;
+  padding: 150px 0;
+}
+
+.hero-registration.hero-registration--video .hero-registration__back {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background: #000;
+  z-index: -1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.hero-registration.hero-registration--video .hero-registration__back video {
+  width: 100%;
+}
+
+.hero-registration.hero-registration--video .hero-registration__back::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(270deg, rgba(0, 0, 0, 0) 2.95%, rgba(0, 0, 0, 0.7) 41.28%, rgba(0, 0, 0, 0.7) 65.59%, rgba(0, 0, 0, 0) 99.93%);
+}
+
+@media (max-width: 992px) {
+  .hero-registration.hero-registration--video {
+    padding: 100px 0 88px 0;
+  }
+
+  .hero-registration.hero-registration--video .hero-registration__back video {
+    width: 500%;
+    height: 100%;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------- */
+/* ---------------------------------------- POST ------------------------------------- */
+/* ------------------------------------------------------------------------------------------- */
+
+.hero-registration--registered.hero-registration--registered--post {
+  background: #1c0329;
+}
+
+.hero-registration--registered.hero-registration--registered--post .emms__calendar__list {
+  margin: 80px auto 0 auto;
+}

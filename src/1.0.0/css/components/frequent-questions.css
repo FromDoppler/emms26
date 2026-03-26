@@ -1,0 +1,161 @@
+.emms__frequentquestions {
+  background: #310e44;
+  padding: 88px 0 102px 0;
+  position: relative;
+}
+
+.emms__frequentquestions.frequentquestions--checkout {
+  background: url("../../../img/backgrounds/bg-section-7.png") #0b0627 no-repeat;
+  background-size: cover;
+  background-position: bottom;
+}
+
+.emms__frequentquestions .emms__container--md {
+  max-width: 708px;
+}
+
+.emms__frequentquestions h2 {
+  font-size: 40px;
+  line-height: 42px;
+  font-weight: 800;
+  text-align: center;
+  color: #fff;
+  margin: 0 0 44px 0;
+  position: relative;
+  animation-delay: 0.1s;
+}
+
+.emms__frequentquestions__list {
+  border: solid 1px #ffffff;
+  background: #310e44;
+  position: relative;
+  animation-delay: 0.2s;
+}
+
+.emms__frequentquestions.frequentquestions--checkout .emms__frequentquestions__list {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.emms__frequentquestions.emms__frequentquestions--during {
+  background: #000 url("../../../img/backgrounds/bg-section-6.png") no-repeat;
+  background-size: 100%;
+}
+
+.emms__frequentquestions__list.emms__frequentquestions__list--during {
+  background: unset;
+  opacity: 0.5;
+}
+
+.emms__frequentquestions__list__item {
+  border-bottom: solid 1px #ffffff;
+}
+
+.emms__frequentquestions__list__item:last-child {
+  border-bottom: none;
+}
+
+.emms__frequentquestions__list__item .emms__frequentquestions__list__item__head {
+  font-family: "Proxima-Nova", "helvetica", "sans-serif";
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 700;
+  text-align: left;
+  color: #fff;
+  background: transparent;
+  border: none;
+  width: 100%;
+  height: 79px;
+  padding: 0 60px 0 32px;
+  position: relative;
+  cursor: pointer;
+}
+
+.emms__frequentquestions__list__item.close .emms__frequentquestions__list__item__head::after {
+  content: "";
+  position: absolute;
+  top: 31px;
+  right: 28px;
+  width: 7.5px;
+  height: 13px;
+  background: url("../../../img/icons/icon-collapsible-arrow.svg") no-repeat;
+  background-size: contain;
+}
+
+.emms__frequentquestions__list__item.open .emms__frequentquestions__list__item__head::after {
+  content: "";
+  position: absolute;
+  top: 31px;
+  right: 28px;
+  width: 7.5px;
+  height: 13px;
+  background: url("../../../img/icons/icon-collapsible-arrow.svg") no-repeat;
+  background-size: contain;
+  transform: rotate(90deg);
+  transition-duration: 0.5s;
+}
+
+.emms__frequentquestions__list__item.close .emms__frequentquestions__list__item__content {
+  height: 0px;
+  overflow: hidden;
+}
+
+.emms__frequentquestions__list__item.open .emms__frequentquestions__list__item__content {
+  font-size: 16px;
+  line-height: 22px;
+  color: #fff;
+  padding: 20px 17px 22px 32px;
+  display: block;
+  animation: collapsible 0.6s;
+  animation-timing-function: ease;
+  box-sizing: border-box;
+}
+
+@keyframes collapsible {
+  0% {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+}
+
+.emms__frequentquestions__list__item.open .emms__frequentquestions__list__item__content a {
+  font-weight: 700;
+  color: #33ad73;
+}
+
+.emms__frequentquestions__list__item.open .emms__frequentquestions__list__item__content a:hover {
+  text-decoration: underline;
+  transition-duration: 0.2s;
+}
+
+/* --------------------------------------------------- Responsive --------------------------------------------------- */
+
+@media (max-width: 620px) {
+  .emms__frequentquestions {
+    padding: 61px 0 73px 0;
+  }
+
+  .emms__frequentquestions h2 {
+    font-size: 30px;
+    line-height: 32px;
+    margin: 0 0 36px 0;
+  }
+
+  .emms__frequentquestions__list__item .emms__frequentquestions__list__item__head {
+    padding: 0 50px 0 15px;
+    line-height: 24px;
+  }
+
+  .emms__frequentquestions__list__item.close .emms__frequentquestions__list__item__head::after,
+  .emms__frequentquestions__list__item.open .emms__frequentquestions__list__item__head::after {
+    right: 18px;
+  }
+
+  .emms__frequentquestions__list__item.open .emms__frequentquestions__list__item__content {
+    padding: 10px 15px 15px 15px;
+  }
+}

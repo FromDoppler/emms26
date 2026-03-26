@@ -1,0 +1,110 @@
+.emms__benefits-carousel {
+  padding: 100px 0;
+}
+
+.emms__benefits-carousel.emms__benefits-carousel--live {
+  padding: 60px 0;
+}
+
+.emms__benefits-carousel__title {
+  color: #fff;
+  text-align: center;
+  margin: 0 0 40px 0;
+  animation-delay: 0.2s;
+}
+
+.emms__benefits-carousel__title h2 {
+  font-size: 40px;
+  line-height: 42px;
+  font-weight: 700;
+}
+
+.emms__benefits-carousel__title.emms__benefits-carousel__title--post h2 {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.emms__benefits-carousel__title p {
+  font-size: 16px;
+  line-height: 24px;
+  max-width: 565px;
+  width: 100%;
+  margin: 20px auto 0;
+}
+
+.emms__benefits-carousel__container {
+  animation-delay: 0.3s;
+}
+
+.emms__benefits-carousel__container .flickity-page-dots {
+  display: none;
+}
+
+.emms__benefits-carousel__container .flickity-prev-next-button.next,
+.emms__benefits-carousel__container .flickity-prev-next-button.previous {
+  top: 50%;
+}
+
+.emms__benefits-carousel__item {
+  width: 33%;
+  padding: 0 1%;
+  box-sizing: border-box;
+}
+
+.emms__benefits-carousel__item__content {
+  border-radius: 3px;
+  overflow: hidden;
+  background: #fff;
+  min-height: 450px;
+}
+
+.emms__benefits-carousel__item__text {
+  padding: 16px 22px 10px 22px;
+  min-height: 76px;
+}
+
+.emms__benefits-carousel__item__text h3 {
+  font-size: 18px;
+  line-height: 24px;
+  text-transform: capitalize;
+  color: #333;
+}
+
+.emms__benefits-carousel__item__text p {
+  font-size: 20px;
+  line-height: 22px;
+  color: #333;
+  margin: 6px 0 0 0;
+}
+
+.emms__benefits-carousel__item__image img {
+  width: 100%;
+}
+
+.emms__benefits-carousel__bottom {
+  text-align: center;
+  margin: 60px 0 0 0;
+}
+
+@media (max-width: 992px) {
+  .emms__benefits-carousel__container {
+    max-width: 400px;
+    width: 80%;
+    margin: 0 auto;
+  }
+
+  .emms__benefits-carousel__item {
+    width: 100%;
+  }
+}
+
+@media (max-width: 620px) {
+  .emms__benefits-carousel {
+    padding: 70px 0;
+  }
+
+  .emms__benefits-carousel__title h2 {
+    font-size: 28px;
+    line-height: 30px;
+  }
+}

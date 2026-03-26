@@ -1,0 +1,8 @@
+.emms-hidden {
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  height: 0px;
+  width: 0px;
+  visibility: hidden;
+}

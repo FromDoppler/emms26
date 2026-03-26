@@ -1,0 +1,52 @@
+:root {
+  /*  Colores principales */
+  --color-primary: #6716f3;
+  --color-primary-hover: #3e00a8;
+
+  --color-secondary: #18ff8c;
+  --color-secondary-hover: #00cb66;
+
+  --color-terciary: rgba(103, 22, 243, 0.2);
+  /* --color-terciary-hover: #a0009f; */
+
+  --gradient-main: linear-gradient(200.04deg, #6716f3 20.32%, #d922c4 64.29%, #18ff8c 116.68%);
+  --gradient-secondary: linear-gradient(90deg, #bd38ea 0%, #6716f3 100%);
+  --gradient-terciary: linear-gradient(360deg, #230966 0%, #14092f 100%);
+
+  /*  Colores de fondo y texto */
+  --color-bg: #ffffff;
+  --color-text: #1e1e1e;
+  --color-muted: #333333;
+  --color-error: #ff4d4d;
+  --color-warning: #ffc107;
+  --color-success: #18ff8c;
+
+  /* Tipografía */
+  --font-family-base: "Proxima-Nova", "helvetica", "sans-serif";
+
+  /* Titulares */
+  --font-h1-size: 50px;
+  --font-h1-line: 52px;
+
+  --font-h2-size: 40px;
+  --font-h2-line: 44px;
+
+  --font-h3-size: 30px;
+  --font-h3-line: 32px;
+
+  --font-h4-size: 22px;
+  --font-h4-line: 24px;
+
+  --font-h5-size: 18px;
+  --font-h5-line: 24px;
+
+  --font-h6-size: 18px;
+  --font-h6-line: 24px;
+
+  /* Párrafos y otros */
+  --font-p-size: 16px;
+  --font-p-line: 24px;
+
+  --font-small-size: 14px;
+  --font-small-line: 20px;
+}

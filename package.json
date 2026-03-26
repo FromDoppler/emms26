@@ -1,0 +1,20 @@
+{
+  "name": "emms26",
+  "version": "1.0.0",
+  "description": "EMMS26 - Matis Team Develop",
+  "scripts": {
+    "verify-format": "npm run prettier-check",
+    "fix-format": "npm run prettier-fix",
+    "verify-format-full": "npm run prettier-check && npm run eclint-check",
+    "fix-format-full": "npm run prettier-fix && npm run eclint-fix",
+    "format-summary": "echo 'Prettier errors:' && (npm run prettier-check 2>&1 | grep -c '\\[warn\\]' || echo '0') && echo 'EditorConfig errors:' && (npm run eclint-check 2>&1 | grep -c '❌' || echo '0')",
+    "eclint-fix": "eclint fix",
+    "eclint-check": "eclint check",
+    "prettier-fix": "prettier --write \"**/*.{html,css,scss,less,js,ts,md,yml,yaml,json}\"",
+    "prettier-check": "prettier --check \"**/*.{html,css,scss,less,js,ts,md,yml,yaml,json}\""
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3",
+    "eclint": "^2.8.1"
+  }
+}

@@ -1,0 +1,269 @@
+/* Hero */
+
+.ecommerce .hero-registration {
+  background: #000 url("../../../img/backgrounds/bg-ecommerce.png") no-repeat;
+  background-size: 100%;
+  background-position-y: bottom;
+  background-position-x: center;
+}
+
+/* FIXME: Change this class with custom digital trends css  */
+.ecommerce .hero-registration.digital--trends {
+  background: #000 url("../../../img/emms-dt-background.png") no-repeat;
+  background-size: cover;
+  background-position-y: bottom;
+  background-position-x: center;
+}
+
+@media (max-width: 620px) {
+  .ecommerce .hero-registration {
+    background-size: cover;
+  }
+}
+
+/* Date Counter */
+
+.ecommerce .emms__counter {
+  margin: 40px 0 0 0;
+  height: 110px;
+}
+
+.ecommerce .hellobar--counter .emms__counter {
+  margin: 0;
+  height: 40px;
+}
+
+@media (max-width: 620px) {
+  .ecommerce .hellobar--counter .emms__counter {
+    margin: 10px 0 0 0;
+  }
+}
+
+/* Calendar */
+
+.ecommerce .emms__calendar {
+  position: relative;
+}
+
+.ecommerce .emms__bg-dark-gradient {
+  padding: 60px 0;
+}
+
+/* Logueado */
+
+.ecommerce .hero-registration--registered.digital--trends {
+  background: #000 url("../../../img/emms-dt-background.png") no-repeat;
+  background-size: cover;
+  animation: hero-back-ecommerce 1s;
+}
+
+.ecommerce .hero-registration--registered {
+  background: #000 url("../../../img/backgrounds/bg-ecommerce.png") no-repeat;
+  background-size: cover;
+  animation: hero-back-ecommerce 1s;
+}
+
+.hero-registration--registered .emms__container--md {
+  max-width: 990px;
+}
+
+.hero-registration--registered .emms__container--md p.emms__paragraph--short {
+  max-width: 516px;
+}
+
+.ecommerce-logueado .emms__calendar {
+  /* background: none; */
+}
+
+.ecommerce-logueado .emms__calendar__title {
+  max-width: 775px;
+  animation-delay: 0.6s;
+}
+
+.ecommerce-logueado .emms__calendar__list {
+  animation-delay: 0.7s;
+}
+
+.ecommerce-logueado .emms__calendar__bottom {
+  max-width: 460px;
+}
+
+.ecommerce-logueado .emms__grid {
+  background: #0c0e25;
+}
+
+/* ---------------------------------------------- Responsive ---------------------------------------------- */
+
+@media (max-width: 1480px) {
+  .ecommerce .emms__calendar .emms__background-c {
+    display: none;
+  }
+}
+
+@media (max-width: 1100px) {
+  .ecommerce .emms__centralvideo .emms__background-b,
+  .ecommerce .emms__centralvideo .emms__background-a {
+    display: none;
+  }
+}
+
+@media (max-width: 992px) {
+  .ecommerce .emms__calendar .emms__background-b {
+    display: none;
+  }
+}
+
+@media (max-width: 620px) {
+  .ecommerce .hero-registration--registered {
+    background-position-x: right;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------- */
+/* ---------------------------------------- DURING ------------------------------------------- */
+/* ------------------------------------------------------------------------------------------- */
+
+/* No Logueado */
+
+.ecommerce--during .emms__header__live {
+  transform: translateX(6%);
+}
+
+.ecommerce--during .hero-registration .hero-registration__columns {
+  align-items: center;
+}
+
+.ecommerce--during .hero-registration__text p.hero-registration__text__live {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ed1e79;
+  position: relative;
+  padding: 0 0 0 28px;
+  margin: 0 0 30px 0;
+  display: none;
+}
+
+.ecommerce--during .hero-registration__text p.hero-registration__text__live::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 5px;
+  width: 24px;
+  height: 13px;
+  background: url("../../../img/icons/icon-live.svg") no-repeat;
+  background-size: contain;
+}
+
+.ecommerce--during .hero-registration.hero-registration--noform {
+  padding: 220px 0 158px 0;
+}
+
+@media (max-width: 992px) {
+  .ecommerce--during .hero-registration__text p.hero-registration__text__live {
+    display: inline-block;
+  }
+}
+
+/* Logueado */
+
+.ecommerce-logueado--during .emms__premium-content .emms__background-a {
+  width: 893px;
+  height: 819px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-65%, 0%) rotate(180deg);
+}
+
+@media (max-width: 1280px) {
+  .ecommerce-logueado--during .emms__premium-content .emms__background-a {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------- */
+/* ---------------------------------------- POST ------------------------------------------- */
+/* ------------------------------------------------------------------------------------------- */
+
+/* No Logueado */
+
+.ecommerce--post .hero-registration .hero-registration__columns {
+  align-items: center;
+}
+
+.ecommerce--post .hero-registration__text p.hero-registration__text__live {
+  font-size: 16px;
+  font-weight: 700;
+  color: #ed1e79;
+  position: relative;
+  padding: 0 0 0 28px;
+  margin: 0 0 30px 0;
+  display: none;
+}
+
+.ecommerce--post .hero-registration__text p.hero-registration__text__live::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 5px;
+  width: 24px;
+  height: 13px;
+  background: url("../../../img/icons/icon-live.svg") no-repeat;
+  background-size: contain;
+}
+
+.ecommerce--post .hero-registration.hero-registration--noform {
+  padding: 220px 0 158px 0;
+}
+
+.ecommerce--post .hero-registration.hero-registration--noform .hero-registration__text {
+  max-width: 460px;
+  width: 90%;
+}
+
+@media (max-width: 992px) {
+  .ecommerce--post .hero-registration__text p.hero-registration__text__live {
+    display: inline-block;
+  }
+}
+
+/* Logueado */
+
+.ecommerce-logueado--post .emms__premium-content .emms__background-a {
+  width: 893px;
+  height: 819px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-65%, -18%) rotate(180deg);
+}
+
+.ecommerce-logueado--post .hero-registration--registered .emms__container--md {
+  max-width: 730px;
+}
+
+.ecommerce-logueado--post .hero-registration--registered p {
+  margin: 0;
+  line-height: 1;
+}
+
+.ecommerce-logueado--post .hero-registration--registered .emms__container--md h1 {
+  margin: 0 auto;
+}
+
+.ecommerce-logueado--post .hero-registration--registered .emms__container--md p {
+  margin: 30px auto 0 auto;
+  line-height: 24px;
+  max-width: 590px;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  text-align: center;
+  color: #ffffff;
+}
+
+@media (max-width: 1280px) {
+  .ecommerce-logueado--post .emms__premium-content .emms__background-a {
+    display: none;
+  }
+}

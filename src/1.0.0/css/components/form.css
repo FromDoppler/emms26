@@ -1,0 +1,315 @@
+.emms_switch__container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.emms_switch__container__switch {
+  position: relative;
+  height: 56px;
+  background: white;
+  border-top-right-radius: 20px;
+  border-top-left-radius: 20px;
+}
+
+.emms_switch__container__switch input {
+  position: relative;
+  width: 300px;
+  height: 50px;
+  border-radius: 25px;
+  outline: none;
+  appearance: none;
+  font-weight: bold;
+  transition: background 0.2s - 0.1s;
+  cursor: pointer;
+}
+
+.emms_switch__container__switch input:before,
+.emms_switch__container__switch input:after {
+  z-index: 2;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #111;
+}
+
+.emms_switch__container__switch input::before {
+  content: "REGISTRARME";
+  left: 19px;
+}
+
+/* &Eacute; = É*/
+
+.emms_switch__container__switch input::after {
+  content: "YA ME REGISTRÉ";
+  right: 40px;
+}
+
+.emms_switch__container__switch label {
+  z-index: 1;
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  border-radius: 20px;
+}
+
+.emms_switch__container__switch input:checked {
+  background: var(--color-terciary);
+}
+
+.emms_switch__container__switch input:checked::before {
+  color: black;
+  transition: color 0.5s 0.2s;
+}
+
+.emms_switch__container__switch input:checked::after {
+  color: #111;
+  transition: color 0.5s;
+}
+
+.emms_switch__container__switch input:checked + label {
+  left: 10px;
+  right: 172px;
+  color: black;
+  background: white;
+  transition:
+    left 0.5s,
+    right 0.4s 0.2s;
+}
+
+.emms_switch__container__switch input:not(:checked) {
+  background: var(--color-terciary);
+  transition: background 0.5s -0.1s;
+}
+
+.emms_switch__container__switch input:not(:checked)::before {
+  color: #111;
+  transition: color 0.5s;
+}
+
+.emms_switch__container__switch input:not(:checked)::after {
+  color: #1e1e1e;
+  transition: color 0.5s 0.2s;
+}
+
+.emms_switch__container__switch input:not(:checked) + label {
+  left: 130px;
+  right: 10px;
+  background: #fff;
+  transition:
+    left 0.4s 0.2s,
+    right 0.5s,
+    background 0.35s -0.1s;
+}
+
+.alreadyAccountForm h2 {
+  text-align: center;
+  font-size: 36px;
+  margin-bottom: 45px;
+}
+
+.alreadyAccountForm .emms__form__btn {
+  margin-top: 4rem;
+}
+
+.alreadyAccountForm .alreadyAccountForm__custom-error {
+  color: #e34f45;
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 18px;
+  display: none;
+}
+
+.alreadyAccountForm .alreadyAccountForm__custom-error.display {
+  display: block;
+}
+
+.alreadyAccountForm .alreadyAccountForm__custom-error b {
+  color: #008046;
+  cursor: pointer;
+}
+
+.alreadyAccountForm .alreadyAccountForm__custom-error b:hover {
+  color: #026c3c;
+  transition-duration: 0.2s;
+}
+
+.emms__form {
+  background: #fff;
+  padding: 37px;
+  border-radius: 14px;
+  min-height: 562px;
+  align-content: center;
+}
+
+.emms__form.dp--none {
+  display: none;
+}
+
+.emms__form.dp--block {
+  display: block;
+}
+
+.emms__form__field-item {
+  margin: 0 0 14px 0;
+}
+
+.emms__form__field-item label {
+  font-size: 12px;
+  line-height: 14px;
+  font-weight: 700;
+  color: #333333;
+  display: block;
+  margin: 0 0 5px 0;
+}
+
+.emms__form__field-item input,
+select {
+  height: 33px;
+  width: 100%;
+  box-sizing: border-box;
+  border: solid 1px #b4b4b4;
+  background: #f5f2f2;
+  padding: 0 9px;
+  font-size: 14px;
+  color: #000;
+  outline: none;
+}
+
+.emms__form__field-item input:focus {
+  border: solid 2px #fab221;
+}
+
+.emms__form__field-item input::placeholder {
+  color: #afafaf;
+}
+
+.emms__form__field-group {
+  margin: 0 0 30px 0;
+}
+
+.emms__form__field-group li {
+  margin: 0px 0px 20px 0px;
+}
+
+.emms__form__field-item__checkbox {
+  position: relative;
+}
+
+.emms__form__field-item__checkbox input[type="checkbox"] {
+  cursor: pointer;
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  opacity: 0;
+}
+
+.emms__form__field-item__checkbox .checkmark {
+  position: absolute;
+  left: 0;
+  top: -3px;
+  height: 16px;
+  width: 16px;
+  border: 1px solid #b4b1a5;
+  border-radius: 3px;
+  background-color: #fff;
+  pointer-events: none;
+}
+
+.emms__form__field-item__checkbox .checkmark::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 0;
+  width: 5px;
+  height: 10px;
+  border: solid #fff;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.emms__form__field-item__checkbox input[type="checkbox"]:checked ~ .checkmark {
+  border-color: #33ad73;
+  background-color: #33ad73;
+}
+
+.emms__form__field-item__checkbox input[type="checkbox"]:checked ~ .checkmark::after {
+  display: block;
+  border-color: #fff;
+}
+
+.emms__form__field-item__checkbox label {
+  font-size: 10px;
+  font-weight: 400;
+  margin: 0 0 0 29px;
+  display: inline-block;
+  vertical-align: top;
+  cursor: pointer;
+}
+
+.emms__form__legal {
+  margin: 30px 0 0 0;
+}
+
+.emms__form__legal .emms__form__legal__btn {
+  font-size: 11px;
+  line-height: 17px;
+  color: #979797;
+  position: relative;
+  padding: 0 0 0 10px;
+  cursor: pointer;
+  transition-duration: 0.2s;
+}
+
+.emms__form__legal .emms__form__legal__btn:hover {
+  color: #727272;
+  transition-duration: 0.2s;
+}
+
+.emms__form__legal .emms__form__legal__btn::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 3px;
+  width: 3px;
+  height: 6px;
+  background: url("../../../img/icons/icon-grey-filled-arrow.svg") no-repeat;
+  background-size: contain;
+}
+
+.emms__form__legal p {
+  font-size: 10px;
+  line-height: 14px;
+  margin: 10px 0 0 0;
+}
+
+.emms__form__legal p a {
+  color: #008046;
+}
+
+.emms__form__legal p a:hover {
+  text-decoration: underline;
+}
+
+.emms__form__legal.close p {
+  display: none;
+}
+
+.emms__form__legal.open p {
+  display: block;
+}
+
+.emms__form__legal.open .emms__form__legal__btn::before {
+  transform: rotate(90deg);
+}
+
+/* ---------------------------------------------- Responsive ---------------------------------------------- */
+
+@media (max-width: 620px) {
+  .emms__form {
+    padding: 37px 28px;
+    min-height: 418px;
+  }
+}

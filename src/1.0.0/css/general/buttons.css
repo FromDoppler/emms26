@@ -1,0 +1,263 @@
+/* General CTA */
+
+.emms__purple-common-anchor {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 20px;
+  text-align: left;
+  text-decoration-line: underline;
+  text-decoration-style: solid;
+  text-underline-position: from-font;
+  text-decoration-skip-ink: none;
+  line-height: 20px;
+  color: #7d04f6;
+  transition: all 0.5s ease-in-out;
+}
+
+.emms__purple-common-anchor:hover {
+  opacity: 0.5;
+}
+
+.emms__purple-anchor {
+  font-style: normal;
+  font-weight: 900;
+  font-size: 16px;
+  line-height: 24px;
+  text-align: center;
+  color: #bd7aff;
+  display: block;
+  transition: opacity 0.3s ease;
+}
+
+.emms__purple-anchor:hover {
+  opacity: 0.5;
+}
+
+.emms__cta {
+  font-size: 16px;
+  line-height: 20px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--color-primary);
+  border-radius: 100px;
+  padding: 20px 50px;
+  display: inline-block;
+  border: none;
+  cursor: pointer;
+  transition-duration: 0.2s;
+  position: relative;
+  text-transform: uppercase;
+}
+
+.emms__cta:hover {
+  background: var(--color-primary-hover);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.emms__cta.emms__cta--primary-light {
+  border: 1px solid var(--color-secondary);
+  border-radius: 100px;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--color-secondary);
+  background-color: transparent;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.emms__cta.emms__cta--primary-light:hover {
+  background-color: var(--color-secondary);
+  color: #000000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.emms__cta.emms__cta--secondary {
+  border: 1px solid var(--color-primary);
+  border-radius: 100px;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  background-color: #ffffff;
+}
+
+.emms__cta.emms__cta--terciary {
+  border: 1px solid var(--color-secondary);
+  border-radius: 100px;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
+  text-align: center;
+  text-transform: uppercase;
+  color: var(--color-text);
+  background-color: var(--color-secondary);
+}
+
+.emms__cta.emms__cta--terciary span {
+  color: var(--color-text);
+}
+
+.emms__cta.emms__cta--terciary:hover {
+  background-color: var(--color-secondary-hover);
+}
+
+.emms__cta.emms__cta--terciary:hover span {
+  color: var(--color-muted);
+}
+
+/* TODO: Unificar el estilo con el del boton que usan las cards de la agenda */
+.emms__cta.emms__cta--golden {
+  color: #0e0a03;
+  background: linear-gradient(242.55deg, #cd930d 8.54%, #dcc958 42.26%, #d59501 123.98%);
+  border-radius: 28px;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 17px;
+  text-align: center;
+  border: unset;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  padding: 17px;
+  width: 100%;
+  max-width: 261px;
+}
+
+.emms__cta.emms__cta--golden:hover {
+  background: linear-gradient(242.55deg, #dcc958 8.54%, #cd930d 42.26%, #f0d678 123.98%);
+  transform: scale(1.03);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.emms__cta.emms__cta--golden::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(120deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 100%);
+  transform: skewX(-25deg);
+  pointer-events: none;
+  animation: shine 2s infinite;
+  border-radius: 28px;
+}
+
+@keyframes shine {
+  0% {
+    left: -75%;
+  }
+
+  100% {
+    left: 125%;
+  }
+}
+
+.emms__cta.emms_cta--secondary:hover {
+  background-color: var(--color-secondary-hover);
+  opacity: 0.5;
+}
+
+.emms__cta.inactive,
+.emms__cta.emms__cta--inactive {
+  background: #cccccc;
+  pointer-events: none;
+  color: #ffffff;
+  font-size: 16px;
+  line-height: 20px;
+  text-align: center;
+}
+
+/* La diferancia con inactive se que permite interactuar con los titles */
+.emms__cta.inactive--button-card {
+  background: #cccccc;
+  cursor: unset;
+  user-select: none;
+}
+
+.emms__cta.inactive--button-card:hover {
+  background: #cccccc;
+}
+
+.emms__cta.emms__cta--during {
+  background-color: #79f66e;
+}
+
+.emms__cta.emms__cta--during:hover {
+  background-color: #61db56;
+}
+
+.emms__cta.emms__cta--during span {
+  color: #000;
+  text-decoration: unset;
+}
+
+.emms__cta img {
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
+.emms__cta span {
+  font-style: normal;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 20px;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.emms__cta.emms__cta--nd {
+  font-size: 13px;
+  color: #33ad73;
+  background: rgba(0, 128, 70, 0.2);
+  box-shadow: 0px 0px 0 1px #33ad73;
+  transition-duration: 0.2s;
+  font-weight: 600;
+}
+
+.emms__cta.emms__cta--nd:hover {
+  background: rgba(0, 128, 70, 0.1);
+  transition-duration: 0.2s;
+}
+
+.emms__cta.sm,
+.emms__cta.emms__cta--sm {
+  padding: 12px 30px;
+}
+
+.emms__cta.emms__cta--md {
+  padding: 20px 76px;
+}
+
+.emms__cta.emms__cta--xl {
+  padding: 18px 88px;
+}
+
+@media (max-width: 620px) {
+  .emms__cta {
+    text-align: center;
+    display: block;
+    width: 100%;
+    padding: 20px 25px;
+    box-sizing: border-box;
+  }
+
+  .emms__cta.emms__cta--md {
+    padding: 14px 30px;
+  }
+
+  .emms__cta.emms__cta--xl {
+    padding: 16px 36px;
+  }
+}

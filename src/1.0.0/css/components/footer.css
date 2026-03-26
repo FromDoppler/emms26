@@ -1,0 +1,77 @@
+/* Footer */
+
+.emms__footer {
+  display: flex;
+  justify-content: space-between;
+  background: #000;
+  padding: 42px 60px;
+}
+
+.emms__footer__event p {
+  font-size: 12px;
+  color: #fff;
+  margin: 0;
+}
+
+.emms__footer__event p strong {
+  font-weight: 700;
+}
+
+.emms__footer__event p a {
+  display: inline-block;
+  width: 84px;
+  margin-left: 3px;
+}
+
+.emms__footer__social ul {
+  display: flex;
+}
+
+.emms__footer__social ul li {
+  margin: 0 10px;
+}
+
+.emms__footer__actions a {
+  font-size: 16px;
+  font-weight: 700;
+  color: #33ad73;
+}
+
+.emms__footer__actions a:hover {
+  text-decoration: underline;
+}
+
+.emms__footer__actions #ot-sdk-btn.ot-sdk-show-settings {
+  font-size: 16px;
+  color: #33ad73;
+}
+
+.emms__footer__actions #ot-sdk-btn.ot-sdk-show-settings:hover {
+  text-decoration: underline;
+  opacity: 1;
+  color: #33ac74;
+}
+
+.emms__footer__actions #ot-sdk-btn.ot-sdk-show-settings::after {
+  content: ".";
+}
+
+@media (max-width: 1200px) {
+  .emms__footer {
+    display: block;
+    padding: 78px 20px 33px 20px;
+    text-align: center;
+    position: relative;
+  }
+
+  .emms__footer__event {
+    margin: 0 0 22px 0;
+  }
+
+  .emms__footer__social {
+    position: absolute;
+    top: 33px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}

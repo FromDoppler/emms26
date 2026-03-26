@@ -1,0 +1,50 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+# Default settings for all files
+[*]
+indent_style = space
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+end_of_line = lf
+indent_size = 2
+max_line_length = 220
+
+# JavaScript files
+[*.js]
+block_comment_start = /*
+block_comment_end = */
+
+max_line_length = 220
+
+# PHP files - ignore line length, only fix indentation/spacing
+[*.php]
+max_line_length = 9999
+
+
+
+# PHP files
+[*.php]
+block_comment_start = /*
+block_comment_end = */
+
+# Markdown files - don't trim trailing whitespace (needed for line breaks)
+[*.md]
+trim_trailing_whitespace = false
+
+# Shell scripts
+[*.sh]
+indent_size = 2
+
+# Unset for binary and generated files
+[{**.svg,**.png,**.jpg,**.jpeg,**.gif,**.ico,**.pdf,node_modules/**,vendor/**,**/vendor/**,logs/**,.docker/**,admin/speakers/uploads/**,*Zone.Identifier,firebase-messaging-sw.js,utils/relay-templates/**}]
+charset = unset
+end_of_line = unset
+insert_final_newline = unset
+trim_trailing_whitespace = unset
+indent_style = unset
+indent_size = unset
+max_line_length = unset

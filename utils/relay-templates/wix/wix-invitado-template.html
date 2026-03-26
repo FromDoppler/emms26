@@ -1,0 +1,1329 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="es">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="x-apple-disable-message-reformatting" />
+    <meta content="telephone=no" name="format-detection" />
+    <title>Doppler</title>
+    <style>
+      html,
+      body {
+        margin: 0 auto !important;
+        padding: 0 !important;
+      }
+
+      * {
+        -ms-text-size-adjust: 100%;
+        -webkit-text-size-adjust: 100%;
+      }
+
+      div[style*="margin: 16px 0"] {
+        margin: 0 !important;
+      }
+
+      table,
+      td {
+        mso-table-lspace: 0pt !important;
+        mso-table-rspace: 0pt !important;
+      }
+
+      table table table {
+        table-layout: auto;
+      }
+
+      img {
+        -ms-interpolation-mode: bicubic;
+        border: 0;
+        height: auto;
+        line-height: 100%;
+        outline: none;
+        text-decoration: none;
+      }
+
+      /* Hover styles for buttons */
+      .button--td:hover,
+      .button--a:hover {
+        background: #026c3c !important;
+      }
+
+      .link-hover:hover {
+        color: #026c3c !important;
+      }
+
+      *[x-apple-data-detectors],
+      .x-gmail-data-detectors,
+      .x-gmail-data-detectors *,
+      .aBn {
+        border-bottom: 0 !important;
+        cursor: default !important;
+        color: inherit !important;
+        text-decoration: none !important;
+        font-size: inherit !important;
+        font-family: inherit !important;
+        font-weight: inherit !important;
+        line-height: inherit !important;
+      }
+
+      th {
+        font-weight: normal;
+      }
+
+      /* MEDIA QUERIES */
+      @media all and (max-width: 480px) {
+        .wrapper {
+          width: 320px !important;
+          padding: 0 !important;
+        }
+
+        .container {
+          width: 300px !important;
+          padding: 0 !important;
+        }
+
+        .mobile {
+          width: 300px !important;
+          display: block !important;
+          padding: 0 !important;
+        }
+
+        .mobile-btn {
+          width: 240px !important;
+          display: block !important;
+        }
+
+        .mobile-center {
+          text-align: center !important;
+        }
+
+        .img {
+          width: 100% !important;
+          height: auto !important;
+        }
+
+        .mobileOff {
+          width: 0px !important;
+          display: none !important;
+        }
+
+        .mobileOn {
+          display: block !important;
+          max-height: none !important;
+        }
+
+        .no-background {
+          background-image: none !important;
+          background-color: #ffffff !important;
+        }
+
+        .mobile-pl,
+        .mobile-pl-btn,
+        u + .body .mobile-pl,
+        u + .body .mobile-pl-btn {
+          padding-left: 0 !important;
+        }
+
+        .mobile-pr,
+        .mobile-pr-btn,
+        u + .body .mobile-pr,
+        u + .body .mobile-pr-btn {
+          padding-right: 0 !important;
+        }
+
+        .mobile-pt,
+        u + .body .mobile-pt {
+          padding-top: 20px !important;
+        }
+
+        .mobilePadding {
+          padding-left: 3% !important;
+          padding-right: 3% !important;
+        }
+
+        u ~ div .wrapper {
+          width: 100vw !important;
+        }
+      }
+    </style>
+    <!--[if gte mso 9]>
+      <xml>
+        <o:OfficeDocumentSettings>
+          <o:AllowPNG />
+          <o:PixelsPerInch>96</o:PixelsPerInch>
+        </o:OfficeDocumentSettings>
+      </xml>
+    <![endif]-->
+  </head>
+
+  <body style="margin: 0; padding: 0">
+    <center>
+      <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td align="center" valign="top" style="background-color: #310e44">
+            <table
+              width="640"
+              cellpadding="0"
+              cellspacing="0"
+              border="0"
+              class="wrapper"
+            >
+              <tr>
+                <td height="30" style="font-size: 30px; line-height: 30px">
+                  &nbsp;
+                </td>
+              </tr>
+              <tr>
+                <td align="center" valign="top">
+                  <table
+                    width="600"
+                    cellpadding="0"
+                    cellspacing="0"
+                    border="0"
+                    class="container"
+                  >
+                    <tr>
+                      <th
+                        align="center"
+                        valign="middle"
+                        width="60"
+                        class="mobileOff"
+                      >
+                        &nbsp;
+                      </th>
+                      <th
+                        align="center"
+                        valign="middle"
+                        width="480"
+                        class="mobile mobile-pt"
+                      >
+                        <a href="#" style="cursor: default">
+                          <img
+                            src="https://i.imgur.com/xYS5gM3.png"
+                            alt="Logo EMMS Digital Trends"
+                            width="177"
+                            style="width: 100%; max-width: 177px !important"
+                          />
+                        </a>
+                      </th>
+                      <th
+                        align="center"
+                        valign="middle"
+                        width="60"
+                        class="mobileOff"
+                      >
+                        &nbsp;
+                      </th>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td height="30" style="font-size: 30px; line-height: 30px">
+                  &nbsp;
+                </td>
+              </tr>
+              <tr>
+                <td align="center" valign="top">
+                  <table
+                    width="600"
+                    cellpadding="0"
+                    cellspacing="0"
+                    border="0"
+                    class="container"
+                  >
+                    <tr>
+                      <th
+                        align="center"
+                        valign="middle"
+                        width="60"
+                        class="mobileOff"
+                      >
+                        &nbsp;
+                      </th>
+                      <th
+                        align="center"
+                        valign="middle"
+                        width="480"
+                        class="mobile mobile-pt"
+                      >
+                        <a href="#" style="cursor: default">
+                          <img
+                            src="https://i.imgur.com/noZMwnu.png"
+                            alt="Ticket"
+                            width="116"
+                            style="width: 100%; max-width: 116px !important"
+                          />
+                        </a>
+                      </th>
+                      <th
+                        align="center"
+                        valign="middle"
+                        width="60"
+                        class="mobileOff"
+                      >
+                        &nbsp;
+                      </th>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td height="30" style="font-size: 30px; line-height: 30px">
+                  &nbsp;
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+
+      <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td align="center" valign="top" style="background-color: #310e44">
+            <table
+              width="640"
+              cellpadding="0"
+              cellspacing="0"
+              border="0"
+              class="wrapper"
+            >
+              <tr>
+                <td align="center" valign="top">
+                  <table
+                    width="600"
+                    cellpadding="0"
+                    cellspacing="0"
+                    border="0"
+                    class="container"
+                  >
+                    <tr>
+                      <td
+                        height="15"
+                        style="font-size: 15px; line-height: 15px"
+                      >
+                        &nbsp;
+                      </td>
+                    </tr>
+
+                    <tr>
+                      <td
+                        align="center"
+                        valign="top"
+                        class="mobile"
+                        style="
+                          font-family: Helvetica, Arial, sans-serif;
+                          color: #ffffff;
+                        "
+                      >
+                        <p
+                          style="
+                            margin: 0;
+                            font-size: 25px;
+                            line-height: 27px;
+                            font-weight: 700;
+                            color: #ffffff;
+                            max-width: 391px;
+                          "
+                          class="mobile-title-fontsize"
+                        >
+                          ¡Has recibido una invitación VIP al EMMS Digital
+                          Trends 2023!
+                        </p>
+                        <p
+                          style="margin: 0; font-size: 25px; line-height: 25px"
+                        >
+                          &nbsp;
+                        </p>
+                        <p
+                          style="
+                            margin: 0;
+                            font-family: Helvetica, Arial, sans-serif;
+                            font-size: 15px;
+                            line-height: 25px;
+                            font-weight: 400;
+                            color: #ffffff;
+                            max-width: 560px;
+                          "
+                        >
+                          Te damos la bienvenida al mayor evento de Marketing
+                          Digital
+                        </p>
+                        <p
+                          style="margin: 0; font-size: 25px; line-height: 25px"
+                        >
+                          &nbsp;
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        height="20"
+                        style="font-size: 20px; line-height: 20px"
+                      >
+                        &nbsp;
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+
+      <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tbody>
+          <tr>
+            <td align="center" valign="top" style="background-color: #ffffff">
+              <table
+                width="640"
+                cellpadding="0"
+                cellspacing="0"
+                border="0"
+                class="wrapper"
+              >
+                <tbody>
+                  <tr>
+                    <td
+                      align="center"
+                      valign="top"
+                      style="background-color: #ffffff"
+                    >
+                      <table
+                        width="600"
+                        cellpadding="0"
+                        cellspacing="0"
+                        border="0"
+                        class="container"
+                      >
+                        <tbody>
+                          <tr>
+                            <td
+                              height="40"
+                              style="font-size: 40px; line-height: 40px"
+                            >
+                              &nbsp;
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <td
+                              align="center"
+                              valign="top"
+                              style="font-family: Helvetica, Arial, sans-serif"
+                              class="mobile-center"
+                            >
+                              <p
+                                style="
+                                  margin: 0;
+                                  font-size: 16px;
+                                  line-height: 22px;
+                                  color: #333333;
+                                  font-weight: 500;
+                                  text-align: center;
+                                "
+                              >
+                                Con tu entrada VIP accederás a:
+                              </p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              height="40"
+                              style="font-size: 40px; line-height: 40px"
+                            >
+                              &nbsp;
+                            </td>
+                          </tr>
+
+                          <tr>
+                            <td align="left" valign="top" class="container">
+                              <table
+                                cellpadding="0"
+                                cellspacing="0"
+                                border="0"
+                                class="container"
+                              >
+                                <tbody>
+                                  <tr>
+                                    <th
+                                      align="center"
+                                      valign="top"
+                                      width="300"
+                                      class="mobile"
+                                    >
+                                      <a
+                                        href="#"
+                                        style="cursor: default !important"
+                                      >
+                                        <img
+                                          src="https://i.imgur.com/aXRrpWG.png"
+                                          alt="Conferencias"
+                                          width="200"
+                                          style="
+                                            width: 100%;
+                                            max-width: 200px !important;
+                                            margin-bottom: 0;
+                                            padding-bottom: 0;
+                                            display: block;
+                                          "
+                                        />
+                                      </a>
+                                      <p
+                                        style="
+                                          margin: 0;
+                                          font-size: 15px;
+                                          line-height: 15px;
+                                        "
+                                      >
+                                        &nbsp;
+                                      </p>
+                                      <p
+                                        style="
+                                          margin: 0;
+                                          font-family:
+                                            Helvetica, Arial, sans-serif;
+                                          font-size: 15px;
+                                          line-height: 21px;
+                                          font-weight: 400;
+                                          text-align: left;
+                                          max-width: 200px;
+                                          color: #333333;
+                                        "
+                                      >
+                                        <strong>Conferencias</strong>
+                                        con referentes internacionales
+                                      </p>
+                                    </th>
+                                    <th
+                                      align="center"
+                                      valign="top"
+                                      width="300"
+                                      class="mobile mobile-pt"
+                                    >
+                                      <a
+                                        href="#"
+                                        style="cursor: default !important"
+                                      >
+                                        <img
+                                          src="https://i.imgur.com/Lqj22Cb.png"
+                                          alt="Recursos"
+                                          width="200"
+                                          style="
+                                            width: 100%;
+                                            max-width: 200px !important;
+                                            margin-bottom: 0;
+                                            padding-bottom: 0;
+                                            display: block;
+                                          "
+                                        />
+                                      </a>
+                                      <p
+                                        style="
+                                          margin: 0;
+                                          font-size: 15px;
+                                          line-height: 15px;
+                                        "
+                                      >
+                                        &nbsp;
+                                      </p>
+                                      <p
+                                        style="
+                                          margin: 0;
+                                          font-family:
+                                            Helvetica, Arial, sans-serif;
+                                          font-size: 15px;
+                                          line-height: 21px;
+                                          font-weight: 400;
+                                          text-align: left;
+                                          max-width: 200px;
+                                          color: #333333;
+                                        "
+                                      >
+                                        <strong>
+                                          Contenido descargable y on demand
+                                        </strong>
+                                        único
+                                      </p>
+                                    </th>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              height="20"
+                              style="font-size: 20px; line-height: 20px"
+                            >
+                              &nbsp;
+                            </td>
+                          </tr>
+                          <tr>
+                            <td align="left" valign="top" class="container">
+                              <table
+                                cellpadding="0"
+                                cellspacing="0"
+                                border="0"
+                                class="container"
+                              >
+                                <tbody>
+                                  <tr>
+                                    <th
+                                      align="center"
+                                      valign="top"
+                                      width="300"
+                                      class="mobile"
+                                    >
+                                      <a
+                                        href="#"
+                                        style="cursor: default !important"
+                                      >
+                                        <img
+                                          src="https://i.imgur.com/LV52HKa.png"
+                                          alt="Workshop"
+                                          width="200"
+                                          style="
+                                            width: 100%;
+                                            max-width: 200px !important;
+                                            margin-bottom: 0;
+                                            padding-bottom: 0;
+                                            display: block;
+                                          "
+                                        />
+                                      </a>
+                                      <p
+                                        style="
+                                          margin: 0;
+                                          font-size: 15px;
+                                          line-height: 15px;
+                                        "
+                                      >
+                                        &nbsp;
+                                      </p>
+                                      <p
+                                        style="
+                                          margin: 0;
+                                          font-family:
+                                            Helvetica, Arial, sans-serif;
+                                          font-size: 15px;
+                                          line-height: 21px;
+                                          font-weight: 400;
+                                          text-align: left;
+                                          max-width: 200px;
+                                          color: #333333;
+                                        "
+                                      >
+                                        Todos los
+                                        <strong>Workshops Prácticos</strong>
+                                        que quieras ⭐
+                                      </p>
+                                    </th>
+                                    <th
+                                      align="center"
+                                      valign="top"
+                                      width="300"
+                                      class="mobile mobile-pt"
+                                    >
+                                      <a
+                                        href="#"
+                                        style="cursor: default !important"
+                                      >
+                                        <img
+                                          src="https://i.imgur.com/toOznVP.png"
+                                          alt="Networking"
+                                          width="200"
+                                          style="
+                                            width: 100%;
+                                            max-width: 200px !important;
+                                            margin-bottom: 0;
+                                            padding-bottom: 0;
+                                            display: block;
+                                          "
+                                        />
+                                      </a>
+                                      <p
+                                        style="
+                                          margin: 0;
+                                          font-size: 15px;
+                                          line-height: 15px;
+                                        "
+                                      >
+                                        &nbsp;
+                                      </p>
+                                      <p
+                                        style="
+                                          margin: 0;
+                                          font-family:
+                                            Helvetica, Arial, sans-serif;
+                                          font-size: 15px;
+                                          line-height: 21px;
+                                          font-weight: 400;
+                                          text-align: left;
+                                          max-width: 200px;
+                                          color: #333333;
+                                        "
+                                      >
+                                        Exclusivas
+                                        <strong>salas de Networking ⭐</strong>
+                                      </p>
+                                    </th>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td height="40" style="font-size: 40px; line-height: 40px">
+                      &nbsp;
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tbody>
+          <tr>
+            <td align="center" valign="top" style="background-color: #ffffff">
+              <table
+                width="640"
+                cellpadding="0"
+                cellspacing="0"
+                border="0"
+                class="wrapper"
+              >
+                <tbody>
+                  <tr>
+                    <td
+                      align="center"
+                      valign="top"
+                      class="container"
+                      style="background-color: #ffffff"
+                    >
+                      <table
+                        width="600"
+                        cellpadding="0"
+                        cellspacing="0"
+                        border="0"
+                        class="container"
+                      >
+                        <tbody>
+                          <tr>
+                            <td
+                              align="center"
+                              valign="top"
+                              class="container"
+                              style="background-color: #ffffff"
+                            >
+                              <table
+                                width="600"
+                                cellpadding="0"
+                                cellspacing="0"
+                                border="0"
+                                class="container"
+                              >
+                                <tbody>
+                                  <tr>
+                                    <td
+                                      height="40"
+                                      style="font-size: 40px; line-height: 40px"
+                                    >
+                                      &nbsp;
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td align="center" valign="middle">
+                                      <img
+                                        src="https://i.imgur.com/22FXDPO.png"
+                                        alt="Separador"
+                                        width="21"
+                                        style="
+                                          width: 100%;
+                                          max-width: 21px !important;
+                                        "
+                                      />
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td
+                                      height="20"
+                                      style="font-size: 20px; line-height: 20px"
+                                    >
+                                      &nbsp;
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tbody>
+          <tr>
+            <td align="center" valign="top" style="background-color: #ffffff">
+              <table
+                width="640"
+                cellpadding="0"
+                cellspacing="0"
+                border="0"
+                class="wrapper"
+              >
+                <tbody>
+                  <tr>
+                    <td
+                      align="center"
+                      valign="top"
+                      style="background-color: #ffffff"
+                    >
+                      <table
+                        width="600"
+                        cellpadding="0"
+                        cellspacing="0"
+                        border="0"
+                        class="container"
+                      >
+                        <tbody>
+                          <tr>
+                            <td
+                              height="40"
+                              style="font-size: 40px; line-height: 40px"
+                            >
+                              &nbsp;
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              align="center"
+                              valign="top"
+                              style="font-family: Helvetica, Arial, sans-serif"
+                              class="mobile-center"
+                            >
+                              <p
+                                style="
+                                  margin: 0;
+                                  font-size: 15px;
+                                  line-height: 22px;
+                                  color: #333333;
+                                  font-weight: 400;
+                                  text-align: left;
+                                "
+                              >
+                                Te hemos enviado un
+                                <strong>
+                                  Email para establecer la contraseña de la
+                                  cuenta con la que accederás al contenido VIP
+                                </strong>
+                                . Una vez confirmada, inicia sesión y ¡listo!
+                                <br />
+                                Llegada la fecha,
+                                <a
+                                  href="https://www.digital-trends.goemms.com/?utm_medium=email&utm_source=fromdoppler&utm_campaign=et-emmsdt-confirmacion-entrada-invitado-empresa-23"
+                                  target="_blank"
+                                  style="
+                                    text-decoration: none;
+                                    color: #33ad73;
+                                    font-weight: 700;
+                                  "
+                                  class="link-hover"
+                                >
+                                  aquí
+                                </a>
+                                encontrarás los enlaces de ingreso a estos
+                                espacios.
+                              </p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              height="30"
+                              style="font-size: 30px; line-height: 30px"
+                            >
+                              &nbsp;
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              align="center"
+                              valign="top"
+                              style="font-family: Helvetica, Arial, sans-serif"
+                              class="mobile-center"
+                            >
+                              <p
+                                style="
+                                  margin: 0;
+                                  font-size: 15px;
+                                  line-height: 22px;
+                                  color: #333333;
+                                  font-weight: 400;
+                                  text-align: left;
+                                "
+                              >
+                                Además, descubre la agenda y todo lo que
+                                aprenderás durante estos cuatro días de
+                                capacitación en el
+                                <a
+                                  href="http://goemms.com/digital-trends?utm_source=fromdoppler&utm_medium=email&utm_campaign=et-emmsdt-confirmacion-entrada-invitado-empresa-23#agenda&dplrid={$encodeEmail}"
+                                  target="_blank"
+                                  style="
+                                    text-decoration: none;
+                                    color: #33ad73;
+                                    font-weight: 700;
+                                  "
+                                  class="link-hover"
+                                >
+                                  sitio web del evento.
+                                </a>
+                              </p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              height="10"
+                              style="font-size: 10px; line-height: 10px"
+                            >
+                              &nbsp;
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td height="50" style="font-size: 50px; line-height: 50px">
+                      &nbsp;
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tbody>
+          <tr>
+            <td align="center" valign="top" style="background-color: #ffffff">
+              <table
+                width="640"
+                cellpadding="0"
+                cellspacing="0"
+                border="0"
+                class="wrapper"
+              >
+                <tbody>
+                  <tr>
+                    <td
+                      align="center"
+                      valign="top"
+                      style="background-color: #ffffff"
+                    >
+                      <table
+                        width="600"
+                        cellpadding="0"
+                        cellspacing="0"
+                        border="0"
+                        class="container"
+                      >
+                        <tbody>
+                          <tr>
+                            <td
+                              height="40"
+                              style="font-size: 40px; line-height: 40px"
+                            >
+                              &nbsp;
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              align="center"
+                              valign="top"
+                              style="font-family: Helvetica, Arial, sans-serif"
+                              class="mobile-center"
+                            >
+                              <p
+                                style="
+                                  margin: 0;
+                                  font-size: 16px;
+                                  line-height: 22px;
+                                  color: #333333;
+                                  font-weight: 700;
+                                  text-align: center;
+                                "
+                              >
+                                ¡Esperamos verte allí pronto! 🙌
+                              </p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              height="10"
+                              style="font-size: 10px; line-height: 10px"
+                            >
+                              &nbsp;
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td height="50" style="font-size: 50px; line-height: 50px">
+                      &nbsp;
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!--footer begin-->
+      <table
+        width="100%"
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+      >
+        <tbody>
+          <tr>
+            <td align="center" valign="top" style="background-color: #efefef">
+              <table
+                width="600"
+                cellpadding="0"
+                cellspacing="0"
+                border="0"
+                class="wrapper"
+              >
+                <tbody>
+                  <tr>
+                    <td
+                      align="center"
+                      valign="top"
+                      style="background-color: #efefef"
+                    >
+                      <table
+                        width="555"
+                        cellpadding="0"
+                        cellspacing="0"
+                        border="0"
+                        class="container"
+                      >
+                        <tbody>
+                          <tr>
+                            <td align="center" valign="top">
+                              <table
+                                width="555"
+                                cellpadding="0"
+                                cellspacing="0"
+                                border="0"
+                                class="container"
+                              >
+                                <tbody>
+                                  <tr>
+                                    <td
+                                      height="50"
+                                      style="font-size: 50px; line-height: 50px"
+                                    >
+                                      &nbsp;
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td align="left" valign="top">
+                                      <table
+                                        width="185"
+                                        border="0"
+                                        cellpadding="0"
+                                        cellspacing="0"
+                                      >
+                                        <tbody>
+                                          <tr>
+                                            <td width="37" align="left">
+                                              <a
+                                                href="https://twitter.com/fromDoppler"
+                                                target="_blank"
+                                              >
+                                                <img
+                                                  src="https://www.fromdoppler.com/images/emails/2022/rrss/twitter-icon.png"
+                                                  style="
+                                                    width: 100%;
+                                                    max-width: 32px !important;
+                                                  "
+                                                  width="32"
+                                                  class="img"
+                                                  alt="Twitter"
+                                                />
+                                              </a>
+                                            </td>
+                                            <td width="37" align="left">
+                                              <a
+                                                href="https://www.facebook.com/DopplerEmailMarketing"
+                                                target="_blank"
+                                              >
+                                                <img
+                                                  src="https://www.fromdoppler.com/images/emails/2022/rrss/facebook-icon.png"
+                                                  style="
+                                                    width: 100%;
+                                                    max-width: 32px !important;
+                                                  "
+                                                  width="32"
+                                                  class="img"
+                                                  alt="Facebook"
+                                                />
+                                              </a>
+                                            </td>
+                                            <td width="37" align="left">
+                                              <a
+                                                href="https://www.linkedin.com/company/228261"
+                                                target="_blank"
+                                              >
+                                                <img
+                                                  src="https://www.fromdoppler.com/images/emails/2022/rrss/linkedin-icon.png"
+                                                  style="
+                                                    width: 100%;
+                                                    max-width: 32px !important;
+                                                  "
+                                                  width="32"
+                                                  class="img"
+                                                  alt="Linkedin"
+                                                />
+                                              </a>
+                                            </td>
+                                            <td width="37" align="left">
+                                              <a
+                                                href="https://www.youtube.com/user/FromDoppler"
+                                                target="_blank"
+                                              >
+                                                <img
+                                                  src="https://www.fromdoppler.com/images/emails/2022/rrss/youtube-icon.png"
+                                                  style="
+                                                    width: 100%;
+                                                    max-width: 32px !important;
+                                                  "
+                                                  width="32"
+                                                  class="img"
+                                                  alt="Youtube"
+                                                />
+                                              </a>
+                                            </td>
+                                            <td width="37" align="left">
+                                              <a
+                                                href="https://www.instagram.com/fromdoppler"
+                                                target="_blank"
+                                              >
+                                                <img
+                                                  src="https://www.fromdoppler.com/images/emails/2022/rrss/instagram-icon.png"
+                                                  style="
+                                                    width: 100%;
+                                                    max-width: 32px !important;
+                                                  "
+                                                  width="32"
+                                                  class="img"
+                                                  alt="Instagram"
+                                                />
+                                              </a>
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td align="left" style="padding: 25px 0 0">
+                                      <p
+                                        style="
+                                          padding: 0;
+                                          margin: 0;
+                                          font-family:
+                                            proxima-nova, Arial, sans-serif !important;
+                                          font-size: 11px;
+                                          line-height: 16px;
+                                          color: #666666;
+                                        "
+                                      >
+                                        © 2023
+                                        <a
+                                          href="http://fromdoppler.com/?utm_source=fromdoppler&utm_medium=email&utm_campaign=et-emmsdt-confirmacion-entrada-invitado-empresa-23"
+                                          target="_blank"
+                                          style="
+                                            color: #33ad73;
+                                            font-weight: normal;
+                                            text-decoration: none;
+                                          "
+                                          class="link"
+                                        >
+                                          Doppler LLC
+                                        </a>
+                                        . Todos los derechos reservados.
+                                      </p>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td
+                                      height="20"
+                                      style="font-size: 20px; line-height: 20px"
+                                    >
+                                      &nbsp;
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td align="left" valign="top">
+                                      <p
+                                        style="
+                                          padding: 0;
+                                          margin: 0;
+                                          font-family:
+                                            proxima-nova, Arial, sans-serif !important;
+                                          font-size: 11px;
+                                          line-height: 16px;
+                                          color: #666666;
+                                        "
+                                      >
+                                        Te informamos que los datos personales
+                                        contenidos en esta comunicación fueron
+                                        recogidos en nuestro Formulario de
+                                        registro, cuyo responsable es Doppler
+                                        LLC, dado que prestaste tu
+                                        consentimiento para recibir nuestras
+                                        comunicaciones. Al registrarte como
+                                        usuario, aceptás y consentís que tus
+                                        datos sean almacenados por nuestra
+                                        plataforma, cuyos servidores están en
+                                        Estados Unidos, para gestionar el envío
+                                        de las comunicaciones correspondientes.
+                                        Podrás ejercer tus derechos de acceso,
+                                        rectificación, limitación y eliminación
+                                        de los datos escribiendo a
+                                        <a
+                                          href="mailto:legal@fromdoppler.com"
+                                          target="_blank"
+                                          style="
+                                            color: #33ad73;
+                                            font-weight: normal;
+                                            text-decoration: none;
+                                          "
+                                          class="link"
+                                        >
+                                          legal@fromdoppler.com
+                                        </a>
+                                        , así como presentar una reclamación
+                                        ante una autoridad de control. Si no
+                                        deseás seguir recibiendo nuestras
+                                        Campañas, podés darte de baja
+                                        automáticamente haciendo clic en el
+                                        enlace que se encuentra debajo. Podés
+                                        consultar información adicional y
+                                        detallada sobre la protección de tus
+                                        datos personales en nuestra
+                                        <a
+                                          href="https://www.fromdoppler.com/legal/privacidad/"
+                                          target="_blank"
+                                          style="
+                                            color: #33ad73;
+                                            font-weight: normal;
+                                            text-decoration: none;
+                                          "
+                                          class="link"
+                                        >
+                                          Política de Privacidad
+                                        </a>
+                                        .
+                                      </p>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td
+                                      height="50"
+                                      style="font-size: 50px; line-height: 50px"
+                                    >
+                                      &nbsp;
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td align="center" valign="top">
+                                      <p
+                                        style="
+                                          padding: 0;
+                                          margin: 0;
+                                          font-family:
+                                            proxima-nova, Arial, sans-serif !important;
+                                          font-size: 12px;
+                                          line-height: 16px;
+                                          color: #666666;
+                                        "
+                                      >
+                                        Este email fue enviado por
+                                        <a
+                                          href="http://goemms.com/?utm_source=fromdoppler&utm_medium=email&utm_campaign=et-emmsdt-confirmacion-entrada-invitado-empresa-23&dplrid={$encodeEmail}"
+                                          target="_blank"
+                                          style="
+                                            color: #33ad73;
+                                            font-weight: bold;
+                                            text-decoration: none;
+                                          "
+                                          class="link"
+                                        >
+                                          EMMS
+                                        </a>
+                                        , un evento creado por
+                                        <a
+                                          href="http://fromdoppler.com/?utm_source=fromdoppler&utm_medium=email&utm_campaign=et-emmsdt-confirmacion-entrada-invitado-empresa-23"
+                                          target="_blank"
+                                          style="
+                                            color: #33ad73;
+                                            font-weight: bold;
+                                            text-decoration: none;
+                                          "
+                                          class="link"
+                                        >
+                                          Doppler
+                                        </a>
+                                        .
+                                      </p>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td
+                                      height="40"
+                                      style="font-size: 40px; line-height: 40px"
+                                    >
+                                      &nbsp;
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </center>
+  </body>
+</html>

@@ -1,0 +1,49 @@
+/* Forms */
+
+.button--loading .button__text {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.button--loading::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  border: 4px solid transparent;
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: button-loading-spinner 1s ease infinite;
+}
+
+.dtCursorPointer.button--loading::after {
+  border-top-color: #000000;
+}
+
+.error {
+  display: block;
+}
+
+.error:after {
+  left: 0;
+  top: 100%;
+  color: #e34f45;
+  content: attr(data-error);
+  font-weight: 400;
+  font-size: 11px;
+  line-height: 18px;
+  padding: 0;
+  text-transform: none;
+  text-transform: initial;
+  white-space: nowrap;
+  z-index: 1;
+}
+
+.input-error {
+  border: 1px solid #e34f45;
+}

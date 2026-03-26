@@ -1,0 +1,101 @@
+* {
+  text-rendering: optimizeLegibility;
+  font-kerning: normal !important;
+  -moz-font-feature-settings: "kern";
+  -ms-font-feature-settings: "kern";
+  -webkit-font-feature-settings: "kern";
+  font-feature-settings: "kern";
+}
+
+html,
+body {
+  font-family: var(--font-family-base);
+  font-size: var(--font-p-size);
+  line-height: var(--font-p-line);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  margin: 0;
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+body.hidden {
+  overflow: hidden;
+}
+
+ul,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+}
+
+ul li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* Titulos */
+h1 {
+  font-size: var(--font-h1-size);
+  line-height: var(--font-h1-line);
+  font-weight: bold;
+}
+
+h2 {
+  font-size: var(--font-h2-size);
+  line-height: var(--font-h2-line);
+  font-weight: bold;
+}
+
+h3 {
+  font-size: var(--font-h3-size);
+  line-height: var(--font-h3-line);
+  font-weight: bold;
+}
+
+h4 {
+  font-size: var(--font-h4-size);
+  line-height: var(--font-h4-line);
+  font-weight: 600;
+}
+
+h5 {
+  font-size: var(--font-h5-size);
+  line-height: var(--font-h5-line);
+  font-weight: 600;
+}
+
+h6 {
+  font-size: var(--font-h6-size);
+  line-height: var(--font-h6-line);
+  font-weight: 600;
+}
+
+/* Párrafos y texto común */
+p {
+  font-size: var(--font-p-size);
+  line-height: var(--font-p-line);
+  font-weight: 400;
+}
+
+strong,
+b {
+  font-weight: bold;
+}
+
+small {
+  font-size: var(--font-small-size);
+  line-height: var(--font-small-line);
+  font-weight: 400;
+}

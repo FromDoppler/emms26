@@ -1,0 +1,1251 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="es">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="x-apple-disable-message-reformatting" />
+    <meta content="telephone=no" name="format-detection" />
+    <title>Doppler</title>
+    <style>
+      html,
+      body {
+        margin: 0 auto !important;
+        padding: 0 !important;
+      }
+
+      * {
+        -ms-text-size-adjust: 100%;
+        -webkit-text-size-adjust: 100%;
+      }
+
+      div[style*="margin: 16px 0"] {
+        margin: 0 !important;
+      }
+
+      table,
+      td {
+        mso-table-lspace: 0pt !important;
+        mso-table-rspace: 0pt !important;
+      }
+
+      table table table {
+        table-layout: auto;
+      }
+
+      img {
+        -ms-interpolation-mode: bicubic;
+        border: 0;
+        height: auto;
+        line-height: 100%;
+        outline: none;
+        text-decoration: none;
+      }
+
+      /* Hover styles for buttons */
+      .button--td:hover,
+      .button--a:hover {
+        background: #026c3c !important;
+      }
+
+      .link-hover:hover {
+        color: #026c3c !important;
+      }
+
+      *[x-apple-data-detectors],
+      .x-gmail-data-detectors,
+      .x-gmail-data-detectors *,
+      .aBn {
+        border-bottom: 0 !important;
+        cursor: default !important;
+        color: inherit !important;
+        text-decoration: none !important;
+        font-size: inherit !important;
+        font-family: inherit !important;
+        font-weight: inherit !important;
+        line-height: inherit !important;
+      }
+
+      th {
+        font-weight: normal;
+      }
+
+      /* MEDIA QUERIES */
+      @media all and (max-width: 480px) {
+        .wrapper {
+          width: 320px !important;
+          padding: 0 !important;
+        }
+
+        .container {
+          width: 300px !important;
+          padding: 0 !important;
+        }
+
+        .mobile {
+          width: 300px !important;
+          display: block !important;
+          padding: 0 !important;
+        }
+
+        .mobile-btn {
+          width: 240px !important;
+          display: block !important;
+        }
+
+        .mobile-center {
+          text-align: center !important;
+        }
+
+        .img {
+          width: 100% !important;
+          height: auto !important;
+        }
+
+        .mobileOff {
+          width: 0px !important;
+          display: none !important;
+        }
+
+        .mobileOn {
+          display: block !important;
+          max-height: none !important;
+        }
+
+        .no-background {
+          background-image: none !important;
+          background-color: #ffffff !important;
+        }
+
+        .mobile-pl,
+        .mobile-pl-btn,
+        u + .body .mobile-pl,
+        u + .body .mobile-pl-btn {
+          padding-left: 0 !important;
+        }
+
+        .mobile-pr,
+        .mobile-pr-btn,
+        u + .body .mobile-pr,
+        u + .body .mobile-pr-btn {
+          padding-right: 0 !important;
+        }
+
+        .mobile-pt,
+        u + .body .mobile-pt {
+          padding-top: 20px !important;
+        }
+
+        .mobilePadding {
+          padding-left: 3% !important;
+          padding-right: 3% !important;
+        }
+
+        u ~ div .wrapper {
+          width: 100vw !important;
+        }
+      }
+    </style>
+    <!--[if gte mso 9]>
+      <xml>
+        <o:OfficeDocumentSettings>
+          <o:AllowPNG />
+          <o:PixelsPerInch>96</o:PixelsPerInch>
+        </o:OfficeDocumentSettings>
+      </xml>
+    <![endif]-->
+  </head>
+
+  <body style="margin: 0; padding: 0">
+    <center>
+      <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td align="center" valign="top" style="background-color: #0c0e25">
+            <table
+              width="640"
+              cellpadding="0"
+              cellspacing="0"
+              border="0"
+              class="wrapper"
+            >
+              <tr>
+                <td height="60" style="font-size: 60px; line-height: 60px">
+                  &nbsp;
+                </td>
+              </tr>
+              <tr>
+                <td align="center" valign="top">
+                  <table
+                    width="600"
+                    cellpadding="0"
+                    cellspacing="0"
+                    border="0"
+                    class="container"
+                  >
+                    <tr>
+                      <th
+                        align="center"
+                        valign="middle"
+                        width="60"
+                        class="mobileOff"
+                      >
+                        &nbsp;
+                      </th>
+                      <th
+                        align="center"
+                        valign="middle"
+                        width="480"
+                        class="mobile mobile-pt"
+                      >
+                        <a href="#" style="cursor: default">
+                          <img
+                            src="https://imgur.com/vyLcqZT.png"
+                            alt="Logo EMMS Ecommerce"
+                            width="200"
+                            style="width: 100%; max-width: 200px !important"
+                          />
+                        </a>
+                      </th>
+                      <th
+                        align="center"
+                        valign="middle"
+                        width="60"
+                        class="mobileOff"
+                      >
+                        &nbsp;
+                      </th>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td height="30" style="font-size: 30px; line-height: 30px">
+                  &nbsp;
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+
+      <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr>
+          <td align="center" valign="top" style="background-color: #0c0e25">
+            <table
+              width="640"
+              cellpadding="0"
+              cellspacing="0"
+              border="0"
+              class="wrapper"
+            >
+              <tr>
+                <td align="center" valign="top">
+                  <table
+                    width="600"
+                    cellpadding="0"
+                    cellspacing="0"
+                    border="0"
+                    class="container"
+                  >
+                    <tr>
+                      <td
+                        height="15"
+                        style="font-size: 15px; line-height: 15px"
+                      >
+                        &nbsp;
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        height="20"
+                        style="font-size: 20px; line-height: 20px"
+                      >
+                        &nbsp;
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        align="center"
+                        valign="top"
+                        class="mobile"
+                        style="
+                          font-family: Helvetica, Arial, sans-serif;
+                          color: #ffffff;
+                        "
+                      >
+                        <p
+                          style="
+                            margin: 0;
+                            font-size: 25px;
+                            line-height: 31px;
+                            font-weight: 700;
+                            color: #ffffff;
+                            max-width: 580px;
+                          "
+                          class="mobile-title-fontsize"
+                        >
+                          Aquí llegó tu pase VIP
+                        </p>
+                        <p
+                          style="margin: 0; font-size: 10px; line-height: 10px"
+                        >
+                          &nbsp;
+                        </p>
+                        <p
+                          style="
+                            margin: 0;
+                            font-family: Helvetica, Arial, sans-serif;
+                            font-size: 15px;
+                            line-height: 22px;
+                            font-weight: 400;
+                            color: #ffffff;
+                            max-width: 540px;
+                          "
+                        >
+                          ¡Felicitaciones! Ya puedes disfrutar de las
+                          actividades más exclusivas del mayor evento hispano de
+                          E-commerce del año y escuchar a tus máximos
+                          referentes.
+                        </p>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        height="20"
+                        style="font-size: 20px; line-height: 20px"
+                      >
+                        &nbsp;
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        align="center"
+                        valign="middle"
+                        width="200"
+                        class="mobile"
+                      >
+                        <a href="#" target="_blank">
+                          <img
+                            src="https://imgur.com/nzHD33B.png"
+                            alt="Emoji de confetis"
+                            width="422"
+                            style="width: 100%; max-width: 422px !important"
+                          />
+                        </a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        height="30"
+                        style="font-size: 30px; line-height: 30px"
+                      >
+                        &nbsp;
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+
+      <table
+        width="100%"
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+      >
+        <tbody>
+          <tr>
+            <td align="center" valign="top" style="background-color: #ffffff">
+              <table
+                width="640"
+                cellpadding="0"
+                cellspacing="0"
+                border="0"
+                class="wrapper"
+              >
+                <tbody>
+                  <tr>
+                    <td align="center" valign="top">
+                      <table
+                        width="600"
+                        cellpadding="0"
+                        cellspacing="0"
+                        border="0"
+                        class="container"
+                      >
+                        <tbody>
+                          <tr>
+                            <td
+                              height="40"
+                              style="font-size: 40px; line-height: 40px"
+                            >
+                              &nbsp;
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              align="center"
+                              valign="top"
+                              style="font-family: Helvetica, Arial, sans-serif"
+                              class="mobile-center"
+                            >
+                              <p
+                                style="
+                                  margin: 0;
+                                  font-size: 15px;
+                                  line-height: 22px;
+                                  color: #333333;
+                                  font-weight: 400;
+                                  max-width: 570px;
+                                  text-align: left;
+                                "
+                              >
+                                Llegada la fecha del evento, encuentra
+                                <a
+                                  href="http://goemms.com/ecommerce-registrado"
+                                  target="_blank"
+                                  class="link-hover"
+                                  style="
+                                    text-decoration: none;
+                                    color: #33ad73;
+                                    font-weight: 700;
+                                  "
+                                >
+                                  en el sitio web
+                                </a>
+                                los enlaces de ingreso a cada uno de estos
+                                espacios. 
+                              </p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              height="30"
+                              style="font-size: 30px; line-height: 30px"
+                            >
+                              &nbsp;
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              align="center"
+                              valign="top"
+                              style="font-family: Helvetica, Arial, sans-serif"
+                              class="mobile-center"
+                            >
+                              <p
+                                style="
+                                  margin: 0;
+                                  font-size: 15px;
+                                  line-height: 22px;
+                                  color: #333333;
+                                  font-weight: 400;
+                                  max-width: 570px;
+                                  text-align: left;
+                                "
+                              >
+                                Mientras tanto, ve preparándote y descubre la
+                                agenda completa para estas dos jornadas
+                                <a
+                                  href="http://goemms.com/ecommerce-registrado#agenda"
+                                  target="_blank"
+                                  style="
+                                    text-decoration: none;
+                                    color: #33ad73;
+                                    font-weight: 700;
+                                  "
+                                  class="link-hover"
+                                >
+                                  aquí
+                                </a>
+                                .
+                              </p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              height="30"
+                              style="font-size: 30px; line-height: 30px"
+                            >
+                              &nbsp;
+                            </td>
+                          </tr>
+                          <tr>
+                            <td align="center" valign="top">
+                              <a href="#" style="cursor: default">
+                                <img
+                                  src="https://imgur.com/HImngeK.png"
+                                  alt="imagen separadora"
+                                  width="21"
+                                  style="
+                                    width: 100%;
+                                    max-width: 21px !important;
+                                  "
+                                  class="img"
+                                />
+                              </a>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              height="30"
+                              style="font-size: 30px; line-height: 30px"
+                            >
+                              &nbsp;
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table
+        width="100%"
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+      >
+        <tbody>
+          <tr>
+            <td align="center" valign="top" style="background-color: #ffffff">
+              <table
+                width="640"
+                cellpadding="0"
+                cellspacing="0"
+                border="0"
+                class="wrapper"
+              >
+                <tbody>
+                  <tr>
+                    <td align="center" valign="top">
+                      <table
+                        width="600"
+                        cellpadding="0"
+                        cellspacing="0"
+                        border="0"
+                        class="container"
+                      >
+                        <tbody>
+                          <tr>
+                            <td
+                              height="20"
+                              style="font-size: 20px; line-height: 20px"
+                            >
+                              &nbsp;
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              align="center"
+                              valign="top"
+                              style="font-family: Helvetica, Arial, sans-serif"
+                              class="mobile-center"
+                            >
+                              <p
+                                style="
+                                  margin: 0;
+                                  font-size: 16px;
+                                  line-height: 22px;
+                                  color: #333333;
+                                  font-weight: 700;
+                                  max-width: 570px;
+                                  text-align: left;
+                                "
+                              >
+                                El detalle de tu compra:
+                              </p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              height="30"
+                              style="font-size: 30px; line-height: 30px"
+                            >
+                              &nbsp;
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              align="center"
+                              valign="top"
+                              style="font-family: Helvetica, Arial, sans-serif"
+                              class="mobile-center"
+                            >
+                              <p
+                                style="
+                                  margin: 0;
+                                  font-size: 15px;
+                                  line-height: 22px;
+                                  color: #333333;
+                                  font-weight: 400;
+                                  max-width: 570px;
+                                  text-align: left;
+                                "
+                              >
+                                Titular: {name}
+                              </p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              height="5"
+                              style="font-size: 5px; line-height: 5px"
+                            >
+                              &nbsp;
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              align="center"
+                              valign="top"
+                              style="font-family: Helvetica, Arial, sans-serif"
+                              class="mobile-center"
+                            >
+                              <p
+                                style="
+                                  margin: 0;
+                                  font-size: 15px;
+                                  line-height: 22px;
+                                  color: #333333;
+                                  font-weight: 400;
+                                  max-width: 570px;
+                                  text-align: left;
+                                "
+                              >
+                                Categoría: {type}
+                              </p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              height="5"
+                              style="font-size: 5px; line-height: 5px"
+                            >
+                              &nbsp;
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              align="center"
+                              valign="top"
+                              style="font-family: Helvetica, Arial, sans-serif"
+                              class="mobile-center"
+                            >
+                              <p
+                                style="
+                                  margin: 0;
+                                  font-size: 15px;
+                                  line-height: 22px;
+                                  color: #333333;
+                                  font-weight: 400;
+                                  max-width: 570px;
+                                  text-align: left;
+                                "
+                              >
+                                Medio de pago: {paymentMethod}
+                              </p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              height="5"
+                              style="font-size: 5px; line-height: 5px"
+                            >
+                              &nbsp;
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              align="center"
+                              valign="top"
+                              style="font-family: Helvetica, Arial, sans-serif"
+                              class="mobile-center"
+                            >
+                              <p
+                                style="
+                                  margin: 0;
+                                  font-size: 15px;
+                                  line-height: 22px;
+                                  color: #333333;
+                                  font-weight: 400;
+                                  max-width: 570px;
+                                  text-align: left;
+                                "
+                              >
+                                Fecha de compra: {date}
+                              </p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              height="5"
+                              style="font-size: 5px; line-height: 5px"
+                            >
+                              &nbsp;
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              align="center"
+                              valign="top"
+                              style="font-family: Helvetica, Arial, sans-serif"
+                              class="mobile-center"
+                            >
+                              <p
+                                style="
+                                  margin: 0;
+                                  font-size: 15px;
+                                  line-height: 22px;
+                                  color: #333333;
+                                  font-weight: 400;
+                                  max-width: 570px;
+                                  text-align: left;
+                                "
+                              >
+                                Monto: {amount}
+                              </p>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <table
+        width="100%"
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+      >
+        <tbody>
+          <tr>
+            <td align="center" valign="top" style="background-color: #ffffff">
+              <table
+                width="640"
+                cellpadding="0"
+                cellspacing="0"
+                border="0"
+                class="wrapper"
+              >
+                <tbody>
+                  <tr>
+                    <td align="center" valign="top">
+                      <table
+                        width="600"
+                        cellpadding="0"
+                        cellspacing="0"
+                        border="0"
+                        class="container"
+                      >
+                        <tbody>
+                          <tr>
+                            <td
+                              height="40"
+                              style="font-size: 40px; line-height: 40px"
+                            >
+                              &nbsp;
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              align="center"
+                              valign="top"
+                              style="font-family: Helvetica, Arial, sans-serif"
+                              class="mobile-center"
+                            >
+                              <p
+                                style="
+                                  margin: 0;
+                                  font-size: 12px;
+                                  line-height: 17px;
+                                  color: #333333;
+                                  font-weight: 400;
+                                  max-width: 570px;
+                                  text-align: left;
+                                "
+                              >
+                                ¿Tienes dudas sobre tu pago? Utiliza el chat
+                                <a
+                                  href="https://www.digital-trends.goemms.com/?utm_source=fromdoppler&utm_medium=email&utm_campaign=et-emmsdt-confirmacion-resumen-compra-asistentevip-23"
+                                  target="_blank"
+                                  style="
+                                    text-decoration: none;
+                                    color: #33ad73;
+                                    font-weight: 700;
+                                  "
+                                  class="link-hover"
+                                >
+                                  en la página
+                                </a>
+                                para recibir asistencia en vivo o escríbenos a
+                                <a
+                                  href="mailto:administracion@fromdoppler.com"
+                                  target="_blank"
+                                  style="
+                                    text-decoration: none;
+                                    color: #33ad73;
+                                    font-weight: 700;
+                                  "
+                                  class="link-hover"
+                                >
+                                  administracion@fromdoppler.com
+                                </a>
+                                contándonos lo sucedido y resolveremos en breve
+                                todas tus inquietudes 😉
+                              </p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              height="30"
+                              style="font-size: 30px; line-height: 30px"
+                            >
+                              &nbsp;
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              height="30"
+                              style="font-size: 30px; line-height: 30px"
+                            >
+                              &nbsp;
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!--footer begin-->
+      <table
+        width="100%"
+        border="0"
+        cellpadding="0"
+        cellspacing="0"
+        role="presentation"
+      >
+        <tbody>
+          <tr>
+            <td align="center" valign="top" style="background-color: #ffffff">
+              <table
+                width="600"
+                cellpadding="0"
+                cellspacing="0"
+                border="0"
+                class="wrapper"
+              >
+                <tbody>
+                  <tr>
+                    <td
+                      align="center"
+                      valign="top"
+                      style="background-color: #ffffff"
+                    >
+                      <table
+                        width="555"
+                        cellpadding="0"
+                        cellspacing="0"
+                        border="0"
+                        class="container"
+                      >
+                        <tbody>
+                          <tr>
+                            <td
+                              align="center"
+                              valign="top"
+                              style="border-top: 1px solid #b4b1a5"
+                            >
+                              <table
+                                width="570"
+                                cellpadding="0"
+                                cellspacing="0"
+                                border="0"
+                                class="container"
+                              >
+                                <tbody>
+                                  <tr>
+                                    <td
+                                      height="40"
+                                      style="font-size: 40px; line-height: 40px"
+                                    >
+                                      &nbsp;
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td align="left" valign="top">
+                                      <table
+                                        width="185"
+                                        border="0"
+                                        cellpadding="0"
+                                        cellspacing="0"
+                                      >
+                                        <tbody>
+                                          <tr>
+                                            <td width="37" align="left">
+                                              <a
+                                                href="https://twitter.com/fromDoppler"
+                                                target="_blank"
+                                              >
+                                                <img
+                                                  src="https://www.fromdoppler.com/images/emails/2022/rrss/twitter-icon.png"
+                                                  style="
+                                                    width: 100%;
+                                                    max-width: 32px !important;
+                                                  "
+                                                  width="32"
+                                                  class="img"
+                                                  alt="Twitter"
+                                                />
+                                              </a>
+                                            </td>
+                                            <td width="37" align="left">
+                                              <a
+                                                href="https://www.facebook.com/DopplerEmailMarketing"
+                                                target="_blank"
+                                              >
+                                                <img
+                                                  src="https://www.fromdoppler.com/images/emails/2022/rrss/facebook-icon.png"
+                                                  style="
+                                                    width: 100%;
+                                                    max-width: 32px !important;
+                                                  "
+                                                  width="32"
+                                                  class="img"
+                                                  alt="Facebook"
+                                                />
+                                              </a>
+                                            </td>
+                                            <td width="37" align="left">
+                                              <a
+                                                href="https://www.linkedin.com/company/228261"
+                                                target="_blank"
+                                              >
+                                                <img
+                                                  src="https://www.fromdoppler.com/images/emails/2022/rrss/linkedin-icon.png"
+                                                  style="
+                                                    width: 100%;
+                                                    max-width: 32px !important;
+                                                  "
+                                                  width="32"
+                                                  class="img"
+                                                  alt="Linkedin"
+                                                />
+                                              </a>
+                                            </td>
+                                            <td width="37" align="left">
+                                              <a
+                                                href="https://www.youtube.com/user/FromDoppler"
+                                                target="_blank"
+                                              >
+                                                <img
+                                                  src="https://www.fromdoppler.com/images/emails/2022/rrss/youtube-icon.png"
+                                                  style="
+                                                    width: 100%;
+                                                    max-width: 32px !important;
+                                                  "
+                                                  width="32"
+                                                  class="img"
+                                                  alt="Youtube"
+                                                />
+                                              </a>
+                                            </td>
+                                            <td width="37" align="left">
+                                              <a
+                                                href="https://www.instagram.com/fromdoppler"
+                                                target="_blank"
+                                              >
+                                                <img
+                                                  src="https://www.fromdoppler.com/images/emails/2022/rrss/instagram-icon.png"
+                                                  style="
+                                                    width: 100%;
+                                                    max-width: 32px !important;
+                                                  "
+                                                  width="32"
+                                                  class="img"
+                                                  alt="Instagram"
+                                                />
+                                              </a>
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td align="left" style="padding: 25px 0 0">
+                                      <p
+                                        style="
+                                          padding: 0;
+                                          margin: 0;
+                                          font-family:
+                                            proxima-nova, Arial, sans-serif !important;
+                                          font-size: 11px;
+                                          line-height: 16px;
+                                          color: #666666;
+                                        "
+                                      >
+                                        © 2023
+                                        <a
+                                          href="http://fromdoppler.com?utm_source=fromdoppler&utm_medium=email&utm_campaign=et-emmsdt-confirmacion-compra-entrada-asistentevip-23"
+                                          target="_blank"
+                                          style="
+                                            color: #33ad73;
+                                            font-weight: normal;
+                                            text-decoration: none;
+                                          "
+                                          class="link"
+                                        >
+                                          Doppler LLC
+                                        </a>
+                                        . Todos los derechos reservados.
+                                      </p>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td
+                                      height="20"
+                                      style="font-size: 20px; line-height: 20px"
+                                    >
+                                      &nbsp;
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td align="left" valign="top">
+                                      <p
+                                        style="
+                                          padding: 0;
+                                          margin: 0;
+                                          font-family:
+                                            proxima-nova, Arial, sans-serif !important;
+                                          font-size: 11px;
+                                          line-height: 14px;
+                                          color: #666666;
+                                        "
+                                      >
+                                        Te informamos que los datos personales
+                                        contenidos en esta comunicación fueron
+                                        recogidos en nuestro Formulario de
+                                        registro, cuyo responsable es Doppler
+                                        LLC, dado que prestaste tu
+                                        consentimiento para recibir nuestras
+                                        comunicaciones. Al registrarte como
+                                        usuario, aceptás y consentís que tus
+                                        datos sean almacenados por nuestra
+                                        plataforma, cuyos servidores están en
+                                        Estados Unidos, para gestionar el envío
+                                        de las comunicaciones correspondientes.
+                                        Podrás ejercer tus derechos de acceso,
+                                        rectificación, limitación y eliminación
+                                        de los datos escribiendo a
+                                        <a
+                                          href="mailto:legal@fromdoppler.com"
+                                          target="_blank"
+                                          style="
+                                            color: #33ad73;
+                                            font-weight: normal;
+                                            text-decoration: none;
+                                          "
+                                          class="link"
+                                        >
+                                          legal@fromdoppler.com
+                                        </a>
+                                        , así como presentar una reclamación
+                                        ante una autoridad de control. Si no
+                                        deseás seguir recibiendo nuestras
+                                        Campañas, podés darte de baja
+                                        automáticamente haciendo clic en el
+                                        enlace que se encuentra debajo. Podés
+                                        consultar información adicional y
+                                        detallada sobre la protección de tus
+                                        datos personales en nuestra
+                                        <a
+                                          href="https://www.fromdoppler.com/legal/privacidad/"
+                                          target="_blank"
+                                          style="
+                                            color: #33ad73;
+                                            font-weight: normal;
+                                            text-decoration: none;
+                                          "
+                                          class="link"
+                                        >
+                                          Política de Privacidad
+                                        </a>
+                                        .
+                                      </p>
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td
+                                      height="20"
+                                      style="font-size: 20px; line-height: 20px"
+                                    >
+                                      &nbsp;
+                                    </td>
+                                  </tr>
+                                  <tr>
+                                    <td
+                                      height="40"
+                                      style="font-size: 40px; line-height: 40px"
+                                    >
+                                      &nbsp;
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tbody>
+          <tr>
+            <td align="center" valign="top" style="background-color: #0c0e25">
+              <table
+                width="640"
+                cellpadding="0"
+                cellspacing="0"
+                border="0"
+                class="wrapper"
+              >
+                <tbody>
+                  <tr>
+                    <td align="center" valign="top">
+                      <table
+                        width="600"
+                        cellpadding="0"
+                        cellspacing="0"
+                        border="0"
+                        class="container"
+                      >
+                        <tbody>
+                          <tr>
+                            <td
+                              height="15"
+                              style="font-size: 15px; line-height: 15px"
+                            >
+                              &nbsp;
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              height="20"
+                              style="font-size: 20px; line-height: 20px"
+                            >
+                              &nbsp;
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              align="center"
+                              valign="middle"
+                              width="200"
+                              class="mobile"
+                            >
+                              <a href="#" target="_blank">
+                                <img
+                                  src="https://imgur.com/9WTjLiQ.png"
+                                  alt="Emoji de confetis"
+                                  width="108"
+                                  style="
+                                    width: 100%;
+                                    max-width: 108px !important;
+                                  "
+                                />
+                              </a>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              align="center"
+                              valign="top"
+                              class="mobile"
+                              style="
+                                font-family: Helvetica, Arial, sans-serif;
+                                color: #ffffff;
+                              "
+                            >
+                              <p
+                                style="
+                                  margin: 0;
+                                  font-size: 10px;
+                                  line-height: 10px;
+                                "
+                              >
+                                &nbsp;
+                              </p>
+                              <p
+                                style="
+                                  margin: 0;
+                                  font-family: Helvetica, Arial, sans-serif;
+                                  font-size: 13px;
+                                  line-height: 20px;
+                                  font-weight: 400;
+                                  color: #ffffff;
+                                  max-width: 540px;
+                                "
+                              >
+                                Este email fue enviado por EMMS, un evento
+                                creado por Doppler
+                              </p>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              height="20"
+                              style="font-size: 20px; line-height: 20px"
+                            >
+                              &nbsp;
+                            </td>
+                          </tr>
+                          <tr>
+                            <td
+                              height="30"
+                              style="font-size: 30px; line-height: 30px"
+                            >
+                              &nbsp;
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </center>
+  </body>
+</html>

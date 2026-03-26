@@ -1,0 +1,135 @@
+.referral {
+  position: relative;
+  background: url(/src/img/backgrounds/referral-bg.png) no-repeat center center;
+  background-size: cover;
+  padding: 35px 20px;
+  color: #fff;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+}
+
+.referral .emms__cta {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid #ffffff;
+  color: #ece9e9;
+  transition: opacity 0.3s ease;
+  padding: 12px 58px;
+}
+
+.referral .emms__cta:hover {
+  opacity: 0.8;
+}
+
+.referral__content {
+  max-width: 540px;
+  color: #fff;
+}
+
+.referral__description {
+  margin-bottom: 20px;
+}
+
+.referral__title {
+  font-style: normal;
+  font-weight: 700;
+  font-size: var(--font-h3-size);
+  line-height: var(--font-h3-line);
+  color: #ffffff;
+}
+
+.referral__description,
+.referral__instructions {
+  font-style: normal;
+  font-weight: 400;
+  font-size: var(--font-p-size);
+  line-height: var(--font-p-line);
+  color: #ffffff;
+}
+
+.referral__description strong {
+  font-weight: 700;
+}
+
+.referral__subtitle {
+  font-size: var(--font-h4-size);
+  line-height: var(--font-h4-line);
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.referral__image-people {
+  pointer-events: none;
+  z-index: 1;
+  position: relative;
+  width: 50%;
+}
+
+.referral__image-people img {
+  width: 100%;
+  height: auto;
+  max-width: 550px;
+  position: absolute;
+  right: 0px;
+  bottom: -36px;
+}
+
+.referral__container {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: flex-end;
+  z-index: 2;
+}
+
+.premios-desktop {
+  display: block;
+  max-height: 190px;
+}
+
+.premios-mobile {
+  max-height: 300px;
+  margin: 0 auto;
+  display: none;
+}
+
+/* Responsive breakpoints */
+@media (max-width: 768px) {
+  .referral {
+    padding: 80px 20px;
+  }
+
+  .referral__image-people {
+    display: none;
+  }
+
+  .referral__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-left: 0;
+    text-align: center;
+  }
+
+  .referral__content {
+    max-width: 100%;
+  }
+
+  .referral__title {
+    font-size: 24px;
+  }
+
+  .referral__instructions {
+    margin: 10 auto;
+  }
+
+  .premios-desktop {
+    display: none;
+  }
+
+  .premios-mobile {
+    display: block;
+  }
+}

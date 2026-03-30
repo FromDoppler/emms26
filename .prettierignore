@@ -42,9 +42,6 @@ firebase-messaging-sw.js
 # PHP files (GitHub Actions doesn't support PHP plugin)
 *.php
 
-# Email templates
-utils/relay-templates/
-
 # Minified files and vendor libraries
 *.min.js
 *.min.css

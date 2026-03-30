@@ -5,6 +5,10 @@
   background: url("../../../img/backgrounds/bg-section-8.png") center/cover no-repeat;
 }
 
+.hero-registration.hero-registration--digitaltrends-pre {
+  background-image: url("../../../img/backgrounds/bg-digitaltrends-hero-2026.png");
+}
+
 .hero-registration__columns {
   display: flex;
   justify-content: space-between;
@@ -184,6 +188,33 @@
   font-weight: 700;
   margin: 24px 0 0 0;
   max-width: 404px;
+}
+
+.hero-registration--digitaltrends-pre .hero-registration__text__subtitle {
+  color: #fff;
+  font-feature-settings:
+    "liga" off,
+    "clig" off;
+  font-style: normal;
+  font-weight: 800;
+  line-height: 36px;
+  max-width: 480px;
+}
+
+.hero-registration--digitaltrends-pre .hero-registration__text__subtitle span {
+  display: inline;
+}
+
+.hero-registration--digitaltrends-pre .hero-registration__text__subtitle--lg {
+  font-size: 40px;
+}
+
+.hero-registration--digitaltrends-pre .hero-registration__text__subtitle--md {
+  font-size: 38px;
+}
+
+.hero-registration--digitaltrends-pre .hero-registration__text__subtitle--sm {
+  font-size: 34px;
 }
 
 .hero-registration .hero-registration__text p .text--highlighted {

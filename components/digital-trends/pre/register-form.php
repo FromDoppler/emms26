@@ -1,10 +1,14 @@
-<section class="hero-registration">
+<section class="hero-registration hero-registration--digitaltrends-pre">
   <div class="hero-registration__columns">
 
     <div class="hero-registration__text emms__fade-in">
-      <h1><em>EVENTO ONLINE Y GRATUITO - 28, 29 y 30 de Octubre</em><span class="top">¡Vuelve el </span> <span class="main">EMMS </span> <span class="bottom">Digital Trends!</span></h1>
-      <p>Inspírate y aprende en un solo lugar todas las tendencias del Marketing Digital. <br>
-        ¡Regístrate gratis y vive una experiencia única!</p>
+      <h1><em>EVENTO ONLINE Y GRATUITO - 14, 15 y 16 de Julio</em><span class="main">EMMS </span> <span class="main">2026 :</span></h1>
+      <p class="hero-registration__text__subtitle">
+        <span class="hero-registration__text__subtitle--lg">La Edición especial</span>
+        <span class="hero-registration__text__subtitle--md">que</span>
+        <span class="hero-registration__text__subtitle--sm">celebra 20 años de Doppler</span>
+      </p>
+      <p>Súmate a Conferencias, Workshops y Networking para capacitarte e inspirarte con las últimas tendencias en Marketing e E-commerce.</p>
       <ul class="hero-registration__text__checklist dk">
         <li>SPEAKERS INTERNACIONALES</li>
         <li>WORKSHOPS Y NETWORKING</li>
@@ -22,9 +26,10 @@
 
     <div class="hero-registration__text emms__fade-in mb">
       <ul class="hero-registration__text__checklist">
-        <li>SPEAKERS INTERNACIONALES</li>
+        <li>Los mejores Speakers de la historia del EMMS.</li>
         <li>WORKSHOPS PRÁCTICOS</li>
-        <li>SORTEOS Y BENEFICIOS</li>
+        <li>Gratis y online.</li>
+        <li>Premios, recursos exclusivos y más.</li>
       </ul>
     </div>
   </div>

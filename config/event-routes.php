@@ -65,8 +65,8 @@ $sharedPages = [
 // Configuración específica por evento
 $events = [
     'ECOMMERCE' => [
-        'freeId' => 'ecommerce25',
-        'vipId'  => 'ecommerce25-vip',
+        'freeId' => 'ecommerce26',
+        'vipId'  => 'ecommerce26-vip',
         'name'   => 'E-commerce',
         'folder' => 'ecommerce',
         'pages'  => [
@@ -75,8 +75,8 @@ $events = [
         ],
     ],
     'DIGITALTRENDS' => [
-        'freeId' => 'digital-trends25',
-        'vipId'  => 'digital-trends25-vip',
+        'freeId' => 'digital-trends26',
+        'vipId'  => 'digital-trends26-vip',
         'name'   => 'Digital Trends',
         'folder' => 'digital-trends',
         'pages'  => [

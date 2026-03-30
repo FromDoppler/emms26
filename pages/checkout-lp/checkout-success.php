@@ -26,7 +26,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/utils/cacheSettings.php');
       });
     };
     const toggleVipDigitalTrendsElements = () => {
-      const isDTVip = isVipUser('digital-trends25-vip');
+      const isDTVip = isVipUser(window.APP.EVENTS.EVENTCODES.DIGITALTRENDSVIP);
       if (isDTVip) {
         toggleVipElements();
       }

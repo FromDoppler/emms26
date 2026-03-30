@@ -1,7 +1,7 @@
 const eventsType = {
-  ECOMMERCE: "ecommerce25",
-  ECOMMERCEVIP: "ecommerce25-vip",
-  DIGITALTRENDS: "digital-trends25",
-  DIGITALTRENDSVIP: "digital-trends25-vip",
+  ECOMMERCE: "ecommerce26",
+  ECOMMERCEVIP: "ecommerce26-vip",
+  DIGITALTRENDS: "digital-trends26",
+  DIGITALTRENDSVIP: "digital-trends26-vip",
 };
 export { eventsType };

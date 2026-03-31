@@ -37,8 +37,8 @@
 }
 
 .emms__frequentquestions.emms__frequentquestions--during {
-  background: #000 url("../../../img/backgrounds/bg-section-6.png") no-repeat;
-  background-size: 100%;
+  background: linear-gradient(90deg, #4f007e 21.58%, #4d007a 35.15%, #400063 60.25%, #390057 78.04%);
+  margin-top: -1px;
 }
 
 .emms__frequentquestions__list.emms__frequentquestions__list--during {
@@ -48,6 +48,10 @@
 
 .emms__frequentquestions__list__item {
   border-bottom: solid 1px #ffffff;
+}
+
+.emms__frequentquestions__list__item__content {
+  margin: 0;
 }
 
 .emms__frequentquestions__list__item:last-child {

@@ -80,11 +80,9 @@ tu negocio.',
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/event-numbers.php') ?>
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/speakers-carousel.php') ?>
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/central-video.php') ?>
-    <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/premium-content.php') ?>
-    <div class="register-noform__container  eventShowElements">
-    </div>
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/users-comments.php') ?>
-    <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/sponsorsList.php') ?>
+    <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/faqs.php') ?>
+    <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/companies-list.php') ?>
   </main>
   <?php
   // Form captador

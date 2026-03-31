@@ -60,6 +60,10 @@ $usersCommentsConfig = [
     'title' => 'Nuestros asistentes dicen:',
     'class' => 'userscomments userscomments--digitaltrends',
     'quotes' =>  $quotesDT,
+    'cta' => [
+      'label' => 'INSCRÍBETE AHORA',
+      'href' => '#registro',
+    ],
   ],
   '/digital-trends-registrado' => [
     'title' => 'Nuestros asistentes dicen:',
@@ -113,6 +117,12 @@ $config = $usersCommentsConfig[$normalizedUrl] ?? $usersCommentsConfig['/*'];
         </li>
       <?php endforeach; ?>
     </ul>
+
+    <?php if (!empty($config['cta'])): ?>
+      <div class="userscomments__cta-wrap emms__fade-in">
+        <a href="<?= htmlspecialchars($config['cta']['href']) ?>" class="emms__cta emms__cta--md userscomments__cta"><?= htmlspecialchars($config['cta']['label']) ?></a>
+      </div>
+    <?php endif; ?>
   </div>
 </section>
 

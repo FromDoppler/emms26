@@ -108,8 +108,15 @@
   height: 15px;
 }
 
+.userscomments .userscomments__cta-wrap {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+}
+
 .userscomments .userscomments__cta {
-  margin: 110px 0 0 0;
+  margin: 110px auto 0;
 }
 
 /* Dark Version */

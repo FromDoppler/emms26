@@ -48,19 +48,9 @@ $isPost = false;
       <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/digital-trends/video-ticketing.php') ?>
       <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/digital-trends/vip-features.php') ?>
     </div>
-    <div class="hidden--vip">
-      <?php
-      $gridVariant = 'long';
-      include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/grid-event-types.php')
-      ?>
-    </div>
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/referral.php') ?>
 
     <div class="show--vip">
-      <?php
-      $gridVariant = 'long';
-      include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/grid-event-types.php')
-      ?>
       <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/premium-content.php') ?>
     </div>
     <div class="hidden--vip">

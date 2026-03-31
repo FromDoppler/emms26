@@ -1,69 +1,76 @@
 <?php
 include_once($_SERVER['DOCUMENT_ROOT'] . '/components/helpers/urlHelper.php');
 $normalizedUrl = getNormalizeUrl();
+$gridBlocks = [
+  '/digital-trends' => ['block' => 'CtaBlock'],
+  '/digital-trends-registrado' => ['block' => 'TextBlock'],
+  '/*' => ['block' => 'CtaBlock'],
+];
+$block = $gridBlocks[$normalizedUrl] ?? $gridBlocks['/*'];
 
-if (!isset($gridVariant)) {
-  $gridVariant = 'short';
-}
-if (!function_exists('getGridBlock')) {
-  function getGridBlock($url)
-  {
-    $blocks = [
-      '/digital-trends' => ['block' => 'CtaBlock'],
-      '/digital-trends-registrado' => ['block' => 'TextBlock'],
-      '/*' => ['block' => 'CtaBlock'],
-    ];
-    return $blocks[$url] ?? $blocks['/*'];
-  }
+if (!isset($gridTitle)) {
+  $gridTitle = 'DESCUBRE LA EXPERIENCIA COMPLETA CON TU ENTRADA VIP';
 }
 
-$block = getGridBlock($normalizedUrl);
-if (!function_exists('renderGridItems')) {
-
-  function renderGridItems($gridVariant = 'long')
-  {
-    $items = [
-      ["img" => "/src/img/conferencias.png", "title" => "Conferencias", "text" => "Escucha a referentes internacionales y conoce las últimas tendencias digitales."],
-      ["img" => "/src/img/entrevistas.png", "title" => "Entrevistas", "text" => "Aprende de influencers y creadores que marcan el rumbo de la industria."],
-      ["img" => "/src/img/casos-de-exito.png", "title" => "Casos de Éxito", "text" => "Descubre cómo las marcas más reconocidas están transformando el sector."],
-      ["img" => "/src/img/gifs.png", "title" => "Regalos y beneficios", "text" => "Accede a descuentos especiales y premios exclusivos para asistentes VIP."],
-      ["img" => "/src/img/workshop.png", "title" => "Workshops", "text" => "Participa en talleres prácticos y aplica lo aprendido al instante."],
-      ["img" => "/src/img/recursos.png", "title" => "Recursos", "text" => "Accede a materiales exclusivos: guías, plantillas, e-books, ¡y mucho más!"],
-    ];
-
-    if ($gridVariant === 'short') {
-      $items = array_slice($items, 0, 3);
-    }
-
-    foreach ($items as $item) {
-      echo '<li class="emms__grid__item">
-                <div class="emms__grid__item__image">
-                    <img src="' . $item['img'] . '" alt="Image">
-                </div>
-                <div class="emms__grid__item__text">
-                    <h3>' . $item['title'] . '</h3>
-                    <p>' . $item['text'] . '</p>
-                </div>
-              </li>';
-    }
-  }
+if (!isset($gridColumns)) {
+  $gridColumns = 2;
 }
 
+if (!isset($gridItems)) {
+  $gridItems = [
+    [
+      'img' => '/src/img/conferencias.png',
+      'alt' => 'Conferencias',
+      'title' => 'Conferencias',
+      'text' => 'Escucha a referentes internacionales y conoce las últimas tendencias digitales.',
+    ],
+    [
+      'img' => '/src/img/entrevistas.png',
+      'alt' => 'Entrevistas',
+      'title' => 'Entrevistas',
+      'text' => 'Aprende de influencers y creadores que marcan el rumbo de la industria.',
+    ],
+    [
+      'img' => '/src/img/casos-de-exito.png',
+      'alt' => 'Casos de Éxito',
+      'title' => 'Casos de Éxito',
+      'text' => 'Descubre cómo las marcas más reconocidas están transformando el sector.',
+    ],
+    [
+      'img' => '/src/img/gifs.png',
+      'alt' => 'Regalos y beneficios',
+      'title' => 'Regalos y beneficios',
+      'text' => 'Accede a descuentos especiales y premios exclusivos para asistentes VIP.',
+    ],
+  ];
+}
+
+$gridClass = $gridColumns === 3 ? 'emms__grid--3' : 'emms__grid--2';
 ?>
 
-<section class="emms__grid emms__grid--3">
+<section class="emms__grid emms__grid--compact-cards <?= $gridClass ?>">
   <div class="emms__container--md">
     <div class="emms__grid__title emms__fade-in">
-      <h2>DESCUBRE LA EXPERIENCIA COMPLETA CON TU ENTRADA VIP</h2>
+      <h2><?= $gridTitle ?></h2>
     </div>
     <ul class="emms__grid__content emms__fade-in">
-      <?php renderGridItems($gridVariant); ?>
+      <?php foreach ($gridItems as $item) : ?>
+        <li class="emms__grid__item">
+          <div class="emms__grid__item__image">
+            <img src="<?= $item['img'] ?>" alt="<?= $item['alt'] ?? $item['title'] ?>">
+          </div>
+          <div class="emms__grid__item__text">
+            <h3><?= $item['title'] ?></h3>
+            <p><?= $item['text'] ?></p>
+          </div>
+        </li>
+      <?php endforeach; ?>
     </ul>
     <div class="grid__footer">
       <?php if ($block['block'] === 'CtaBlock') : ?>
-        <a href="#registro" class="emms__cta emms__fade-in-animation eventHiddenElements">REGÍSTRATE GRATIS</a>
+        <a href="#registro" class="emms__cta emms__fade-in-animation eventHiddenElements">RESERVA TU LUGAR</a>
         <button class="emms__cta emms__fade-in-animation eventShowElements alreadyRegisterForm">
-          <span class="button__text">Regístrate gratis</span>
+          <span class="button__text">RESERVA TU LUGAR</span>
         </button>
       <?php elseif ($block['block'] === 'TextBlock') : ?>
         <div class="hidden--vip">

@@ -39,6 +39,7 @@ $isPost = false;
     <div class="register-noform__container  eventShowElements">
       <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/register-withoutform.php') ?>
     </div>
+    <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/vip-offer.php') ?>
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/schedule/schedule.php') ?>
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/central-video.php') ?>
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/premium-content.php') ?>

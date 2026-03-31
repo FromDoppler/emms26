@@ -1,29 +1,33 @@
 <?php
-
+//TODO: Queda pendiente que pasen el video 
 $contents = [
   '/' => [
-    'heading' => '¡Vuelve el EMMS Digital Trends!',
-    'body' => '¿Buscas inspiración real, aprendizajes concretos y un espacio para potenciar tu Estrategia? Este evento reúne a las empresas y figuras que están transformando el presente y futuro del Marketing Digital. ¡No te lo pierdas!
+    'heading' => 'Descubre por qué el EMMS es una cita clave si quieres crecer en digital',
+    'body' => 'Conoce cómo este evento ayuda a profesionales, marcas y negocios 
+a actualizarse, encontrar nuevas ideas y llevarlas a la acción.
 ',
     'button' => 'ASEGURA TU LUGAR GRATIS',
     'link' => 'digital-trends#registro',
     'youtubeCode' => 'rTImzuky-LE',
   ],
   '/digital-trends' => [
-    'heading' => '¿Qué esperas para inscribirte?',
-    'body' => 'Mira este video y descubre por qué el EMMS Digital Trends es el evento clave para transformar tus Estrategias de Marketing Digital, de la mano de especialistas del sector.',
+    'heading' => 'Descubre por qué el EMMS es una cita clave si quieres crecer en digital',
+    'body' => 'Conoce cómo este evento ayuda a profesionales, marcas y negocios 
+a actualizarse, encontrar nuevas ideas y llevarlas a la acción.',
     'button' => 'INSCRÍBETE AHORA',
     'link' => '#registro',
     'youtubeCode' => 'rTImzuky-LE',
   ],
   '/registrado' => [
-    'heading' => '¡Vuelve el EMMS Digital Trends!',
-    'body' => '¿Buscas inspiración real, aprendizajes concretos y un espacio para potenciar tu Estrategia? Este evento reúne a las empresas y figuras que están transformando el presente y futuro del Marketing Digital. ¡No te lo pierdas!',
+    'heading' => 'Descubre por qué el EMMS es una cita clave si quieres crecer en digital',
+    'body' => 'Conoce cómo este evento ayuda a profesionales, marcas y negocios 
+a actualizarse, encontrar nuevas ideas y llevarlas a la acción.',
     'youtubeCode' => 'isDPHOi2mAs',
   ],
   '/*' => [
-    'heading' => '¡Vuelve el EMMS Digital Trends!',
-    'body' => '¿Buscas inspiración real, aprendizajes concretos y un espacio para potenciar tu Estrategia? Este evento reúne a las empresas y figuras que están transformando el presente y futuro del Marketing Digital. ¡No te lo pierdas!
+    'heading' => 'Descubre por qué el EMMS es una cita clave si quieres crecer en digital',
+    'body' => 'Conoce cómo este evento ayuda a profesionales, marcas y negocios 
+a actualizarse, encontrar nuevas ideas y llevarlas a la acción.
 ',
     'button' => 'ASEGURA TU LUGAR GRATIS',
     'link' => 'digital-trends#registro',

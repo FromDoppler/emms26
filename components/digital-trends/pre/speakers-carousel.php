@@ -1,6 +1,7 @@
 <?php
 include_once($_SERVER['DOCUMENT_ROOT'] . '/components/helpers/urlHelper.php');
 $normalizedUrl = getNormalizeUrl();
+
 function getBlock($url)
 {
   $blocks = [
@@ -20,6 +21,7 @@ function getBlock($url)
 
   return $blocks[$url] ?? $blocks['/*'];
 }
+
 $block = getBlock($normalizedUrl);
 
 function renderSpeakersList($speakers, $carouselId = "carousel-default")
@@ -27,7 +29,7 @@ function renderSpeakersList($speakers, $carouselId = "carousel-default")
   $primarySpeaker = 'Federico Muñoz Villavicencio';
   $secondarySpeaker = 'Vedant Misra';
 
-  $initialIndexClass = ''; // class selector for Flickity
+  $initialIndexClass = '';
   foreach ($speakers as $speaker) {
     if ($speaker['name'] === $primarySpeaker) {
       $initialIndexClass = $primarySpeaker;
@@ -43,7 +45,6 @@ function renderSpeakersList($speakers, $carouselId = "carousel-default")
       }
     }
   }
-
 ?>
   <div class="speakerslist emms__fade-in ">
     <ul
@@ -141,6 +142,7 @@ $speakersHome = [
     'company' => 'Mercatitlán'
   ],
 ];
+
 $speakersEcommerce = [
   [
     'name' => 'Federico Muñoz Villavicencio',
@@ -206,19 +208,20 @@ $speakersEcommerce = [
     'company' => 'Google'
   ]
 ];
-
 ?>
-
 
 <section class="speakers emms__bg-section-10">
   <div class="emms__container--lg">
     <div class="spealers__header">
       <?php if ($block['block'] === 'home') : ?>
-        <h2 class="emms__fade-in">Speakers de primer nivel que marcaron tendencia en ediciones anteriores:</h2>
+        <h2 class="emms__fade-in">Speakers que brillaron en el EMMS</h2>
       <?php elseif ($block['block'] === 'registerHome') : ?>
-        <h2 class="emms__fade-in">Speakers de primer nivel que marcaron tendencia en ediciones anteriores:</h2>
+        <h2 class="emms__fade-in">Speakers que brillaron en el EMMS</h2>
       <?php elseif ($block['block'] === 'digital-trends') : ?>
         <h2 class="emms__fade-in speakers__title">Speakers que brillaron en el EMMS</h2>
+        <p class="emms__fade-in speakers__body">Durante años, el EMMS reunió a las voces más influyentes del Marketing Digital y el Comercio Electrónico.
+En esta edición aniversario, vuelven los mejores speakers de la historia del evento
+y se suman nuevas figuras internacionales.</p>
       <?php endif; ?>
     </div>
 
@@ -231,10 +234,9 @@ $speakersEcommerce = [
     <?php if ($block['block'] === 'home') : ?>
       <a href="/digital-trends" class="emms__cta emms__cta--md  emms__fade-in">REGÍSTRATE GRATIS</a>
     <?php elseif ($block['block'] === 'digital-trends') : ?>
-      <p class="emms__fade-in speakers__sub-title">¡Muy pronto conocerás la agenda 2025! Regístrate gratis y descúbrela antes que nadie.
+      <p class="emms__fade-in speakers__sub-title">Muy pronto conocerás la agenda 2026. Regístrate gratis y descúbrela antes que nadie.
       </p>
       <a href="#registro" class="emms__cta emms__cta--md emms__fade-in">REGÍSTRATE GRATIS</a>
     <?php endif; ?>
-
   </div>
 </section>

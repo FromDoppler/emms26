@@ -19,6 +19,17 @@
   text-align: center;
 }
 
+.academy-banner__description--button a {
+  background-color: transparent;
+  border: 1px solid #FFF;
+  color: #FFF;
+  text-align: center;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 13px;
+}
+
 .academy-banner__description h2 {
   font-weight: 700;
   margin: 0 auto 20px auto;

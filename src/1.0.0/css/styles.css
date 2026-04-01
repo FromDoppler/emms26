@@ -43,6 +43,7 @@
 @import "pages/digital-trends.css";
 @import "pages/home.css";
 @import "pages/sponsors.css";
+@import "pages/sponsors-conferences.css";
 @import "pages/internal-sponsors.css";
 @import "pages/previous-editions.css";
 @import "pages/certificate-download.css";
@@ -55,3 +56,4 @@
 @import "scripts/certificate.css";
 @import "scripts/common.css";
 @import "scripts/speakerInternca.css";
+

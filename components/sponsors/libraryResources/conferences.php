@@ -75,16 +75,16 @@ el eslabón clave de la recompra orgánica",
 
 ?>
 
-<section class="emms__conferences">
-    <div class="emms__conferences__container">
-        <div class="emms__conferences__wrapper">
-            <div class="emms__conferences__title emms__fade-in">
+<section class="sponsors-conferences">
+    <div class="sponsors-conferences__container">
+        <div class="sponsors-conferences__wrapper">
+            <div class="sponsors-conferences__title emms__fade-in">
                 <h2>Conferencias exclusivas</h2>
                 <p>Tus mayores referentes comparten las mejores estrategias para hacer crecer tu negocio en breves videos.  ¡Capacítate e inspírate con el EMMS!</p>
             </div>
-            <div class="emms__conferences__cards__container">
+            <div class="sponsors-conferences__grid">
                 <?php foreach ($videos as $video): ?>
-                    <div class="emms__conferences__cards emms__fade-in">
+                    <div class="sponsors-conferences__card emms__fade-in">
                         <a
                             <?php if (!$isRegistered): ?>
                             data-target="modalRegister" data-toggle="emms__register-modal" href="#"
@@ -92,10 +92,10 @@ el eslabón clave de la recompra orgánica",
                             href="<?= $video['link'] ?>" target="_blank"
                             <?php endif; ?>>
                             <img src="<?= $video['img'] ?>" alt="Conferencias exclusivas">
-                            <div class="emms__conferences__cards__info">
+                            <div class="sponsors-conferences__card-body">
                                 <h4><?= $video['title'] ?></h4>
                                 <span>Ver ahora →</span>
-                                <div class="emms__conferences__cards__info__image-container">
+                                <div class="sponsors-conferences__card-logo">
                                     <img src="<?= $video['logo'] ?>" alt="<?= $video['altLogo'] ?>">
                                 </div>
                             </div>

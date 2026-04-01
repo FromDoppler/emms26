@@ -1,0 +1,177 @@
+/* Conferences section */
+
+.sponsors-conferences {
+  background: linear-gradient(180deg, #13092f 0%, #230965 94.04%);
+  padding: 114px 0;
+}
+
+.sponsors-conferences__container {
+  display: flex;
+  max-width: 990px;
+  margin: auto;
+  width: 90%;
+  justify-content: center;
+}
+
+.sponsors-conferences__wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.sponsors-conferences__title {
+  text-align: center;
+  margin: 0 auto 50px auto;
+}
+
+.sponsors-conferences__title h2 {
+  font-size: 40px;
+  line-height: 44px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.sponsors-conferences__title p {
+  font-size: 16px;
+  line-height: 24px;
+  color: #ffffff;
+  margin: 30px auto 0 auto;
+  max-width: 548px;
+}
+
+.sponsors-conferences__grid {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.sponsors-conferences__card {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  padding: 30px 18px;
+  box-sizing: border-box;
+  margin-bottom: 40px;
+}
+
+.sponsors-conferences__card a {
+  cursor: pointer;
+  border: 1px solid #999999;
+  min-height: 510px;
+  max-height: 510px;
+}
+
+.sponsors-conferences__card img {
+  width: 100%;
+  transition-duration: 0.3s;
+  height: 246px;
+}
+
+.sponsors-conferences__card-body {
+  background-color: white;
+  padding: 32px 40px;
+}
+
+.sponsors-conferences__card-body h4 {
+  color: #333333;
+  min-height: 40px;
+  font-size: 26px;
+  line-height: 34px;
+}
+
+.sponsors-conferences__card-body span {
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 22px;
+  color: #33ad73;
+  margin: 35px 0 10px 0;
+  display: block;
+  transition-duration: 0.3s;
+  text-transform: uppercase;
+}
+
+.sponsors-conferences__card-logo {
+  width: 100%;
+  border-top: 1px solid #999999;
+  text-align: center;
+  max-height: 60px;
+}
+
+.sponsors-conferences__card-logo img {
+  width: auto;
+  height: 100%;
+  margin-top: 20px;
+  max-height: 60px;
+}
+
+.sponsors-conferences__card a:hover img {
+  opacity: 0.8;
+  transition-duration: 0.3s;
+}
+
+.sponsors-conferences__card a:hover span {
+  text-decoration: underline;
+  transition-duration: 0.3s;
+}
+
+.sponsors-conferences__card a:hover {
+  color: #008046;
+  transition: all 0.35s ease;
+}
+
+.sponsors-conferences a[data-target="modalRegister"] img,
+.sponsors-conferences a[data-target="modalRegister"] h4,
+.sponsors-conferences a[data-target="modalRegister"] span {
+  pointer-events: none;
+}
+
+@media only screen and (max-width: 1025px) {
+  .sponsors-conferences__title h2 {
+    padding: 0 2rem;
+  }
+
+  .sponsors-conferences__title p {
+    padding: 0 2rem;
+  }
+}
+
+@media only screen and (max-width: 898px) {
+  .sponsors-conferences__title h2 {
+    padding: 0rem;
+  }
+
+  .sponsors-conferences__title p {
+    padding: 0rem;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .sponsors-conferences__card {
+    max-width: initial;
+    width: 100%;
+    margin: 0 0 20px;
+  }
+
+  .sponsors-conferences__card:last-child {
+    margin: 0;
+  }
+
+  .sponsors-conferences__card img {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 620px) {
+  .sponsors-conferences {
+    padding: 60px 0;
+  }
+
+  .sponsors-conferences__title h2 {
+    font-size: 32px;
+    line-height: 35px;
+  }
+}

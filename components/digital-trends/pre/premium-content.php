@@ -2,19 +2,32 @@
 if (!function_exists('getContentForUrl')) {
   function getContentForUrl($url)
   {
+    $resourceList = [
+      'Contenidos descargables',
+      'Conferencias on-demand',
+      'Herramientas que potencian tu negocio',
+    ];
 
     $contentMap = [
       'default' => [
-        'heading' => 'Accede a la Biblioteca de Recursos ¡Es gratis y súper completa!',
-        'body' => 'Aprovecha los beneficios, contenidos descargables y herramientas que traen nuestros aliados para optimizar tu presencia digital.',
+        'heading' => 'Capacítate gratis con la <br> Biblioteca de Recursos',
+        'body' => 'Aprovecha los materiales descargables y herramientas que traen nuestros aliados para optimizar tu estrategia digital antes del evento.',
+        'list' => null,
       ],
       'group1' => [
-        'heading' => 'Accede a la Biblioteca de Recursos <br> ¡Es gratis y súper completa!',
-        'body' => 'Aprovecha los beneficios, contenidos descargables y herramientas que traen nuestros aliados para optimizar tu presencia digital.',
+        'heading' => 'Capacítate gratis con la <br> Biblioteca de Recursos',
+        'body' => 'Aprovecha los materiales descargables y herramientas que traen nuestros aliados para optimizar tu estrategia digital antes del evento.',
+        'list' => null,
       ],
       'group2' => [
-        'heading' => 'Accede a la Biblioteca de Recursos <br> ¡Es gratis y súper completa!',
-        'body' => 'Aprovecha los beneficios, contenidos descargables y herramientas que traen nuestros aliados para optimizar tu presencia digital.',
+        'heading' => 'Capacítate gratis con la <br> Biblioteca de Recursos',
+        'body' => 'Aprovecha los materiales descargables y herramientas que traen nuestros aliados para optimizar tu estrategia digital antes del evento.',
+        'list' => null,
+      ],
+      'with-list' => [
+        'heading' => 'Capacítate gratis con la <br> Biblioteca de Recursos',
+        'body' => 'Aprovecha los materiales descargables y herramientas que traen nuestros aliados para optimizar tu estrategia digital antes del evento.',
+        'list' => $resourceList,
       ],
     ];
 
@@ -48,21 +61,18 @@ $isDigitalTrends = in_array($normalizedUrl, [
     </div>
     <div class="premium-content__text emms__fade-in">
       <h2><?php echo ($content['heading']); ?></h2>
+      <p><?php echo ($content['body']); ?></p>
 
+      <?php if (!empty($content['list'])) { ?>
         <ul class="premium-content__list emms__fade-in">
-          <li>
-            <img src="/src/img/icons/icon-check--strong-purple.svg" alt="Check">
-            <span>Contenidos descargables</span>
-          </li>
-          <li>
-            <img src="/src/img/icons/icon-check--strong-purple.svg" alt="Check">
-            <span>Conferencias on-demand</span>
-          </li>
-          <li>
-            <img src="/src/img/icons/icon-check--strong-purple.svg" alt="Check">
-            <span>Herramientas que potencian tu negocio</span>
-          </li>
+          <?php foreach ($content['list'] as $item) { ?>
+            <li>
+              <img src="/src/img/icons/icon-check--strong-purple.svg" alt="Check">
+              <span><?php echo ($item); ?></span>
+            </li>
+          <?php } ?>
         </ul>
+      <?php } ?>
 
       <a href="<?= $isRegistered ?  '/sponsors-registrado' : '/sponsors' ?>" class="emms__cta sm emms__cta--secondary emms__fade-in">ACCEDE AHORA</a>
     </div>

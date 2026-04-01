@@ -203,6 +203,19 @@
   text-decoration: unset;
 }
 
+.emms__cta.emms__cta--secondary-solid {
+  background-color: var(--color-secondary);
+}
+
+.emms__cta.emms__cta--secondary-solid:hover {
+  background-color: var(--color-secondary-hover);
+}
+
+.emms__cta.emms__cta--secondary-solid span {
+  color: #000;
+  text-decoration: unset;
+}
+
 .emms__cta img {
   vertical-align: middle;
   margin-right: 5px;

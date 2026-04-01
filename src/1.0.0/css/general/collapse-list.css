@@ -26,13 +26,14 @@
   line-height: 24px;
   text-transform: uppercase;
   color: #ffffff;
-  margin-left: 10px;
+  margin-left: 5px;
 }
 
 .text-with-icon-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  gap: 35px;
 }
 
 @media (max-width: 620px) {

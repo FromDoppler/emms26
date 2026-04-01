@@ -277,6 +277,7 @@
   pointer-events: none;
 }
 
+
 @media (max-width: 992px) {
   .emms__sponsors__list .emms__sponsors__list__title ul {
     max-width: 300px;

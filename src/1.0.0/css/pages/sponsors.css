@@ -159,8 +159,8 @@
 }
 
 .emms__sponsors__list
-  .emms__sponsors__list__content
-  .emms__sponsors__list__item {
+.emms__sponsors__list__content
+.emms__sponsors__list__item {
   margin: 0 0 100px 0;
   flex: 1;
   max-width: 440px;
@@ -204,9 +204,9 @@
 }
 
 .emms__sponsors__list
-  .emms__sponsors__list__content
-  .emms__sponsors__list__item
-  .emms__sponsors__list__item__logo {
+.emms__sponsors__list__content
+.emms__sponsors__list__item
+.emms__sponsors__list__item__logo {
   border-top: solid 2px #b4b4b4;
   margin: 0 0 20px 0;
   text-align: center;
@@ -215,18 +215,18 @@
 }
 
 .emms__sponsors__list
-  .emms__sponsors__list__content
-  .emms__sponsors__list__item
-  .emms__sponsors__list__item__logo
-  img {
+.emms__sponsors__list__content
+.emms__sponsors__list__item
+.emms__sponsors__list__item__logo
+img {
   height: 50px;
   transform: translateY(50%);
 }
 
 .emms__sponsors__list
-  .emms__sponsors__list__content
-  .emms__sponsors__list__item
-  h3 {
+.emms__sponsors__list__content
+.emms__sponsors__list__item
+h3 {
   font-size: 28px;
   line-height: 27px;
   font-weight: 700;
@@ -235,9 +235,9 @@
 }
 
 .emms__sponsors__list
-  .emms__sponsors__list__content
-  .emms__sponsors__list__item
-  p {
+.emms__sponsors__list__content
+.emms__sponsors__list__item
+p {
   font-size: 17px;
   line-height: 25px;
   font-weight: 400;
@@ -246,9 +246,9 @@
 }
 
 .emms__sponsors__list
-  .emms__sponsors__list__content
-  .emms__sponsors__list__item
-  a {
+.emms__sponsors__list__content
+.emms__sponsors__list__item
+a {
   font-size: 16px;
   font-weight: bold;
   line-height: 21px;
@@ -262,17 +262,17 @@
 }
 
 .emms__sponsors__list
-  .emms__sponsors__list__content
-  .emms__sponsors__list__item
-  a:hover {
+.emms__sponsors__list__content
+.emms__sponsors__list__item
+a:hover {
   color: #026c3c;
   transition-duration: 0.2s;
 }
 
 .emms__sponsors__list
-  .emms__sponsors__list__content
-  .emms__sponsors__list__item
-  a.inactive {
+.emms__sponsors__list__content
+.emms__sponsors__list__item
+a.inactive {
   color: #b2b2b2;
   pointer-events: none;
 }
@@ -308,8 +308,8 @@
   }
 
   .emms__sponsors__list
-    .emms__sponsors__list__content
-    .emms__sponsors__list__item {
+  .emms__sponsors__list__content
+  .emms__sponsors__list__item {
     max-width: 300px;
     width: 100%;
     margin: 0 auto 78px auto;

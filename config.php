@@ -159,6 +159,7 @@ if (!defined('DB_PASSWORD')) define('DB_PASSWORD', $DB_PASSWORD);
 if (!defined('DB_HOST')) define('DB_HOST', $DB_HOST);
 
 #ADMIN
+if (!defined('ADMIN_BASE_PATH')) define('ADMIN_BASE_PATH', 'adm26');
 if (!defined('ADMIN_RESTRICTED_SERVERS')) define('ADMIN_RESTRICTED_SERVERS', $ADMIN_RESTRICTED_SERVERS);
 if (!defined('ADMIN_ALLOW_IPS')) define('ADMIN_ALLOW_IPS', $ADMIN_ALLOW_IPS);
 

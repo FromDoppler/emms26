@@ -80,8 +80,8 @@ $events = [
         'name'   => 'Digital Trends',
         'folder' => 'digital-trends',
         'pages'  => [
-            'unregistered' => ['url' => 'digital-trends', 'page' => 'digital-trends.php'],
-            'registered'   => ['url' => 'digital-trends-registrado', 'page' => 'digital-trends-registrado.php'],
+            'unregistered' => ['url' => '', 'page' => 'digital-trends.php'],
+            'registered'   => ['url' => 'registrado', 'page' => 'digital-trends-registrado.php'],
         ],
     ],
 ];

@@ -130,8 +130,8 @@ CREATE TABLE IF NOT EXISTS `settings_phase` (
 --
 
 INSERT INTO `settings_phase` (`event`, `pre`, `during`, `post`, `transition`, `transmission`) VALUES
-('digital-trends25', 1, 0, 0, 'live-off', 'youtube'),
-('ecommerce25', 1, 0, 0, 'live-off', 'youtube');
+('digital-trends26', 1, 0, 0, 'live-off', 'youtube'),
+('ecommerce26', 1, 0, 0, 'live-off', 'youtube');
 
 -- --------------------------------------------------------
 

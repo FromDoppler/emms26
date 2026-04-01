@@ -82,6 +82,7 @@ const sendDataCurrentPhase = async (e, event) => {
 //getPhase
 const checkRadiosPhase = async (event) => {
   const objResult = await getPhase(event);
+  if (!objResult?.current_phase) return;
 
   document.getElementById(event + "_" + objResult.current_phase).checked = true;
   if (objResult.transition === "live-on") document.getElementById(event + "_toggle-live").checked = true;
@@ -94,12 +95,13 @@ const sendDataCurrentTransmission = async (e, event) => {
   await setTransmission(event, transmission);
   showAlert(event + "_transmission-alert-success");
   const objResult = await getPhase(event);
-  if (objResult.transition === "live-on") {
+  if (objResult?.transition === "live-on") {
     await sendRefresh();
   }
 };
 
 const checkRadiosTransmission = async (event) => {
   const objResult = await getPhase(event);
+  if (!objResult?.transmission) return;
   document.getElementById(event + "_" + objResult.transmission).checked = true;
 };

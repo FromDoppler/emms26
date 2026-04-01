@@ -388,7 +388,6 @@
 
 .hero-registration--registered h1 em {
   font-style: normal;
-  text-transform: uppercase;
   display: block;
   margin: 0 0 30px 0;
   font-weight: 700;
@@ -718,6 +717,10 @@
 
 .hero-registration--registered.hero-registration--registered--post {
   background: #1c0329;
+}
+
+.hero-registration--registered.hero-registration--registered--digitaltrends-pre {
+  background: #0b0627 url("../../../img/backgrounds/bg-digitaltrends-hero-registered-2026.png") center/cover no-repeat;
 }
 
 .hero-registration--registered.hero-registration--registered--post .emms__calendar__list {

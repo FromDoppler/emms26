@@ -1,15 +1,12 @@
-<section class="hero-registration--registered">
+<section class="hero-registration--registered hero-registration--withoutform hero-registration--registered--digitaltrends-pre">
   <div class="emms__container--md">
-    <h1 class="emms__fade-top"><em>ONLINE Y GRATUITO - 28, 29 y 30 de Octubre</em>¡Gracias por sumarte al<br> <span>EMMS Digital Trends 2025!</span> </h1>
-    <p class="emms__fade-in">La transmisión del evento en vivo la realizaremos desde este sitio. ¡Prepárate para conocer
-las últimas tendencias del Marketing Digital! Mientras tanto, potencia tu experiencia
-con el Pase VIP y accede a beneficios exclusivos
-    </p>
+    <h1 class="emms__fade-top"><em>ONLINE Y GRATUITO - Del 14 al 16 de Julio</em><span>&iexcl;Ya eres parte del EMMS 2026!</span></h1>
+    <p class="emms__fade-in">Te damos la bienvenida al evento que marcar&aacute; las tendencias del presente<br>y futuro del Marketing y el Comercio Electr&oacute;nico. Guarda la fecha para no perderte nada.<br>Muy pronto te contaremos por Email la agenda y todas las novedades del EMMS.</p>
     <div class="hero-registration__buttons">
-      <a class=" emms__fade-in emms__cta   emms__cta--terciary" href="/checkout.php" target="_blank">COMPRA TU ENTRADA VIP AHORA</a>
-      <a class=" emms__fade-in emms__cta   emms__cta--primary-light" href="#entradas">CONOCE LOS BENEFICIOS</a>
+      <p class="emms__fade-in"><img src="/src/img/icons/icon-calendar-hero.png" alt="" aria-hidden="true" align="absmiddle">AG&Eacute;NDALO EN TU CALENDARIO:</p>
+      <a class="emms__fade-in emms__cta emms__cta--secondary-solid emms__cta--xl" href="#dia-1"><span>D&Iacute;A 1</span></a>
+      <a class="emms__fade-in emms__cta emms__cta--secondary-solid emms__cta--xl" href="#dia-2"><span>D&Iacute;A 2</span></a>
     </div>
-
   </div>
   <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/marquee.php') ?>
 </section>

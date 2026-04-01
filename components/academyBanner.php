@@ -1,5 +1,11 @@
+<?php
+$academyBannerVariant = $academyBannerVariant ?? 'default';
+$isGreenAcademyBannerVariant = $academyBannerVariant === true || $academyBannerVariant === 'green';
+$academyBannerSectionClass = $isGreenAcademyBannerVariant ? ' academy-banner--green-accent' : '';
+$academyBannerIcon = $isGreenAcademyBannerVariant ? '/src/img/icons/icon-check--soft-green.svg' : '/src/img/icons/icon-check--purple.svg';
+?>
         <!-- Doppler Academy Banner -->
-        <section class="academy-banner emms__bg-section-6 sponsors__hero--blue-bg" id="aprende-con-doppler">
+        <section class="academy-banner emms__bg-section-6 sponsors__hero--blue-bg<?= $academyBannerSectionClass ?>" id="aprende-con-doppler">
             <div class="emms__container--sm">
                 <div class="academy-banner__description">
                     <h2>Lleva tu conocimiento a otro nivel con Doppler Academy</h2>
@@ -7,15 +13,15 @@
                     <br> Cursa a tu ritmo, donde quieras y cuando quieras 🙂</p>
                     <div class="text-with-icon-container">
                         <div class="text-with-icon">
-                            <img src="/src/img/icons/icon-check--purple.svg" alt="Check icon">
+                            <img src="<?= $academyBannerIcon ?>" alt="Check icon">
                             <span>Gratuito</span>
                         </div>
                         <div class="text-with-icon">
-                            <img src="/src/img/icons/icon-check--purple.svg" alt="Check icon">
+                            <img src="<?= $academyBannerIcon ?>" alt="Check icon">
                             <span>on demand</span>
                         </div>
                         <div class="text-with-icon">
-                            <img src="/src/img/icons/icon-check--purple.svg" alt="Check icon">
+                            <img src="<?= $academyBannerIcon ?>" alt="Check icon">
                             <span>A TU RITMO</span>
                         </div>
                     </div>

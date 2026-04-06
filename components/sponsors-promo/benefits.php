@@ -19,7 +19,7 @@ $benefits = [
             <ul>
                 <?php foreach ($benefits as $benefit): ?>
                     <li>
-                        <img src="/src/img/asset-estrella.png" alt="Ícono de beneficio">
+                        <img src="/src/img/icons/icon-check--purple-simple.svg" alt="Ícono de beneficio">
                         <span><?= htmlspecialchars($benefit) ?></span>
                     </li>
                 <?php endforeach; ?>

@@ -20,14 +20,14 @@
 
 .hero-registration .hero-registration__text {
   width: 48%;
-  color: #fff;
+  color: var(--color-bg);
   animation-delay: 0.2s;
 }
 
 .hero-registration .hero-registration__text a {
   font-style: normal;
   font-weight: 700;
-  font-size: 16px;
+  font-size: var(--font-p-size);
   line-height: 25px;
   color: #bd7aff;
   transition: all 0.2s ease-in-out;
@@ -45,25 +45,25 @@
 .hero-registration .hero-registration__text h1,
 .hero-registration .hero-registration__text.hero-registration__text--live h2 {
   font-weight: 800;
-  font-size: 50px;
-  line-height: 52px;
+  font-size: var(--font-h1-size);
+  line-height: var(--font-h1-line);
   letter-spacing: -1px;
-  color: #ffffff;
+  color: var(--color-bg);
   max-width: 445px;
 }
 
 .hero-registration.post .hero-registration__text h1,
 .hero-registration .hero-registration__text.hero-registration__text--live h2 {
-  font-size: 50px;
-  line-height: 52px;
+  font-size: var(--font-h1-size);
+  line-height: var(--font-h1-line);
   font-weight: 800;
   letter-spacing: -1px;
 }
 
 .hero-registration .hero-registration__text h1 em,
 .hero-registration .hero-registration__text.hero-registration__text--live h2 em {
-  font-size: 14px;
-  line-height: 20px;
+  font-size: var(--font-small-size);
+  line-height: var(--font-small-line);
   font-style: normal;
   font-weight: 600;
   letter-spacing: 0.5px;
@@ -75,8 +75,8 @@
 .hero-registration--registered h1 em small {
   font-style: normal;
   font-weight: 700;
-  font-size: 14px;
-  line-height: 20px;
+  font-size: var(--font-small-size);
+  line-height: var(--font-small-line);
   letter-spacing: 0.5px;
   color: #79f66e;
 }
@@ -97,7 +97,7 @@
   font-weight: 800;
   font-size: 48px;
   line-height: 32px;
-  color: #ffffff;
+  color: var(--color-bg);
 }
 
 .hero-registration .hero-registration__text.hero-registration__text--live h1 span:nth-child(2) {
@@ -105,7 +105,7 @@
   font-weight: 800;
   font-size: 72px;
   line-height: 32px;
-  color: #ffffff;
+  color: var(--color-bg);
 }
 
 .hero-registration .hero-registration__text.hero-registration__text--live h1 span:nth-child(3) {
@@ -113,7 +113,7 @@
   font-weight: 800;
   font-size: 48px;
   line-height: 32px;
-  color: #ffffff;
+  color: var(--color-bg);
 }
 
 .hero-registration .hero-registration__text.hero-registration__text--live h1 span:nth-child(4) {
@@ -121,7 +121,7 @@
   font-weight: 300;
   font-size: 129px;
   line-height: 101px;
-  color: #ffffff;
+  color: var(--color-bg);
 }
 
 .hero-registration .hero-registration__text.hero-registration__text--live h2 em span {
@@ -137,8 +137,8 @@
   display: inline-block;
   font-style: normal;
   font-weight: 700;
-  font-size: 14px;
-  line-height: 20px;
+  font-size: var(--font-small-size);
+  line-height: var(--font-small-line);
   letter-spacing: 0.5px;
 }
 
@@ -147,7 +147,7 @@
   font-size: 56px;
   line-height: 37px;
   letter-spacing: 9px;
-  color: #ffffff;
+  color: var(--color-bg);
 }
 
 .hero-registration .hero-registration__text h1 span.top.top--transition {
@@ -183,15 +183,15 @@
 }
 
 .hero-registration .hero-registration__text p {
-  font-size: 16px;
-  line-height: 24px;
+  font-size: var(--font-p-size);
+  line-height: var(--font-p-line);
   font-weight: 700;
   margin: 24px 0 0 0;
-  max-width: 404px;
+  max-width: 430px;
 }
 
 .hero-registration--digitaltrends-pre .hero-registration__text__subtitle {
-  color: #fff;
+  color: var(--color-bg);
   font-feature-settings:
     "liga" off,
     "clig" off;
@@ -206,7 +206,7 @@
 }
 
 .hero-registration--digitaltrends-pre .hero-registration__text__subtitle--lg {
-  font-size: 40px;
+  font-size: var(--font-h2-size);
 }
 
 .hero-registration--digitaltrends-pre .hero-registration__text__subtitle--md {
@@ -220,22 +220,23 @@
 .hero-registration .hero-registration__text p .text--highlighted {
   font-style: normal;
   font-weight: 700;
-  font-size: 16px;
-  line-height: 24px;
-  color: #18ff8c;
+  font-size: var(--font-p-size);
+  line-height: var(--font-p-line);
+  color: var(--color-secondary);
 }
 
 .hero-registration .hero-registration__text .hero-registration__text__checklist {
-  max-width: 380px;
+  max-width: 432px;
   margin: 30px 0 0 0;
 }
 
 .hero-registration .hero-registration__text .hero-registration__text__checklist li {
-  font-size: 16px;
-  line-height: 24px;
+  font-size: var(--font-p-size);
+  line-height: var(--font-p-line);
   margin: 0 0 10px 0;
   padding: 0 0 0 28px;
   position: relative;
+  font-weight: bold;
   text-transform: uppercase;
 }
 
@@ -265,13 +266,13 @@
   background-size: 25px;
   background-position: center;
   border-radius: 100%;
-  border: solid 1px #fff;
+  border: solid 1px var(--color-bg);
   margin: 0 auto;
   transform: rotate(90deg);
 }
 
 .hero-registration .hero-registration__text .hero-registration__text__strong p {
-  font-size: 22px;
+  font-size: var(--font-h4-size);
   line-height: 34px;
   font-weight: 700;
   margin: 35px 0 0 0;
@@ -377,11 +378,11 @@
 .hero-registration--registered h1 {
   font-style: normal;
   font-weight: 700;
-  font-size: 50px;
-  line-height: 52px;
+  font-size: var(--font-h1-size);
+  line-height: var(--font-h1-line);
   text-align: center;
   letter-spacing: -1px;
-  color: #ffffff;
+  color: var(--color-bg);
   max-width: 930px;
   margin: 0 auto;
 }
@@ -398,10 +399,10 @@
 
 .hero-registration--registered.hero-registration--withoutform h1 em {
   font-weight: 700;
-  font-size: 16px;
-  line-height: 20px;
+  font-size: var(--font-small-size);
+  line-height: var(--font-small-line);
   letter-spacing: 0.5px;
-  color: #ffffff;
+  color: var(--color-bg);
 }
 
 .hero-registration--registered h1 span {
@@ -415,10 +416,10 @@
   margin: 30px 0;
   animation-delay: 0.5s;
   font-style: normal;
-  font-size: 16px;
-  line-height: 24px;
+  font-size: var(--font-p-size);
+  line-height: var(--font-p-line);
   text-align: center;
-  color: #ffffff;
+  color: var(--color-bg);
   max-width: 640px;
   margin: 30px auto;
 }
@@ -445,9 +446,9 @@
 }
 
 .hero-registration--registered .hero-registration__add-event span {
-  font-size: 16px;
-  line-height: 20px;
-  color: #fff;
+  font-size: var(--font-p-size);
+  line-height: var(--font-small-line);
+  color: var(--color-bg);
   background: linear-gradient(-140deg, #7d04f6 50%, #f604cf 120%);
   display: block;
   padding: 20px 0;
@@ -455,7 +456,7 @@
 }
 
 .hero-registration--registered .hero-registration__add-event span a {
-  color: #ffffff;
+  color: var(--color-bg);
 }
 
 .hero-registration--registered .hero-registration__add-event::before {
@@ -491,7 +492,7 @@
   line-height: 23px;
   text-align: center;
   text-transform: uppercase;
-  color: #ffffff;
+  color: var(--color-bg);
   margin-bottom: 20px;
 }
 
@@ -508,7 +509,7 @@
   }
 
   .hero-registration__buttons p {
-    font-size: 16px;
+    font-size: var(--font-p-size);
     line-height: 20px;
   }
 
@@ -580,7 +581,7 @@
 
 @media (max-width: 620px) {
   .hero-registration--registered h1 em {
-    font-size: 14px;
+    font-size: var(--font-small-size);
     margin: 0 auto;
   }
 

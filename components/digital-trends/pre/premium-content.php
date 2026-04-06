@@ -10,22 +10,22 @@ if (!function_exists('getContentForUrl')) {
 
     $contentMap = [
       'default' => [
-        'heading' => 'Capacítate gratis con la <br> Biblioteca de Recursos',
+        'heading' => 'Capacítate gratis con <br> la Biblioteca de Recursos',
         'body' => 'Aprovecha los materiales descargables y herramientas que traen nuestros aliados para optimizar tu estrategia digital antes del evento.',
         'list' => null,
       ],
       'group1' => [
-        'heading' => 'Capacítate gratis con la <br> Biblioteca de Recursos',
+        'heading' => 'Capacítate gratis con <br> la Biblioteca de Recursos',
         'body' => 'Aprovecha los materiales descargables y herramientas que traen nuestros aliados para optimizar tu estrategia digital antes del evento.',
         'list' => null,
       ],
       'group2' => [
-        'heading' => 'Capacítate gratis con la <br> Biblioteca de Recursos',
+        'heading' => 'Capacítate gratis con <br> la  Biblioteca de Recursos',
         'body' => 'Aprovecha los materiales descargables y herramientas que traen nuestros aliados para optimizar tu estrategia digital antes del evento.',
         'list' => null,
       ],
       'with-list' => [
-        'heading' => 'Capacítate gratis con la <br> Biblioteca de Recursos',
+        'heading' => 'Capacítate gratis con <br> la  Biblioteca de Recursos',
         'body' => 'Aprovecha los materiales descargables y herramientas que traen nuestros aliados para optimizar tu estrategia digital antes del evento.',
         'list' => $resourceList,
       ],

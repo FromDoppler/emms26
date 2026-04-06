@@ -1,7 +1,7 @@
 .vip-offer {
   --vip-offer-bg-start: rgba(179, 77, 181, 0.26);
   --vip-offer-bg-end: rgba(111, 0, 174, 0.2);
-  --vip-offer-text: #ffffff;
+  --vip-offer-text: var(--color-bg);
   --vip-offer-shadow: rgba(50, 0, 87, 0.24);
   position: relative;
   overflow: hidden;
@@ -58,8 +58,8 @@
   margin: 0 0 18px;
   color: var(--vip-offer-text);
   font-weight: 700;
-  font-size: clamp(2rem, 2.2vw, 2.8rem);
-  line-height: 1.1;
+  font-size: var(--font-h2-size);
+  line-height: var(--font-h2-line);
 }
 
 .vip-offer__title span {
@@ -84,13 +84,14 @@
   margin: 0 0 18px;
   padding: 0;
   list-style: none;
+  max-width: 380px;
 }
 
 .vip-offer__benefit {
   position: relative;
   margin-bottom: 12px;
   padding-left: 32px;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
 }
 

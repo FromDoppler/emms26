@@ -10,9 +10,10 @@
       </p>
       <p>Súmate a Conferencias, Workshops y Networking para capacitarte e inspirarte con las últimas tendencias en Marketing e E-commerce.</p>
       <ul class="hero-registration__text__checklist dk">
-        <li>SPEAKERS INTERNACIONALES</li>
-        <li>WORKSHOPS Y NETWORKING</li>
-        <li>SORTEOS Y BENEFICIOS</li>
+        <li>Los mejores Speakers de la historia del EMMS.</li>
+        <li>WORKSHOPS PRÁCTICOS</li>
+        <li>Gratis y online.</li>
+        <li>Premios, recursos exclusivos y más.</li>
       </ul>
     </div>
     <!-- Form -->

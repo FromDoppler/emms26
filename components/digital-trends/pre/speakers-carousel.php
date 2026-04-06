@@ -6,16 +6,13 @@ function getBlock($url)
 {
   $blocks = [
     '/' => [
-      'block' => 'home',
+      'block' => 'digital-trends',
     ],
     '/registrado' => [
       'block' => 'registerHome',
     ],
-    '/digital-trends' => [
-      'block' => 'digital-trends',
-    ],
     '/*' => [
-      'block' => 'home',
+      'block' => 'digital-trends',
     ],
   ];
 

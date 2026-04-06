@@ -26,14 +26,14 @@ $quotes = [
 $quotesDT = [
   [
     'name' => 'Andrea',
-    'text' => '“El EMMS fue una experiencia transformadora y muy enriquecedora.  No solo aprendí estrategias que pude implementar al instante, sino que también hice alianzas con otros colegas de toda la región. ¡Totalmente recomendado!”.',
+    'text' => '“El EMMS fue una experiencia transformadora y muy enriquecedora. No solo aprendí estrategias que pude implementar al instante, sino que también hice alianzas con otros colegas de toda la región. ¡Totalmente recomendado!”.',
     'image' => '/src/img/quotes/quote-andrea.png',
     'flag' => '/src/img/flags/CO.png',
     'country' => 'Colombia',
   ],
   [
     'name' => 'Beatriz',
-    'text' => '“Nunca imaginé que un evento digital me proporcionaría tanto valor.  Los workshops prácticos fueron claves para mejorar nuestras campañas. ¡Definitivamente, un must para cualquier profesional del marketing!”.',
+    'text' => '“Nunca imaginé que un evento digital me proporcionaría tanto valor. Los workshops prácticos fueron claves para mejorar nuestras campañas. ¡Definitivamente, un must para cualquier profesional del marketing!”.',
     'image' => '/src/img/quotes/quote-beatriz.png',
     'flag' => '/src/img/flags/ES.png',
     'country' => 'España',
@@ -51,28 +51,34 @@ $normalizedUrl = getNormalizeUrl();
 
 
 $usersCommentsConfig = [
-  '/digital-trends' => [
-    'title' => 'Esto opinan quienes <br> ya fueron parte del EMMS:',
-    'class' => 'userscomments',
-    'quotes' => $quotes,
+  '/' => [
+    'title' => 'Nuestros asistentes dicen:',
+    'class' => 'userscomments userscomments--digitaltrends',
+    'quotes' =>  $quotesDT,
+    'cta' => [
+      'text' => 'INSCRÍBETE AHORA',
+      'link' => '/digital-trends#registro',
+      'class' => 'emms__cta emms__cta--md userscomments__cta',
+    ],
   ],
   '/digital-trends' => [
     'title' => 'Nuestros asistentes dicen:',
     'class' => 'userscomments userscomments--digitaltrends',
     'quotes' =>  $quotesDT,
     'cta' => [
-      'label' => 'INSCRÍBETE AHORA',
-      'href' => '#registro',
+      'text' => 'INSCRÍBETE AHORA',
+      'link' => '#registro',
+      'class' => 'emms__cta emms__cta--md userscomments__cta',
     ],
   ],
-  '/digital-trends-registrado' => [
+  '/registrado' => [
     'title' => 'Nuestros asistentes dicen:',
     'class' => 'userscomments userscomments--digitaltrends',
     'quotes' => $quotesDT,
   ],
   '/*' => [
     'title' => 'Esto opinan quienes <br> ya fueron parte del EMMS:',
-    'class' => 'userscomments',
+    'class' => 'userscomments userscomments--digitaltrends',
     'quotes' => $quotes,
   ]
 ];
@@ -118,9 +124,11 @@ $config = $usersCommentsConfig[$normalizedUrl] ?? $usersCommentsConfig['/*'];
       <?php endforeach; ?>
     </ul>
 
-    <?php if (!empty($config['cta'])): ?>
+    <?php if (!empty($config['cta']['text']) && !empty($config['cta']['link']) && !empty($config['cta']['class'])): ?>
       <div class="userscomments__cta-wrap emms__fade-in">
-        <a href="<?= htmlspecialchars($config['cta']['href']) ?>" class="emms__cta emms__cta--md userscomments__cta"><?= htmlspecialchars($config['cta']['label']) ?></a>
+        <a class="<?= $config['cta']['class'] ?>" href="<?= $config['cta']['link'] ?>">
+          <?= $config['cta']['text'] ?>
+        </a>
       </div>
     <?php endif; ?>
   </div>

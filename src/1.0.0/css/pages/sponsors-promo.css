@@ -14,25 +14,25 @@
 
 .emms__sponsor-promo__hero .emms__sponsor-promo__hero__content {
   width: 43%;
-  color: #fff;
+  color: var(--color-bg);
 }
 
 .emms__sponsor-promo__hero .emms__sponsor-promo__hero__content span {
-  font-size: 14px;
-  line-height: 20px;
+  font-size: var(--font-small-size);
+  line-height: var(--font-small-line);
 }
 
 .emms__sponsor-promo__hero .emms__sponsor-promo__hero__content h1 {
-  font-size: 30px;
-  line-height: 32px;
+  font-size: var(--font-h3-size);
+  line-height: var(--font-h3-line);
   font-weight: 700;
   margin: 26px auto;
   max-width: 368px;
 }
 
 .emms__sponsor-promo__hero .emms__sponsor-promo__hero__content p {
-  font-size: 16px;
-  line-height: 24px;
+  font-size: var(--font-p-size);
+  line-height: var(--font-p-line);
   max-width: 526px;
   margin: 0 auto;
 }
@@ -81,7 +81,7 @@
   }
 
   .emms__sponsor-promo__hero .emms__sponsor-promo__hero__content h1 {
-    font-size: 22px;
+    font-size: var(--font-h4-size);
     line-height: 23px;
     margin: 0 0 14px 0;
   }
@@ -90,7 +90,7 @@
 /* Resource */
 
 .emms__sponsor-promo__resource {
-  background: #ffffff;
+  background: var(--color-bg);
   padding: 70px 0 80px 0;
   position: relative;
   z-index: 1;
@@ -130,9 +130,9 @@
 }
 
 .emms__sponsor-promo__resource__text p {
-  font-size: 16px;
-  line-height: 24px;
-  color: #333333;
+  font-size: var(--font-p-size);
+  line-height: var(--font-p-line);
+  color: var(--color-muted);
   margin-bottom: 30px;
 }
 
@@ -147,8 +147,7 @@
   display: flex;
   align-items: flex-start;
   font-size: 15px;
-  color: #333333;
-  font-weight: bold;
+  color: var(--color-muted);
   line-height: 20px;
   margin-bottom: 20px;
 }
@@ -184,7 +183,7 @@
   }
 
   .emms__sponsor-promo__resource__text h2 {
-    font-size: 22px;
+    font-size: var(--font-h4-size);
     line-height: 23px;
     margin: 0 0 20px 0;
   }
@@ -236,14 +235,14 @@
   font-size: 27px;
   line-height: 29px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--color-bg);
   margin: 0 0 30px 0;
 }
 
 .emms__sponsor-promo__media-partner__text p {
-  font-size: 16px;
-  line-height: 24px;
-  color: #ffffff;
+  font-size: var(--font-p-size);
+  line-height: var(--font-p-line);
+  color: var(--color-bg);
   margin-bottom: 30px;
   font-weight: 400;
 }
@@ -260,7 +259,7 @@
   display: flex;
   align-items: flex-start;
   font-size: 15px;
-  color: #ffffff;
+  color: var(--color-bg);
   font-weight: 400;
   line-height: 20px;
   margin-bottom: 20px;
@@ -272,7 +271,7 @@
 
 .emms__sponsor-promo__media-partner__text .emms__cta {
   background: rgba(255, 255, 255, 0.2);
-  border: 1px solid #ffffff;
+  border: 1px solid var(--color-bg);
   border-radius: 100px;
   margin: 33px 0 0 0;
   padding: 20px 28px;
@@ -308,7 +307,7 @@
   }
 
   .emms__sponsor-promo__media-partner__text h2 {
-    font-size: 22px;
+    font-size: var(--font-h4-size);
     line-height: 23px;
     margin: 0 0 20px 0;
   }
@@ -333,20 +332,20 @@
   font-size: 27px;
   line-height: 29px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--color-bg);
   margin: 0 0 22px 0;
 }
 
 .emms__sponsor-promo__description p {
-  font-size: 16px;
-  line-height: 24px;
-  color: #ffffff;
+  font-size: var(--font-p-size);
+  line-height: var(--font-p-line);
+  color: var(--color-bg);
 }
 
 .emms__sponsor-promo__description .emms__cta {
   margin: 32px 0 0 0;
   background: rgba(255, 255, 255, 0.2);
-  border: 1px solid #ffffff;
+  border: 1px solid var(--color-bg);
   padding: 20px 60px;
 }
 
@@ -362,8 +361,8 @@
   }
 
   .emms__sponsor-promo__description h2 {
-    font-size: 22px;
-    line-height: 24px;
+    font-size: var(--font-h4-size);
+    line-height: var(--font-h4-line);
     margin: 0 0 20px 0;
   }
 }

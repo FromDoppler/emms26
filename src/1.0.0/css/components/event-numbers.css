@@ -1,6 +1,6 @@
 .emms__eventnumbers {
   padding: 70px 0;
-  background: linear-gradient(359deg, #13092d 0%, #25096c 109.27%);
+  background: #210b63;
 }
 
 /* Rectangle 1332 */
@@ -23,11 +23,11 @@
 .emms__eventnumbers h2 {
   font-style: normal;
   font-weight: 700;
-  font-size: 40px;
-  line-height: 44px;
+  font-size: var(--font-h2-size);
+  line-height: var(--font-h2-line);
   text-align: center;
   letter-spacing: -1px;
-  color: #ffffff;
+  color: var(--color-bg);
   margin-bottom: 53px;
 }
 
@@ -36,7 +36,7 @@
   line-height: 22px;
   font-weight: 400;
   text-align: center;
-  color: #333333;
+  color: var(--color-muted);
   margin: 0 0 55px 0;
   animation-delay: 0.3s;
 }
@@ -72,7 +72,7 @@
   right: 0;
   width: 2px;
   height: 60%;
-  background: #fff;
+  background: var(--color-bg);
   border-radius: 100px;
 }
 
@@ -82,9 +82,9 @@
 
 .emms__eventnumbers ul li p {
   font-family: "Inter", sans-serif;
-  font-size: 50px;
+  font-size: var(--font-h1-size);
   font-weight: 700;
-  color: #333333;
+  color: var(--color-muted);
   margin: 0;
   display: inline-block;
 }
@@ -95,9 +95,9 @@
 
 .emms__eventnumbers ul li span {
   font-family: "Inter", sans-serif;
-  font-size: 16px;
+  font-size: var(--font-p-size);
   font-weight: 300;
-  color: #333333;
+  color: var(--color-muted);
   display: block;
 }
 
@@ -157,9 +157,9 @@
 }
 
 .emms__eventnumbers--large ul li p {
-  font-size: 50px;
+  font-size: var(--font-h1-size);
   line-height: 0.8;
-  color: #fff;
+  color: var(--color-bg);
   margin: 25px 0 0 0;
 }
 
@@ -167,7 +167,7 @@
   font-size: 20px;
   font-weight: 600;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--color-bg);
   text-align: center;
 }
 
@@ -205,7 +205,7 @@
   }
 
   .emms__eventnumbers--large ul li span {
-    font-size: 14px;
+    font-size: var(--font-small-size);
   }
 
   .emms__eventnumbers--large ul li {

@@ -26,19 +26,6 @@ USE `EMMS26`;
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `google_oauth`
---
-
-CREATE TABLE IF NOT EXISTS `google_oauth` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `provider` varchar(255) NOT NULL,
-  `provider_value` text NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `log_errors`
 --
 

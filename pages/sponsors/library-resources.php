@@ -22,7 +22,10 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/utils/cacheSettings.php');
         <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/sponsors/libraryResources/conferences.php') ?>
     </main>
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/sponsors/libraryResources/resources/resourceGrid.php') ?>
-    <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/academyBanner.php') ?>
+    <?php 
+    $academyBannerVariant = true;
+    include($_SERVER['DOCUMENT_ROOT'] . '/components/academyBanner.php') 
+    ?>
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/footer.php'); ?>
     <script src="/src/<?= VERSION ?>/js/sponsors.js"></script>
 </body>

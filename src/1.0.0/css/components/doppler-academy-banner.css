@@ -30,6 +30,18 @@
   line-height: 13px;
 }
 
+.academy-banner--green-accent .academy-banner__description--button a {
+  background-color: var(--color-secondary);
+  border-color: var(--color-secondary);
+  color: var(--color-text);
+}
+
+.academy-banner--green-accent .academy-banner__description--button a:hover {
+  background-color: var(--color-secondary-hover);
+  border-color: var(--color-secondary-hover);
+  color: var(--color-text);
+}
+
 .academy-banner__description h2 {
   font-weight: 700;
   margin: 0 auto 20px auto;

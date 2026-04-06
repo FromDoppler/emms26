@@ -46,6 +46,7 @@ if (!isset($gridItems)) {
 }
 
 $gridClass = $gridColumns === 3 ? 'emms__grid--3' : 'emms__grid--2';
+$showVipFooter = $block['block'] === 'TextBlock' && $normalizedUrl !== '/digital-trends-registrado';
 ?>
 
 <section class="emms__grid emms__grid--compact-cards <?= $gridClass ?>">
@@ -66,19 +67,21 @@ $gridClass = $gridColumns === 3 ? 'emms__grid--3' : 'emms__grid--2';
         </li>
       <?php endforeach; ?>
     </ul>
-    <div class="grid__footer">
-      <?php if ($block['block'] === 'CtaBlock') : ?>
-        <a href="#registro" class="emms__cta emms__fade-in-animation eventHiddenElements">RESERVA TU LUGAR</a>
-        <button class="emms__cta emms__fade-in-animation eventShowElements alreadyRegisterForm">
-          <span class="button__text">RESERVA TU LUGAR</span>
-        </button>
-      <?php elseif ($block['block'] === 'TextBlock') : ?>
-        <div class="hidden--vip">
-          <p><strong>¡No te lo pierdas! Vive la experiencia EMMS completa con tu pase VIP.</strong></p>
-          <a href="#entradas" class="emms__cta emms__fade-in-animation emms__cta--xl">COMPRA TU ENTRADA</a>
-        </div>
-      <?php endif; ?>
-    </div>
+    <?php if ($block['block'] === 'CtaBlock' || $showVipFooter) : ?>
+      <div class="grid__footer">
+        <?php if ($block['block'] === 'CtaBlock') : ?>
+          <a href="#registro" class="emms__cta emms__fade-in-animation eventHiddenElements">RESERVA TU LUGAR</a>
+          <button class="emms__cta emms__fade-in-animation eventShowElements alreadyRegisterForm">
+            <span class="button__text">RESERVA TU LUGAR</span>
+          </button>
+        <?php elseif ($showVipFooter) : ?>
+          <div class="hidden--vip">
+            <p><strong>&iexcl;No te lo pierdas! Vive la experiencia EMMS completa con tu pase VIP.</strong></p>
+            <a href="#entradas" class="emms__cta emms__fade-in-animation emms__cta--xl">COMPRA TU ENTRADA</a>
+          </div>
+        <?php endif; ?>
+      </div>
+    <?php endif; ?>
     <?php if ($block['block'] === 'TextBlock') : ?>
       <div class="emms__separator emms__separator--white"></div>
     <?php endif; ?>

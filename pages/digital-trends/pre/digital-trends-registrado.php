@@ -1,7 +1,6 @@
 <?php
 require_once($_SERVER['DOCUMENT_ROOT'] . '/config.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/utils/cacheSettings.php');
-require_once($_SERVER['DOCUMENT_ROOT'] . '/components/modal/modal.php');
 $isPost = false;
 ?>
 
@@ -26,43 +25,19 @@ $isPost = false;
 </head>
 
 <body>
-  <div class="register-form__container hidden--vip">
-    <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/hello-bar.php'); ?>
-  </div>
-
   <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/gtm.php'); ?>
   <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/navbar-reg.php') ?>
   <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/share.php') ?>
   <main>
-    <div class="show--vip">
-      <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/digital-trends/hello-vip-module.php') ?>
-    </div>
-    <div class="hidden--vip">
-      <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/digital-trends/hello-module.php') ?>
-    </div>
-    <div class="gold-schedule">
-      <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/schedule/schedule.php') ?>
-    </div>
-    <div class="hidden--vip">
-      <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/digital-trends/entry-plans.php') ?>
-      <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/digital-trends/video-ticketing.php') ?>
-      <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/digital-trends/vip-features.php') ?>
-    </div>
+    <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/digital-trends/hello-module.php') ?>
+    
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/referral.php') ?>
-
-    <div class="show--vip">
-      <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/premium-content.php') ?>
-    </div>
-    <div class="hidden--vip">
-      <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/premium-content.php') ?>
-    </div>
+    <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/premium-content.php') ?>
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/academyBanner.php'); ?>
+    <?php require_once($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/grid-event-types-preset.php'); ?>
+    <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/grid-event-types.php'); ?>
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/sponsorsList.php') ?>
   </main>
-  <?php
-  require_once($_SERVER['DOCUMENT_ROOT'] . '/components/modal/extraDataCaptor.php');
-  render_modal('modalVip', 'vipmodal',  'vip', true);
-  ?>
   <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/footer.php'); ?>
   <script src="src/<?= VERSION ?>/js/newDate.js" type="module"></script>
 

@@ -92,16 +92,15 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/utils/DB.php');
         <h2>Revive las ediciones anteriores</h2>
         <div class="emms__previous-editions__list__container emms__previous-editions__list__container--xl emms__fade-in">
           <div class="emms__previous-editions__list__item emms__previous-editions__list__item--xl">
-            <a href="https://www.youtube.com/playlist?list=PLHE_SVtQOB8rXMsoQVihjCL9cSjEvRs-_" target="_blank">
+            <a href="https://youtube.com/playlist?list=PLHE_SVtQOB8rElPSqsIGZ-ZmZFuypCYU4&si=V_fl3ZINxIgUZufv" target="_blank">
               <div class="emms__previous-editions__list__item__image">
-                <img src="/src/img/editions/edicion2024-dt-xl.png" alt="EMMS 2024 E-commerce" class="desktop">
-                <img src="/src/img/editions/emms2023-dt.png" alt="EMMS 2024 Digital Trends" class="mobile">
+                <img src="/src/img/editions/edicion2024-dt-xl.png" alt="EMMS Digital Trends 2025" class="desktop">
+                <img src="/src/img/editions/emms2023-dt.png" alt="EMMS Digital Trends 2025" class="mobile">
               </div>
               <div class="emms__previous-editions__list__item__description">
-                <h4>EMMS E-commerce 2025</h4>
+                <h4>EMMS Digital Trends 2025</h4>
                 <p>
-                  Te invitamos a revivir el evento más importante de Comercio Electrónico en Latinoamérica y España. Fueron dos días de puro aprendizaje junto a las mentes más brillantes de la industria, quienes revelaron Estrategias simples y efectivas para atraer clientes y escalar las ventas de tu Tienda Online. Si no pudiste asistir
-                  o quieres reactivar todo lo aprendido, ¡accede ahora!
+                  Revive el evento más importante de Marketing Digital en Latinoamérica y España. Accede ahora a todas las Conferencias y descubre ideas, tendencias y estrategias de negocio compartidas por los principales referentes de la industria. Vuelve a inspirarte con los contenidos que marcaron la edición anterior.
                 </p>
                 <span>REVIVE ESTA EDICIÓN</span>
               </div>
@@ -110,6 +109,20 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/utils/DB.php');
         </div>
 
         <ul class="emms__previous-editions__list__container emms__previous-editions__list__container--lg">
+          <li class="emms__previous-editions__list__item emms__previous-editions__list__item--lg emms__fade-in">
+            <a href="https://www.youtube.com/playlist?list=PLHE_SVtQOB8rXMsoQVihjCL9cSjEvRs-_" target="_blank">
+              <div class="emms__previous-editions__list__item__image">
+                <img src="/src/img/editions/emms2023-ecommerce.png" alt="EMMS E-commerce 2025">
+              </div>
+              <div class="emms__previous-editions__list__item__description">
+                <h3>EMMS E-commerce 2025</h3>
+                <p>
+                  Te invitamos a revivir el evento más importante de Comercio Electrónico en Latinoamérica y España. Fueron dos días de puro aprendizaje junto a las mentes más brillantes de la industria, quienes revelaron Estrategias simples y efectivas para atraer clientes y escalar las ventas de tu Tienda Online. Si no pudiste asistir o quieres reactivar todo lo aprendido, ¡accede ahora!
+                </p>
+                <span>Revive esta edición</span>
+              </div>
+            </a>
+          </li>
           <li class="emms__previous-editions__list__item emms__previous-editions__list__item--lg emms__fade-in">
             <a href="https://www.youtube.com/playlist?list=PLHE_SVtQOB8pmtMbwaW-CORRkIu-0p8xN" target="_blank">
               <div class="emms__previous-editions__list__item__image">

@@ -6,7 +6,7 @@
     <a class="emms__header__nav--mb" id="btn-burger"></a>
     <nav class="emms__header__nav emms__header__nav--hidden" id="nav-mb">
       <ul class="emms__header__nav__menu" id="navMenu">
-        <li><a href="/registrado">home</a></li>
+        <li><a href="/registrado">EMMS 2026</a></li>
         <li><a href="/digital-trends-registrado">DIGITAL TRENDS</a></li>
         <li><a href="/sponsors-registrado">biblioteca de recursos</a></li>
         <li class="emms__header__nav__menu__dropdown"><a href="/ediciones-anteriores-registrado">Qué es el EMMS</a>
@@ -36,7 +36,11 @@
     if (activeLink) {
       activeLink.classList.add('active');
     } else {
-      document.querySelector('#navMenu a[href="/"]').classList.add('active');
+      const fallbackLink = document.querySelector('#navMenu a[href="/registrado"]') || navLinks[0];
+
+      if (fallbackLink) {
+        fallbackLink.classList.add('active');
+      }
     }
   });
 </script>

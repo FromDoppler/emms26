@@ -1,24 +1,36 @@
 <?php
 include_once($_SERVER['DOCUMENT_ROOT'] . '/components/helpers/urlHelper.php');
 $normalizedUrl = getNormalizeUrl();
+
+function getCurrentShareUrl($normalizedUrl)
+{
+    $path = empty($normalizedUrl) ? '/' : $normalizedUrl;
+    $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+        || (isset($_SERVER['SERVER_PORT']) && (string) $_SERVER['SERVER_PORT'] === '443');
+    $scheme = $isHttps ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'] ?? 'goemms.com';
+
+    return $scheme . '://' . $host . $path;
+}
+
 function getLinkPreByCurrentUrl($url)
 {
+    $shareUrl = rawurlencode(getCurrentShareUrl($url));
+    $twitterText = rawurlencode('¡Ya llega el EMMS 2026! Vive una edición especial por los 20 años de Doppler: vuelven algunos de los Speakers más destacados en la historia del EMMS, junto a Conferencias, Workshops y beneficios especiales. Es online y gratuito.');
+    $linkedinTitle = rawurlencode('¡Ya llega el EMMS 2026!');
+    $linkedinSummary = rawurlencode('¡Ya llega el EMMS 2026! Se viene una edición especial del evento de Marketing Digital más esperado: celebramos los 20 años de Doppler con el regreso de algunos de los Speakers más destacados en la historia del EMMS. Conferencias, Workshops, Casos de Éxito, sorteos, beneficios especiales y mucho más. Online y gratuito.');
+    $facebookQuote = rawurlencode('¡Ya llega el EMMS 2026! 🤩 Vive una edición especial por los 20 años de Doppler, con el regreso de algunos de los Speakers más destacados en la historia del EMMS. Descubre tendencias, ideas y estrategias de negocio junto a referentes de la industria. 💡 Es online y gratuito.');
+
+    $shareLinks = [
+        'twitter' => "https://twitter.com/intent/tweet?text={$twitterText}%20{$shareUrl}",
+        'linkedln' => "https://www.linkedin.com/shareArticle?mini=true&url={$shareUrl}&title={$linkedinTitle}&summary={$linkedinSummary}",
+        'facebook' => "https://www.facebook.com/sharer/sharer.php?u={$shareUrl}&quote={$facebookQuote}",
+    ];
+
     $urls = [
-        '/' => [
-            'twitter' => 'https://twitter.com/intent/tweet?text=Llega%20el%20EMMS%20Digital%20Trends%202025%2C%20%C2%A1reg%C3%ADstrate%20gratis!%20Conferencias%2C%20Workshops%20y%20beneficios%20especiales.%20Inscr%C3%ADbete%20y%20descubre%20las%20%C3%BAltimas%20innovaciones%20en%20Marketing%20Digital%20con%20referentes%20de%20la%20industria.%20Reserva%20tu%20lugar%20ahora%20en%20https%3A%2F%2Fgoemms.com%2F',
-            'linkedln' => 'https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fgoemms.com%2F&title=%C2%A1Ya%20puedes%20inscribirte%20en%20el%20EMMS%20Digital%20Trends%202025!&summary=%C2%A1Ya%20puedes%20inscribirte%20en%20el%20EMMS%20Digital%20Trends%202025!%20El%20evento%20de%20Marketing%20Digital%20m%C3%A1s%20importante%20en%20LATAM%20y%20Espa%C3%B1a.%20Accede%20a%20Conferencias%20de%20Speakers%20internacionales%2C%20Workshops%20exclusivos%2C%20Casos%20de%20%C3%89xito%2C%20recursos%20descargables%2C%20sorteos%2C%20beneficios%20especiales%20y%20mucho%20m%C3%A1s.%20Es%20online%20y%20gratuito.%20%C2%A1Reg%C3%ADstrate%20ahora!',
-            'facebook' => 'https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fgoemms.com%2F&quote=%C2%A1Cuenta%20regresiva%20para%20el%20EMMS%20Digital%20Trends%202025!%20El%20evento%20de%20Marketing%20Digital%20m%C3%A1s%20importante%20en%20LATAM%20y%20Espa%C3%B1a.%20%F0%9F%A4%A9%20Reg%C3%ADstrate%20gratis%20y%20descubre%20las%20%C3%BAltimas%20innovaciones%20en%20Marketing%20Digital%20con%20referentes%20de%20la%20industria.%20%F0%9F%92%A1%20Es%20online%20y%20gratuito.'
-        ],
-        '/digital-trends-registrado' => [
-            'twitter' => 'https://twitter.com/intent/tweet?text=%C2%A1Cuenta%20regresiva%20para%20el%20EMMS%20Digital%20Trends%202025!%20Conferencias%2C%20Workshops%20y%20beneficios%20especiales.%20El%20evento%20de%20Marketing%20Digital%20m%C3%A1s%20importante%20en%20LATAM%20y%20Espa%C3%B1a%20vuelve%20a%20realizarse%20este%2028%2C%2029%20y%2030%20de%20octubre.%20Es%20online%20y%20gratuito.%20https%3A%2F%2Fgoemms.com%2Fdigital-trends',
-            'linkedln' => 'https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fgoemms.com%2Fdigital-trends-registrado&title=%C2%A1Cuenta%20regresiva%20para%20el%20EMMS%20Digital%20Trends%202025!&summary=%C2%A1Cuenta%20regresiva%20para%20el%20EMMS%20Digital%20Trends%202025!%20Llega%20una%20nueva%20edici%C3%B3n%20del%20evento%20de%20Marketing%20Digital%20m%C3%A1s%20esperado%20del%20a%C3%B1o%20%F0%9F%A4%A9%20Conferencias%20de%20Speakers%20internacionales%2C%20Workshops%20exclusivos%2C%20Casos%20de%20%C3%89xito%2C%20recursos%20descargables%2C%20sorteos%2C%20beneficios%20especiales%20y%20mucho%20m%C3%A1s.%20Es%20online%20y%20gratuito.',
-            'facebook' => 'https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fgoemms.com%2Fdigital-trends-registrado',
-        ],
-        '/*' => [
-            'twitter' => 'https://twitter.com/intent/tweet?text=Llega%20el%20EMMS%20Digital%20Trends%202025%2C%20%C2%A1reg%C3%ADstrate%20gratis!%20Conferencias%2C%20Workshops%20y%20beneficios%20especiales.%20Inscr%C3%ADbete%20y%20descubre%20las%20%C3%BAltimas%20innovaciones%20en%20Marketing%20Digital%20con%20referentes%20de%20la%20industria.%20Reserva%20tu%20lugar%20ahora%20en%20https%3A%2F%2Fgoemms.com%2F',
-            'linkedln' => 'https://www.linkedin.com/shareArticle?mini=true&url=https%3A%2F%2Fgoemms.com%2F&title=%C2%A1Ya%20puedes%20inscribirte%20en%20el%20EMMS%20Digital%20Trends%202025!&summary=%C2%A1Ya%20puedes%20inscribirte%20en%20el%20EMMS%20Digital%20Trends%202025!%20El%20evento%20de%20Marketing%20Digital%20m%C3%A1s%20importante%20en%20LATAM%20y%20Espa%C3%B1a.%20Accede%20a%20Conferencias%20de%20Speakers%20internacionales%2C%20Workshops%20exclusivos%2C%20Casos%20de%20%C3%89xito%2C%20recursos%20descargables%2C%20sorteos%2C%20beneficios%20especiales%20y%20mucho%20m%C3%A1s.%20Es%20online%20y%20gratuito.%20%C2%A1Reg%C3%ADstrate%20ahora!',
-            'facebook' => 'https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fgoemms.com%2F&quote=%C2%A1Cuenta%20regresiva%20para%20el%20EMMS%20Digital%20Trends%202025!%20El%20evento%20de%20Marketing%20Digital%20m%C3%A1s%20importante%20en%20LATAM%20y%20Espa%C3%B1a.%20%F0%9F%A4%A9%20Reg%C3%ADstrate%20gratis%20y%20descubre%20las%20%C3%BAltimas%20innovaciones%20en%20Marketing%20Digital%20con%20referentes%20de%20la%20industria.%20%F0%9F%92%A1%20Es%20online%20y%20gratuito.'
-        ],
+        '/' => $shareLinks,
+        '/digital-trends-registrado' => $shareLinks,
+        '/*' => $shareLinks,
     ];
 
     return $urls[$url] ?? $urls['/*'];

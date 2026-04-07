@@ -6,8 +6,7 @@
         <a class="emms__header__nav--mb" id="btn-burger"></a>
         <nav class="emms__header__nav emms__header__nav--hidden" id="nav-mb">
             <ul class="emms__header__nav__menu" id="navMenu">
-                <li><a href="/">home</a></li>
-                <li><a href="/digital-trends">DIGITAL TRENDS</a></li>
+                <li><a href="/">EMMS 2026</a></li>
                 <li><a href="/sponsors">biblioteca de recursos</a></li>
                 <li class="emms__header__nav__menu__dropdown"><a href="/ediciones-anteriores">Qué es el EMMS</a>
                     <ul class="emms__header__nav__submenu">

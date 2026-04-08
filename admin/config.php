@@ -7,6 +7,8 @@ $DB_PASSWORD = '';
 $DB_NAME = 'EMMS26';
 $ALLOW_IPS = array('::1', '200.5.229.58', '200.5.253.210', '127.0.0.1', '172.19.0.1');
 
+if (!defined('ADMIN_BASE_PATH')) define('ADMIN_BASE_PATH', 'adm26');
+
 $con=mysqli_connect($DB_HOST,$DB_USER,$DB_PASSWORD,$DB_NAME);
 
 function isIPAllow($ip, $ALLOW_IPS) {

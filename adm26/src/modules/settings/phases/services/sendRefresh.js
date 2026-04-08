@@ -1,8 +1,8 @@
-const buildAdminUrl = (path) => `${window.ADM_CONFIG.basePath}/${path.replace(/^\/+/, "")}`;
+import { ADMIN_BASE_PATH } from "../../../../config/adminConfig.js";
 
 export const sendRefresh = async () => {
   try {
-    const sendRefreshUrl = buildAdminUrl("server/modules/settings/sendRefresh.php");
+    const sendRefreshUrl = `${ADMIN_BASE_PATH}/server/modules/settings/sendRefresh.php`;
     await fetch(sendRefreshUrl, {
       method: "post",
       headers: {

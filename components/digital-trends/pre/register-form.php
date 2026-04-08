@@ -1,19 +1,24 @@
 <section class="hero-registration hero-registration--digitaltrends-pre">
+  <?php
+  $heroRegistrationChecklist = [
+    'Conferencias de e-commerce y marketing digital',
+    'Los mejores Speakers de la historia del EMMS.',
+    'WORKSHOPS PRÁCTICOS',
+    'Gratis y online.',
+    'Premios, recursos exclusivos y más.',
+  ];
+  ?>
   <div class="hero-registration__columns">
 
     <div class="hero-registration__text emms__fade-in">
       <h1><em>EVENTO ONLINE Y GRATUITO - 14, 15 y 16 de Julio</em><span class="main">EMMS </span> <span class="main">2026 :</span></h1>
       <p class="hero-registration__text__subtitle">
-        <span class="hero-registration__text__subtitle--lg">La Edición especial</span>
-        <span class="hero-registration__text__subtitle--md">que</span>
-        <span class="hero-registration__text__subtitle--sm">celebra 20 años de Doppler</span>
+        La Edición especial que celebra 20 años de Doppler
       </p>
-      <p>Súmate a Conferencias, Workshops y Networking para capacitarte e inspirarte con las últimas tendencias en Marketing e E-commerce.</p>
       <ul class="hero-registration__text__checklist dk">
-        <li>Los mejores Speakers de la historia del EMMS.</li>
-        <li>WORKSHOPS PRÁCTICOS</li>
-        <li>Gratis y online.</li>
-        <li>Premios, recursos exclusivos y más.</li>
+        <?php foreach ($heroRegistrationChecklist as $heroRegistrationChecklistItem): ?>
+          <li><?= $heroRegistrationChecklistItem ?></li>
+        <?php endforeach; ?>
       </ul>
     </div>
     <!-- Form -->
@@ -27,10 +32,9 @@
 
     <div class="hero-registration__text emms__fade-in mb">
       <ul class="hero-registration__text__checklist">
-        <li>Los mejores Speakers de la historia del EMMS.</li>
-        <li>WORKSHOPS PRÁCTICOS</li>
-        <li>Gratis y online.</li>
-        <li>Premios, recursos exclusivos y más.</li>
+        <?php foreach ($heroRegistrationChecklist as $heroRegistrationChecklistItem): ?>
+          <li><?= $heroRegistrationChecklistItem ?></li>
+        <?php endforeach; ?>
       </ul>
     </div>
   </div>

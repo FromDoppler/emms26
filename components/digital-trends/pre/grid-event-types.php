@@ -70,8 +70,8 @@ $showVipFooter = $block['block'] === 'TextBlock' && $normalizedUrl !== '/digital
     <?php if ($block['block'] === 'CtaBlock' || $showVipFooter) : ?>
       <div class="grid__footer">
         <?php if ($block['block'] === 'CtaBlock') : ?>
-          <a href="#registro" class="emms__cta emms__fade-in-animation eventHiddenElements">RESERVA TU LUGAR</a>
-          <button class="emms__cta emms__fade-in-animation eventShowElements alreadyRegisterForm">
+          <a href="#registro" class="emms__cta emms__cta--xl emms__fade-in-animation eventHiddenElements">RESERVA TU LUGAR</a>
+          <button class="emms__cta emms__cta--xl emms__fade-in-animation eventShowElements alreadyRegisterForm">
             <span class="button__text">RESERVA TU LUGAR</span>
           </button>
         <?php elseif ($showVipFooter) : ?>

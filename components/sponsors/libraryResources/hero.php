@@ -1,7 +1,7 @@
 <section class="sponsors__hero">
     <div class="sponsors__hero__title emms__fade-top">
         <h1>
-            <em>Herramientas gratis para optimizar tu tienda online</em>
+            <em>Herramientas gratutitas para optimizar tu Tienda Online</em>
             Biblioteca de Recursos exclusiva para registrados al EMMS
         </h1>
         <p>

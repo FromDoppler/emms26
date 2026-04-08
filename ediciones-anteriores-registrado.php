@@ -77,7 +77,10 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/utils/DB.php');
       <div class="emms__container--lg emms__previous-editions__hero__row">
         <div class="emms__previous-editions__hero__column-text">
           <h1 class="emms__fade-top">Acerca del EMMS</h1>
-          <p class="emms__fade-in">El EMMS es el <strong>evento online de Marketing Digital más convocante en Latinoamérica y España</strong>. Se desarrolla de forma <strong>100% virtual</strong> y es organizado por <a href="https://www.fromdoppler.com/es/" target="_blank">Doppler</a>, la <strong>herramienta de Marketing Automation</strong> líder entre el público hispanohablante, hace <strong>más de 16 años</strong>. <br><br>Cada edición cuenta con los referentes y marcas más destacados en la industria, abordando las temáticas más resonantes de los últimos meses ante más de 50 mil registrados. <br>Además, actualmente el EMMS ofrece dos ediciones: una exclusiva para la industria E-commerce y otra sobre tendencias globales de marketing digital.
+          <p class="emms__fade-in">
+            El EMMS es el <strong>evento online de E-commerce y Marketing Digital más convocante en Latinoamérica y España</strong>. Se desarrolla de forma <strong>100% virtual</strong> y es organizado por <a href="https://www.fromdoppler.com/es/" target="_blank">Doppler</a>, la <strong>herramienta de Marketing Automation</strong> líder entre el público hispanohablante, desde hace <strong>20 años</strong>.<br><br>
+            Cada edición cuenta con la participación de los <strong>Speakers</strong> y las marcas más destacadas de la industria, abordando las temáticas que son tendencia en los últimos meses ante miles de personas registradas.<br><br>
+            A través del EMMS, Doppler continúa apoyando la educación y el intercambio de saberes para impulsar el crecimiento en la industria.
           </p>
         </div>
         <div class="emms__previous-editions__hero__column-img">

@@ -1,9 +1,8 @@
-const buildAdminUrl = (path) => `${window.ADM_CONFIG.basePath}/${path.replace(/^\/+/, "")}`;
-const getEventId = (eventKey) => window.ADM_CONFIG.eventIds[eventKey] ?? eventKey;
+import { ADMIN_BASE_PATH, getEventId } from "../../../../config/adminConfig.js";
 
 export const getPhase = async (currentEvent) => {
   try {
-    const getPhaseUrl = buildAdminUrl("server/modules/settings/getPhase.php");
+    const getPhaseUrl = `${ADMIN_BASE_PATH}/server/modules/settings/getPhase.php`;
     const response = await fetch(
       `${getPhaseUrl}?${new URLSearchParams({
         event: getEventId(currentEvent),

@@ -1,9 +1,8 @@
-const buildAdminUrl = (path) => `${window.ADM_CONFIG.basePath}/${path.replace(/^\/+/, "")}`;
-const getEventId = (eventKey) => window.ADM_CONFIG.eventIds[eventKey] ?? eventKey;
+import { ADMIN_BASE_PATH, getEventId } from "../../../../config/adminConfig.js";
 
 export const setPhase = async (currentEvent, selectedPhase, transition) => {
   try {
-    const setPhaseUrl = buildAdminUrl("server/modules/settings/setPhase.php");
+    const setPhaseUrl = `${ADMIN_BASE_PATH}/server/modules/settings/setPhase.php`;
     const formData = new FormData();
     formData.append("event", getEventId(currentEvent));
     formData.append("phase", selectedPhase);
@@ -20,7 +19,7 @@ export const setPhase = async (currentEvent, selectedPhase, transition) => {
 
 export const setTransmission = async (currentEvent, transmission) => {
   try {
-    const setPhaseUrl = buildAdminUrl("server/modules/settings/setTransmission.php");
+    const setPhaseUrl = `${ADMIN_BASE_PATH}/server/modules/settings/setTransmission.php`;
     const formData = new FormData();
     formData.append("event", getEventId(currentEvent));
     formData.append("transmission", transmission);

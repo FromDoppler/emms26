@@ -35,7 +35,7 @@ if (!empty($sponsors)) {
                             <?php endif; ?>
                         <?php endif; ?>
                         <div class="emms__sponsors__list__item__logo">
-                            <img src="./adm24/server/modules/sponsors/uploads/<?= htmlspecialchars($sponsor['logo_company']) ?>" alt="<?= htmlspecialchars($sponsor['alt_logo_company']) ?>">
+                            <img src="/<?= ADMIN_BASE_PATH ?>/server/modules/sponsors/uploads/<?= htmlspecialchars($sponsor['logo_company']) ?>" alt="<?= htmlspecialchars($sponsor['alt_logo_company']) ?>">
                         </div>
                     </li>
                 <?php

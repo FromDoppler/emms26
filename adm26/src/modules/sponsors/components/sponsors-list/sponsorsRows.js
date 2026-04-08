@@ -1,8 +1,10 @@
 import { getSponsors } from "./getSponsors.js";
 import { showSponsorsPage } from "./sponsorsList.js";
 import { showSponsorForm } from "../sponsor-form/sponsorForm.js";
+import { ADMIN_BASE_PATH } from "../../../../config/adminConfig.js";
+
 const removeSponsor = async (sponsorId, currentSponsorType) => {
-  const removeSponsorUrl = "/adm25/server/modules/sponsors/removeSponsor.php";
+  const removeSponsorUrl = `${ADMIN_BASE_PATH}/server/modules/sponsors/removeSponsor.php`;
   const formData = new FormData();
   formData.append("sponsorId", sponsorId);
 

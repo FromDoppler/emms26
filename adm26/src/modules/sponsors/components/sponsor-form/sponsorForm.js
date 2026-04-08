@@ -1,6 +1,7 @@
 import { sponsorType } from "../../types/sponsorTypes.js";
 import { id_field_col_array } from "./hiddenFieldList.js";
 import { showSponsorsPage } from "../sponsors-list/sponsorsList.js";
+import { ADMIN_BASE_PATH } from "../../../../config/adminConfig.js";
 
 const topFunction = () => {
   document.body.scrollTop = 0; // For Safari
@@ -69,7 +70,7 @@ const addSponsor = async (currentSponsorType, sponsorId) => {
     const str = JSON.stringify(sponsorObj);
     formData.append("str", str);
 
-    const addSponsorUrl = "/adm25/server/modules/sponsors/addSponsor.php";
+    const addSponsorUrl = `${ADMIN_BASE_PATH}/server/modules/sponsors/addSponsor.php`;
 
     await fetch(addSponsorUrl, {
       method: "post",

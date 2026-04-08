@@ -34,7 +34,7 @@ if (!$db->hasActiveSponsor()) {
   return;
 }
 
-$uploadsPath = './adm25/server/modules/sponsors/uploads/';
+$uploadsPath = '/' . ADMIN_BASE_PATH . '/server/modules/sponsors/uploads/';
 $faqLink = $isRegistered ? '/registrado#preguntas-frecuentes' : './#preguntas-frecuentes';
 
 $sponsorTypes = [

@@ -19,9 +19,9 @@
   color: var(--color-bg);
   background: transparent;
   box-shadow: none;
-  font-size: 10px;
+  font-size: var(--font-small-size);
   font-weight: 600;
-  line-height: 1.2;
+  line-height: var(--font-small-line);
   letter-spacing: 0.02em;
   transition:
     opacity 0.3s ease,
@@ -59,27 +59,27 @@
 .referral__title {
   margin: 0 0 8px;
   color: var(--color-bg);
-  font-size: 30px;
+  font-size: var(--font-h3-size);
   font-style: normal;
   font-weight: 700;
-  line-height: 1.08;
+  line-height: var(--font-h3-line);
 }
 
 .referral__description {
   margin: 0 0 16px;
   color: var(--color-bg);
-  font-size: 13px;
+  font-size: var(--font-small-size);
   font-style: normal;
   font-weight: 600;
-  line-height: 1.35;
+  line-height: var(--font-small-line);
 }
 
 .referral__subtitle {
   margin: 0 0 8px;
   color: var(--color-bg);
-  font-size: 16px;
+  font-size: var(--font-p-size);
   font-weight: 700;
-  line-height: 1.2;
+  line-height: var(--font-p-line);
 }
 
 .referral__steps {
@@ -116,17 +116,17 @@
 .referral__step-title {
   margin: 0 0 6px;
   color: #7d06e0;
-  font-size: 14px;
+  font-size: var(--font-small-size);
   font-weight: 700;
-  line-height: 20px;
+  line-height: var(--font-small-line);
 }
 
 .referral__step-text {
   margin: 0;
   color: #5a5a5a;
-  font-size: 14px;
+  font-size: var(--font-small-size);
   font-weight: 400;
-  line-height: 16px;
+  line-height: var(--font-small-line);
 }
 
 .referral__actions {
@@ -174,7 +174,8 @@
   }
 
   .referral__title {
-    font-size: 26px;
+    font-size: var(--font-h4-size);
+    line-height: var(--font-h4-line);
   }
 }
 
@@ -203,7 +204,8 @@
   }
 
   .referral__title {
-    font-size: 28px;
+    font-size: var(--font-h4-size);
+    line-height: var(--font-h4-line);
   }
 
   .referral__description {
@@ -234,11 +236,13 @@
   }
 
   .referral__step-title {
-    font-size: 13px;
+    font-size: var(--font-small-size);
+    line-height: var(--font-small-line);
   }
 
   .referral__step-text {
-    font-size: 11px;
+    font-size: var(--font-small-size);
+    line-height: var(--font-small-line);
   }
 
   .referral__actions {
@@ -251,6 +255,7 @@
     width: 100%;
     min-width: 0;
     padding: 12px 20px;
-    font-size: 12px;
+    font-size: var(--font-small-size);
+    line-height: var(--font-small-line);
   }
 }

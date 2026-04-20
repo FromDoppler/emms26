@@ -2,7 +2,7 @@
 $faqItems = [
   [
     "question" => "🕵️‍♀️ ¿Por qué asistir al EMMS?",
-    "answer" => "Es el evento online y gratuito de Marketing Digital más importante de España y Latinoamérica. Cada año nos eligen expertos de compañías líderes de la industria para dar a conocer las principales tendencias en su sector."
+    "answer" => "Es el evento online y gratuito de E-commerce y Marketing Digital más importante de España y Latinoamérica. Cada año nos eligen expertos de compañías líderes de la industria para dar a conocer las principales tendencias en su sector."
   ],
   [
     "question" => "🎁 ¿Qué obtengo al registrarme al evento?",
@@ -10,7 +10,7 @@ $faqItems = [
   ],
   [
     "question" => "📅 ¿Cuándo se realizará el EMMS 2026?",
-    "answer" => "El EMMS 2026 se realizará el 14, 15 y 16 de julio. Será una edición especial por los 20 años de Doppler que volverá a convocar a los mejores speakers de la historia del evento. Registrándote al EMMS recibirás por Email todos las novedades."
+    "answer" => "El EMMS 2026 se realizará el 14, 15 y 16 de julio. Será una edición especial por los 20 años de Doppler que volverá a convocar a los mejores Speakers de la historia del evento. Registrándote al EMMS recibirás por Email todos las novedades."
   ],
   [
     "question" => "📍 ¿Dónde serán los eventos?",
@@ -38,11 +38,11 @@ $faqItems = [
   ],
   [
     "question" => "🎙Quiero ser Speaker del EMMS, ¿puedo postularme?",
-    "answer" => "¡Por supuesto! Escríbenos a <a href='mailto:partners@fromdoppler.com'>partners@fromdoppler.com</a> para comentarnos por qué deberías ser ponente en EMMS y te responderemos a la brevedad."
+    "answer" => "¡Por supuesto! Escríbenos a <a href='mailto:partners@fromdoppler.com'>partners@fromdoppler.com</a> para comentarnos por qué deberías ser ponente del EMMS y te responderemos a la brevedad."
   ],
   [
     "question" => "📝 ¿Obtengo un certificado de participación por asistir al evento?",
-    "answer" => "¡Sí! Podrás descargar tu certificado de asistencia a cada una de las ediciones del EMMS."
+    "answer" => "¡Sí! Podrás obtener tu certificado de asistencia para compartir en tus Redes Sociales."
   ]
 ];
 

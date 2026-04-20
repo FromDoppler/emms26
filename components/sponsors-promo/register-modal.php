@@ -2,7 +2,7 @@
     <div class="emms__register-modal__window emms__register-modal--sponsor-promo">
         <!-- Form -->
         <form class="emms__form" id="sponsorsPromoForm" novalidate autocomplete="off">
-            <h3>Déjanos tus datos de contacto para ser parte del EMMS 2025 :)</h3>
+            <h3>Déjanos tus datos de contacto para ser parte del EMMS 2026 :)</h3>
             <h4>En breve nuestro equipo te escribirá para conversar sobre la mejor forma de sumarte como <span id="sponsorType"></span> al EMMS</h4>
             <ul class="emms__form__field-group">
                 <li class="emms__form__field-item">
@@ -19,7 +19,7 @@
                 </li>
                 <li class="emms__form__field-item">
                     <div class="holder">
-                        <label class="required-label" for="telefono">Teléfono</label>
+                        <label class="required-label" for="telefono">WhatsApp</label>
                         <input type="tel" name="phone" id="phone" class="phone phone-number" autocomplete="off">
                     </div>
                 </li>

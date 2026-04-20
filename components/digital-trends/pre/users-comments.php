@@ -26,21 +26,21 @@ $quotes = [
 $quotesDT = [
   [
     'name' => 'Andrea',
-    'text' => '“El EMMS fue una experiencia transformadora y muy enriquecedora. No solo aprendí estrategias que pude implementar al instante, sino que también hice alianzas con otros colegas de toda la región. ¡Totalmente recomendado!”.',
+    'text' => '&ldquo;El EMMS fue una experiencia transformadora y muy enriquecedora. No solo aprendí estrategias que pude implementar al instante, sino que también hice alianzas con otros colegas de toda la región. ¡Totalmente recomendado!&rdquo;.',
     'image' => '/src/img/quotes/quote-andrea.png',
     'flag' => '/src/img/flags/CO.png',
     'country' => 'Colombia',
   ],
   [
     'name' => 'Beatriz',
-    'text' => '“Nunca imaginé que un evento digital me proporcionaría tanto valor. Los workshops prácticos fueron claves para mejorar nuestras campañas. ¡Definitivamente, un must para cualquier profesional del marketing!”.',
+    'text' => '&ldquo;Nunca imaginé que un evento digital me proporcionaría tanto valor. Los workshops prácticos fueron claves para mejorar nuestras campañas. ¡Definitivamente, un must para cualquier profesional del marketing!&rdquo;.',
     'image' => '/src/img/quotes/quote-beatriz.png',
     'flag' => '/src/img/flags/ES.png',
     'country' => 'España',
   ],
   [
     'name' => 'Juan Pablo',
-    'text' => '“El EMMS me brindó las herramientas exactas que necesitaba para optimizar mi estrategia de marketing. Los casos de éxito compartidos fueron inspiradores. Ahora mi negocio está escalando como nunca”.',
+    'text' => '&ldquo;El EMMS me brindó las herramientas exactas que necesitaba para optimizar mi estrategia de marketing. Los casos de éxito compartidos fueron inspiradores. Ahora mi negocio está escalando como nunca&rdquo;.',
     'image' => '/src/img/quotes/quote-juan.png',
     'flag' => '/src/img/flag-mexico.png',
     'country' => 'México',
@@ -57,11 +57,11 @@ $usersCommentsConfig = [
     'quotes' =>  $quotesDT,
     'cta' => [
       'text' => 'INSCRÍBETE AHORA',
-      'link' => '/digital-trends#registro',
+      'link' => '/#registro',
       'class' => 'emms__cta emms__cta--md userscomments__cta',
     ],
   ],
-  '/digital-trends' => [
+  '/' => [
     'title' => 'Nuestros asistentes dicen:',
     'class' => 'userscomments userscomments--digitaltrends',
     'quotes' =>  $quotesDT,
@@ -79,7 +79,12 @@ $usersCommentsConfig = [
   '/*' => [
     'title' => 'Esto opinan quienes <br> ya fueron parte del EMMS:',
     'class' => 'userscomments userscomments--digitaltrends',
-    'quotes' => $quotes,
+    'quotes' => $quotesDT,
+    'cta' => [
+      'text' => 'INSCRÍBETE AHORA',
+      'link' => '#registro',
+      'class' => 'emms__cta emms__cta--md userscomments__cta',
+    ],
   ]
 ];
 

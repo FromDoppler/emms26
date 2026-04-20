@@ -57,7 +57,7 @@ class EmailTemplateManager
       'ecommerceVipPre' => 'getEcommerceVipTemplatePre',
       'ecommerceVipDuring' => 'getEcommerceVipEmailTemplateDuring',
       'ecommerceVipPost' => 'getEcommerceVipEmailTemplatePost',
-      'digitalTrendsVipPre' => 'getDTVipEmailTemplatePre',
+      'digitalTrendsVipPre' => 'getDigitalTEmailTemplatePREEarlyBirds',
       'digitalTrendsVipDuring' => 'getDigitalTrendsVipEmailTemplateDuring',
       'digitalTrendsVipPost' => 'getDigitalTrendsVipEmailTemplatePost',
     ];

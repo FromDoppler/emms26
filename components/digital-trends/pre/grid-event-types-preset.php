@@ -25,6 +25,6 @@ tu negocio.',
     'img' => '/src/img/grid-event-types/regalos.png',
     'alt' => 'Sorpresas por Aniversario',
     'title' => 'Sorpresas por Aniversario',
-    'text' => 'Descuentos exclusivos, premios y beneficios únicos por los 20 años Doppler',
+    'text' => 'Descuentos exclusivos, premios y beneficios únicos por nuestra edición aniversario.',
   ],
 ];

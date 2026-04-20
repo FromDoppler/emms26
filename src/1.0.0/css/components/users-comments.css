@@ -116,7 +116,7 @@
 }
 
 .userscomments .userscomments__cta {
-  margin: 110px auto 0;
+  margin: 60px auto 0;
 }
 
 /* Dark Version */
@@ -205,6 +205,7 @@
   }
 
   .userscomments.userscomments--digitaltrends {
-    padding: 45 0 70px 0;
+    padding: 45px 0 70px 0;
+    margin-bottom: 0;
   }
 }

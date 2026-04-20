@@ -1,5 +1,5 @@
 .hero-registration {
-  padding: 145px 0 88px 0;
+  padding: 145px 0 135px 0;
   background: #000;
   position: relative;
   background: url("../../../img/backgrounds/bg-section-8.png") center/cover no-repeat;
@@ -190,31 +190,20 @@
   max-width: 430px;
 }
 
-.hero-registration--digitaltrends-pre .hero-registration__text__subtitle {
+.hero-registration--digitaltrends-pre p.hero-registration__text__subtitle {
   color: var(--color-bg);
   font-feature-settings:
     "liga" off,
     "clig" off;
   font-style: normal;
   font-weight: 800;
+  font-size: 32px;
   line-height: 36px;
-  max-width: 480px;
+  max-width: 444px;
 }
 
 .hero-registration--digitaltrends-pre .hero-registration__text__subtitle span {
   display: inline;
-}
-
-.hero-registration--digitaltrends-pre .hero-registration__text__subtitle--lg {
-  font-size: var(--font-h2-size);
-}
-
-.hero-registration--digitaltrends-pre .hero-registration__text__subtitle--md {
-  font-size: 38px;
-}
-
-.hero-registration--digitaltrends-pre .hero-registration__text__subtitle--sm {
-  font-size: 34px;
 }
 
 .hero-registration .hero-registration__text p .text--highlighted {

@@ -5,21 +5,21 @@
 $contents = [
   '/' => [
     'subheading' => 'TODAS LAS TENDENCIAS DE MARKETING DIGITAL EN UN SOLO LUGAR',
-    'heading' => '<span> Digital Trends 2025: ¡Está llegando!</span>',
+    'heading' => '<span> Digital Trends 2026: ¡Está llegando!</span>',
     'body' => 'Revoluciona tu forma de hacer negocios y potencia tus resultados con el mayor evento
 de Latam y España. Disfruta de dos ediciones exclusivas al año para capacitarte e inspirarte con referentes de tu industria.</a> ',
     'ecommerceUrl' => '/ecommerce',
   ],
   '/registrado' => [
     'subheading' => 'TODAS LAS TENDENCIAS DE MARKETING DIGITAL EN UN SOLO LUGAR',
-    'heading' => '<span>¡YA ERES PARTE DEL EMMS 2025!</span>',
+    'heading' => '<span>¡YA ERES PARTE DEL EMMS 2026!</span>',
     'body' => 'Revoluciona tu forma de hacer negocios y potencia tus resultados con el mayor evento
 de Latam y España. Disfruta de dos ediciones exclusivas al año para capacitarte e inspirarte con referentes de tu industria.',
     'ecommerceUrl' => '/ecommerce-registrado',
   ],
   '/*' => [
     'subheading' => 'TODAS LAS TENDENCIAS DE MARKETING DIGITAL EN UN SOLO LUGAR',
-    'heading' => '<span> Digital Trends 2025: ¡Está llegando!</span>',
+    'heading' => '<span> Digital Trends 2026: ¡Está llegando!</span>',
     'body' => 'Revoluciona tu forma de hacer negocios y potencia tus resultados con el mayor evento
 de Latam y España. Disfruta de dos ediciones exclusivas al año para capacitarte e inspirarte con referentes de tu industria.</a> ',
     'ecommerceUrl' => '/ecommerce',

@@ -9,7 +9,7 @@
         Si te registras entre las primeras 1.000 personas, accedes sin costo a la experiencia VIP del EMMS.
       </p>
       <ul class="vip-offer__benefits">
-        <li class="vip-offer__benefit">Más de &quot;x&quot; workshops en salas reducidas con especialistas.</li>
+        <li class="vip-offer__benefit">Workshops en salas reducidas con especialistas.</li>
         <li class="vip-offer__benefit">Cuenta en Doppler gratis por 6 meses.</li>
         <li class="vip-offer__benefit">Premios, recursos descargables y beneficios especiales.</li>
       </ul>

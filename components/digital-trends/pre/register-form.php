@@ -1,7 +1,7 @@
 <section class="hero-registration hero-registration--digitaltrends-pre">
   <?php
   $heroRegistrationChecklist = [
-    'Conferencias de e-commerce y marketing digital',
+    'Conferencias de e-commerce y marketing digital.',
     'Los mejores Speakers de la historia del EMMS.',
     'WORKSHOPS PRÁCTICOS',
     'Gratis y online.',
@@ -11,7 +11,7 @@
   <div class="hero-registration__columns">
 
     <div class="hero-registration__text emms__fade-in">
-      <h1><em>EVENTO ONLINE Y GRATUITO - 14, 15 y 16 de Julio</em><span class="main">EMMS </span> <span class="main">2026 :</span></h1>
+      <h1><em>EVENTO ONLINE Y GRATUITO - 14, 15 y 16 de Julio</em><span class="main">EMMS </span> <span class="main">2026</span></h1>
       <p class="hero-registration__text__subtitle">
         La Edición especial que celebra 20 años de Doppler
       </p>

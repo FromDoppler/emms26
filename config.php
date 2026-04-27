@@ -134,7 +134,7 @@ if (!defined('SUBJECT_FREE_POST_DIGITALT'))
 
 // --- VIP ---
 if (!defined('SUBJECT_VIP_PRE_DIGITALT'))
-    define('SUBJECT_VIP_PRE_DIGITALT', html_entity_decode('&#x1F39F;', ENT_QUOTES, 'UTF-8') . ' Tu entrada VIP al EMMS Digital Trends');
+    define('SUBJECT_VIP_PRE_DIGITALT', 'Ya estás en el EMMS 2026 ' . html_entity_decode('&#x1F64C;', ENT_QUOTES, 'UTF-8'));
 
 if (!defined('SUBJECT_VIP_DURING_DIGITALT'))
     define('SUBJECT_VIP_DURING_DIGITALT', html_entity_decode('&#x1F39F;', ENT_QUOTES, 'UTF-8') . ' Ya eres VIP en el EMMS Digital Trends 2025');

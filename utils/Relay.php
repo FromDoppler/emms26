@@ -10,7 +10,7 @@ class Relay
     private static $account;
 
     private const urlBase = 'https://api.dopplerrelay.com/accounts/';
-    private const fromName = 'EMMS 2025';
+    private const fromName = 'EMMS 2026';
     private const fromEmail = 'info@goemms.com';
 
     private static function executeCurl($url, $data, $headers, $method)

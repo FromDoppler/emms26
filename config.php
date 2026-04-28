@@ -124,7 +124,7 @@ if (!defined('SUBJECT_VIP_POST_ECOMMERCE'))
 ## DT
 // --- FREE ---
 if (!defined('SUBJECT_FREE_PRE_DIGITALT'))
-    define('SUBJECT_FREE_PRE_DIGITALT', 'Ya estás en el EMMS 2026 ' . html_entity_decode('&#x1F64C;', ENT_QUOTES, 'UTF-8'));
+    define('SUBJECT_FREE_PRE_DIGITALT', 'Ya est' . html_entity_decode('&#x00E1;', ENT_QUOTES, 'UTF-8') . 's en el EMMS 2026 ' . html_entity_decode('&#x1F64C;', ENT_QUOTES, 'UTF-8'));
 
 if (!defined('SUBJECT_FREE_DURING_DIGITALT'))
     define('SUBJECT_FREE_DURING_DIGITALT', html_entity_decode('&#x1F389;', ENT_QUOTES, 'UTF-8') . ' Ya eres parte del EMMS Digital Trends 2025');

@@ -50,7 +50,7 @@ class EmailTemplateManager
         'post' => 'getEcommerceEmailTemplatePost',
       ],
       DIGITALTRENDS => [
-        'pre' => 'getDigitalTEmailTemplatePRE',
+        'pre' => 'getDigitalTEmailTemplatePREEarlyBirds',
         'during' => 'getDigitalTEmailTemplateDuring',
         'post' => 'getDigitalTEmailTemplatePost',
       ],

@@ -1,6 +1,6 @@
 <div class="hero-registration__form emms__fade-in" id="registro">
   <!-- Form -->
-  <form class="emms__form emms__form--two-step emms__fade-in" novalidate autocomplete="off" id="commonForm" data-step="1" eventType='<?= $eventType ?>'>
+  <form class="emms__form emms__form--two-step emms__fade-in" novalidate autocomplete="off" id="commonForm" data-step="1" data-registration-flow="email-first" eventType='<?= $eventType ?>'>
     <div class="emms__form__step" data-step="1">
       <img class="emms__form__badge" src="/src/img/icons/icon-form-mail.png" alt="">
       <h2>Ingresa tu Email</h2>

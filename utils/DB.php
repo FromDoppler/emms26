@@ -278,6 +278,23 @@ class DB
         }
     }
 
+    public function isRegisteredForEvent($email, $eventId)
+    {
+        $eventColumns = [
+            ECOMMERCE     => ['ecommerce', '`ecommerce-vip`'],
+            DIGITALTRENDS => ['`digital-trends`', '`digital-trends-vip`'],
+        ];
+
+        if (!isset($eventColumns[$eventId])) {
+            throw new Exception("Unknown event id: $eventId");
+        }
+
+        [$freeCol, $vipCol] = $eventColumns[$eventId];
+        $sql = "SELECT 1 FROM registered WHERE email = ? AND ($freeCol = 1 OR $vipCol = 1) LIMIT 1";
+        $result = $this->query($sql, [$email])->fetchArray();
+        return !empty($result);
+    }
+
 
 
     public function google_oauth_is_table_empty()

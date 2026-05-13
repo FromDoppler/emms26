@@ -348,8 +348,8 @@ select {
 }
 
 .emms__form--two-step .emms__form__subtitle {
-  font-size: 16px;
-  line-height: 24px;
+  font-size: var(--font-p-size);
+  line-height: var(--font-p-line);
   color: #000000;
   margin: 0 0 8px 0;
 }

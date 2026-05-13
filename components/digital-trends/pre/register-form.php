@@ -27,7 +27,7 @@
     $formSubTitle = '';
     $eventType = DIGITALTRENDS;
     ?>
-    <?php include_once($_SERVER['DOCUMENT_ROOT'] . '/components/register-form-component.php'); ?>
+    <?php include_once($_SERVER['DOCUMENT_ROOT'] . '/components/register-form-two-step.php'); ?>
     <!-- End form -->
 
     <div class="hero-registration__text emms__fade-in mb">

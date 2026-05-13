@@ -278,6 +278,12 @@ class DB
         }
     }
 
+    public function isRegisteredByEmail($email)
+    {
+        $result = $this->query("SELECT 1 FROM registered WHERE email = ? LIMIT 1", [$email])->fetchArray();
+        return !empty($result);
+    }
+
 
 
     public function google_oauth_is_table_empty()

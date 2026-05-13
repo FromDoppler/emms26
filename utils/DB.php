@@ -278,9 +278,20 @@ class DB
         }
     }
 
-    public function isRegisteredByEmail($email)
+    public function isRegisteredForEvent($email, $eventId)
     {
-        $result = $this->query("SELECT 1 FROM registered WHERE email = ? LIMIT 1", [$email])->fetchArray();
+        $eventColumns = [
+            ECOMMERCE     => ['ecommerce', '`ecommerce-vip`'],
+            DIGITALTRENDS => ['`digital-trends`', '`digital-trends-vip`'],
+        ];
+
+        if (!isset($eventColumns[$eventId])) {
+            throw new Exception("Unknown event id: $eventId");
+        }
+
+        [$freeCol, $vipCol] = $eventColumns[$eventId];
+        $sql = "SELECT 1 FROM registered WHERE email = ? AND ($freeCol = 1 OR $vipCol = 1) LIMIT 1";
+        $result = $this->query($sql, [$email])->fetchArray();
         return !empty($result);
     }
 

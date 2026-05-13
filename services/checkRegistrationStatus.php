@@ -6,6 +6,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/utils/DB.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/config.php');
 
 require_once($_SERVER['DOCUMENT_ROOT'] . '/services/functions.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/services/getCurrentEvent.php');
 
 
 header('Content-Type: application/json; charset=utf-8');
@@ -27,13 +28,15 @@ try {
     $email = (isset($input['email']) && is_string($input['email'])) ? trim($input['email']) : null;
     Validator::validateEmail($email);
 
+    $currentEvent = getCurrentEvent();
+
     $db = new DB(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-    $isRegistered = $db->isRegisteredByEmail($email);
+    $isRegistered = $db->isRegisteredForEvent($email, $currentEvent['freeId']);
     $db->close();
 
     echo json_encode(['registered' => $isRegistered]);
 } catch (Exception $e) {
-    processError("checkRegistrationStatus", $e->getMessage(), ['email' => $email]);
+    processError("checkRegistrationStatus", $e->getMessage(), ['email' => $email, 'event' => $currentEvent['freeId'] ?? null]);
     header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);
     echo json_encode(['status' => 'error', 'message' => 'Unable to check registration status']);
     exit();

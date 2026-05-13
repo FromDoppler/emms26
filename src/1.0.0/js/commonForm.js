@@ -79,9 +79,9 @@ const initializeEventListeners = () => {
 
   if (form) {
     const isEmailFirstFlow = form.dataset.registrationFlow === "email-first";
-    const submitBtn = form.querySelector("button");
-    if (submitBtn) submitBtn.addEventListener("click", (e) => submitFormHandler(e, form));
     if (!isEmailFirstFlow) {
+      const submitBtn = form.querySelector("button");
+      if (submitBtn) submitBtn.addEventListener("click", (e) => submitFormHandler(e, form));
       swichFormListener(form); // usando nombre original con typo
     }
   }

@@ -108,4 +108,9 @@ const validateSimpleForm = (form) => {
   return emailField && hasRequiredsValidate;
 };
 
-export { validateEmailField, validateEmptyField, validateEmptyFields, validatePolicyCheckbox, resetErrorField, validateForm, validateSimpleForm };
+const validateEmailStep = (form) => {
+  const emailInput = form.querySelector('input[name="email"]');
+  return validateEmptyField(emailInput) && validateEmailField(emailInput);
+};
+
+export { validateEmailField, validateEmptyField, validateEmptyFields, validatePolicyCheckbox, resetErrorField, validateForm, validateSimpleForm, validateEmailStep };

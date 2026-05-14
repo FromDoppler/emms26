@@ -1,24 +1,11 @@
 "use strict";
 
 import { customError } from "./common/customsError.js";
-import { submitFormFetch, submitModalForm, submitWithoutForm } from "./common/submitForm.js";
+import { submitFormFetch, submitModalForm, submitWithoutForm, redirectToRegisteredPage } from "./common/submitForm.js";
 import { validateForm } from "./common/formsValidators.js";
 import { alreadyAccountListener, swichFormListener } from "./common/switchForm.js";
 import { closeModal, openModal } from "../../../components/modal/openModal.js";
-
-const redirectToRegisteredPage = () => {
-  const currentPath = window.location.pathname.replace(/^\//, "");
-
-  // Special case for sponsors (preserve slug)
-  if (currentPath === "sponsors") {
-    const slug = sessionStorage.getItem("currentSlug");
-    const baseUrl = window.APP.EVENTS.CURRENT.sharedPages.sponsors.registered.url;
-    window.location.href = slug && slug !== "null" ? `/${baseUrl}?slug=${slug}` : `/${baseUrl}`;
-  } else {
-    // Default: go to event's registered page
-    window.location.href = window.APP.utils.addParams(`/${window.APP.EVENTS.CURRENT.pages.registered.url}`);
-  }
-};
+import { initHeroRegistrationFlow } from "./heroRegistrationFlow.js";
 
 // Form submit handler
 const submitFormHandler = async (e, form) => {
@@ -79,7 +66,9 @@ const initializeEventListeners = () => {
 
   if (form) {
     const isEmailFirstFlow = form.dataset.registrationFlow === "email-first";
-    if (!isEmailFirstFlow) {
+    if (isEmailFirstFlow) {
+      initHeroRegistrationFlow(form);
+    } else {
       const submitBtn = form.querySelector("button");
       if (submitBtn) submitBtn.addEventListener("click", (e) => submitFormHandler(e, form));
       swichFormListener(form); // usando nombre original con typo

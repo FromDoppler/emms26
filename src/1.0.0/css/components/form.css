@@ -328,6 +328,34 @@ select {
   display: none;
 }
 
+.emms__form--two-step .emms__form__step {
+  transition:
+    opacity 280ms ease,
+    transform 280ms ease;
+}
+
+.emms__form--two-step .emms__form__step.is-leaving {
+  opacity: 0;
+  transform: translateY(-8px);
+  pointer-events: none;
+}
+
+.emms__form--two-step .emms__form__step.is-entering {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .emms__form--two-step .emms__form__step {
+    transition-duration: 1ms;
+  }
+
+  .emms__form--two-step .emms__form__step.is-leaving,
+  .emms__form--two-step .emms__form__step.is-entering {
+    transform: none;
+  }
+}
+
 .emms__form--two-step .emms__form__badge {
   width: 64px;
   height: auto;

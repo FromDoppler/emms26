@@ -109,6 +109,7 @@ const validateSimpleForm = (form) => {
 };
 
 const validateEmailStep = (form) => {
+  activeFieldEventsValidator(form);
   const emailInput = form.querySelector('input[name="email"]');
   return validateEmptyField(emailInput) && validateEmailField(emailInput);
 };

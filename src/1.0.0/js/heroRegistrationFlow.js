@@ -4,7 +4,7 @@ import { customError } from "./common/customsError.js";
 import {
   checkRegistrationStatus,
   submitFormFetch,
-  redirectToRegisteredPage,
+  redirectToRegisteredPage
 } from "./common/submitForm.js";
 import { validateEmailStep } from "./common/formsValidators.js";
 import { setEventInLocalStorage } from "./common/submitHelpers.js";
@@ -66,7 +66,7 @@ const handleEmailStep = async (form, stepOneEl, stepTwoEl, stepOneButton) => {
     if (registered === true) {
       setEventInLocalStorage(
         window.APP.EVENTS.CURRENT.freeId,
-        toHex(emailValue),
+        toHex(emailValue)
       );
       redirectToRegisteredPage();
       return;
@@ -86,7 +86,7 @@ const handleSubmitStep = async (form, stepTwoButton) => {
   try {
     const result = await submitFormFetch(
       form,
-      window.APP.EVENTS.CURRENT.freeId,
+      window.APP.EVENTS.CURRENT.freeId
     );
     if (result === undefined) return;
     if (result === null) {

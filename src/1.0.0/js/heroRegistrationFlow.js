@@ -4,7 +4,7 @@ import { customError } from "./common/customsError.js";
 import {
   checkRegistrationStatus,
   submitFormFetch,
-  redirectToRegisteredPage
+  redirectToRegisteredPage,
 } from "./common/submitForm.js";
 import { validateEmailStep } from "./common/formsValidators.js";
 import { setEventInLocalStorage } from "./common/submitHelpers.js";

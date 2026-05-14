@@ -78,9 +78,12 @@ const initializeEventListeners = () => {
   const alreadyAccountForm = document.getElementById("alreadyAccountForm");
 
   if (form) {
-    const submitBtn = form.querySelector("button");
-    if (submitBtn) submitBtn.addEventListener("click", (e) => submitFormHandler(e, form));
-    swichFormListener(form); // usando nombre original con typo
+    const isEmailFirstFlow = form.dataset.registrationFlow === "email-first";
+    if (!isEmailFirstFlow) {
+      const submitBtn = form.querySelector("button");
+      if (submitBtn) submitBtn.addEventListener("click", (e) => submitFormHandler(e, form));
+      swichFormListener(form); // usando nombre original con typo
+    }
   }
 
   if (modalForm) {

@@ -1,11 +1,7 @@
 "use strict";
 
 import { customError } from "./common/customsError.js";
-import {
-  checkRegistrationStatus,
-  submitFormFetch,
-  redirectToRegisteredPage,
-} from "./common/submitForm.js";
+import { checkRegistrationStatus, submitFormFetch, redirectToRegisteredPage } from "./common/submitForm.js";
 import { validateEmailStep } from "./common/formsValidators.js";
 import { setEventInLocalStorage } from "./common/submitHelpers.js";
 import { toHex } from "./common/decodeEmail.js";
@@ -17,10 +13,7 @@ const setButtonLoading = (button, isLoading) => {
 
 const STEP_TRANSITION_MS = 280;
 
-const prefersReducedMotion = () =>
-  typeof window !== "undefined" &&
-  window.matchMedia &&
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const prefersReducedMotion = () => typeof window !== "undefined" && window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const goToStepTwo = (form, stepOneEl, stepTwoEl) => {
   form.dataset.step = "2";
@@ -64,10 +57,7 @@ const handleEmailStep = async (form, stepOneEl, stepTwoEl, stepOneButton) => {
     const registered = await checkRegistrationStatus(emailValue);
 
     if (registered === true) {
-      setEventInLocalStorage(
-        window.APP.EVENTS.CURRENT.freeId,
-        toHex(emailValue)
-      );
+      setEventInLocalStorage(window.APP.EVENTS.CURRENT.freeId, toHex(emailValue));
       redirectToRegisteredPage();
       return;
     }
@@ -84,10 +74,7 @@ const handleSubmitStep = async (form, stepTwoButton) => {
   setButtonLoading(stepTwoButton, true);
 
   try {
-    const result = await submitFormFetch(
-      form,
-      window.APP.EVENTS.CURRENT.freeId
-    );
+    const result = await submitFormFetch(form, window.APP.EVENTS.CURRENT.freeId);
     if (result === undefined) return;
     if (result === null) {
       throw new Error("Fetch fail in heroRegistrationFlow submit");

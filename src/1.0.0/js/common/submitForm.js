@@ -4,6 +4,41 @@ import { validateForm } from "./formsValidators.js";
 import { toHex, fromHex } from "./decodeEmail.js";
 import { buildUserData, setEventInLocalStorage, extractFormData, toggleButtonLoading, trackMetaPixel } from "./submitHelpers.js";
 
+const redirectToRegisteredPage = () => {
+  const currentPath = window.location.pathname.replace(/^\//, "");
+
+  // Special case for sponsors (preserve slug)
+  if (currentPath === "sponsors") {
+    const slug = sessionStorage.getItem("currentSlug");
+    const baseUrl = window.APP.EVENTS.CURRENT.sharedPages.sponsors.registered.url;
+    window.location.href = slug && slug !== "null" ? `/${baseUrl}?slug=${slug}` : `/${baseUrl}`;
+  } else {
+    window.location.href = window.APP.utils.addParams(`/${window.APP.EVENTS.CURRENT.pages.registered.url}`);
+  }
+};
+
+const checkRegistrationStatus = async (email) => {
+  const endPoint = "/services/checkRegistrationStatus.php";
+
+  try {
+    const fetchResp = await fetch(endPoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+
+    if (!fetchResp.ok) return null;
+
+    const data = await fetchResp.json().catch(() => null);
+
+    if (!data || typeof data.registered !== "boolean") return null;
+    return data.registered;
+  } catch (error) {
+    console.warn("checkRegistrationStatus error", error);
+    return null;
+  }
+};
+
 const sendUserData = async (userData) => {
   const endPoint = "./services/register.php";
 
@@ -29,6 +64,12 @@ const sendUserData = async (userData) => {
   }
 };
 
+/**
+ * @returns {Promise<{fetchResp: Response, encodeEmail: string} | null | undefined>}
+ *   - object on success
+ *   - undefined when client-side validation fails (errors already rendered)
+ *   - null when the network request throws
+ */
 const submitFormFetch = async (form, fetchType) => {
   if (!validateForm(form)) return;
 
@@ -101,4 +142,4 @@ const submitModalForm = async (form, fetchType, formOrigin = null) => {
   return result;
 };
 
-export { submitFormFetch, submitWithoutForm, submitModalForm };
+export { submitFormFetch, submitWithoutForm, submitModalForm, redirectToRegisteredPage, checkRegistrationStatus };

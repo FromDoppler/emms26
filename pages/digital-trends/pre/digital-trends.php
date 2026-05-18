@@ -25,7 +25,7 @@ $isPost = false;
   </script>
 </head>
 
-<body>
+<body class="emms__digitaltrends">
   <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/gtm.php'); ?>
 
 

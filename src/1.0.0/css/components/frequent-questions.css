@@ -163,3 +163,49 @@
     padding: 10px 15px 15px 15px;
   }
 }
+
+.emms__frequentquestions--aniversario {
+  overflow: hidden;
+}
+
+.emms__frequentquestions--aniversario .emms__frequentquestions__cake,
+.emms__frequentquestions--aniversario .emms__frequentquestions__number {
+  display: block;
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+.emms__frequentquestions--aniversario .emms__frequentquestions__cake {
+  top: 70px;
+  left: 0;
+  width: 280px;
+  height: auto;
+}
+
+.emms__frequentquestions--aniversario .emms__frequentquestions__number {
+  bottom: 150px;
+  right: 0;
+  width: 375px;
+  height: auto;
+}
+
+.emms__frequentquestions--aniversario .emms__container--md {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 992px) {
+  .emms__frequentquestions--aniversario .emms__frequentquestions__cake,
+  .emms__frequentquestions--aniversario .emms__frequentquestions__number {
+    width: 140px;
+  }
+}
+
+@media (max-width: 620px) {
+  .emms__frequentquestions--aniversario .emms__frequentquestions__cake,
+  .emms__frequentquestions--aniversario .emms__frequentquestions__number {
+    display: none;
+  }
+}

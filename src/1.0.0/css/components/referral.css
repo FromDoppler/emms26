@@ -12,16 +12,16 @@
 }
 
 .referral .emms__cta {
-  min-width: 106px;
-  padding: 7px 18px;
+  min-width: 180px;
+  padding: 14px 36px;
   border: 1.5px solid var(--color-bg);
   border-radius: 999px;
   color: var(--color-bg);
-  background: transparent;
+  background: #7e3da3;
   box-shadow: none;
-  font-size: var(--font-small-size);
+  font-size: 12px;
   font-weight: 600;
-  line-height: var(--font-small-line);
+  line-height: 16px;
   letter-spacing: 0.02em;
   transition:
     opacity 0.3s ease,
@@ -71,6 +71,7 @@
   font-size: var(--font-small-size);
   font-style: normal;
   font-weight: 600;
+  max-width: 445px;
   line-height: var(--font-small-line);
 }
 

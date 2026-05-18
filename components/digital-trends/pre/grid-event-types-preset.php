@@ -1,6 +1,7 @@
 <?php
 $gridTitle = 'EMMS 2026: anticípate al futuro del Marketing';
 $gridColumns = 2;
+$showAnniversaryConfetti = true;
 $gridItems = [
   [
     'img' => '/src/img/grid-event-types/ia.png',

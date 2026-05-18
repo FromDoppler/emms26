@@ -84,7 +84,6 @@
   margin: 0 0 18px;
   padding: 0;
   list-style: none;
-  max-width: 380px;
 }
 
 .vip-offer__benefit {
@@ -92,7 +91,6 @@
   margin-bottom: 12px;
   padding-left: 32px;
   font-weight: 600;
-  text-transform: uppercase;
 }
 
 .vip-offer__benefit::before {

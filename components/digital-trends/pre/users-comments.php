@@ -77,7 +77,7 @@ $usersCommentsConfig = [
     'quotes' => $quotesDT,
   ],
   '/*' => [
-    'title' => 'Esto opinan quienes <br> ya fueron parte del EMMS:',
+    'title' => 'Nuestros asistentes dicen:',
     'class' => 'userscomments userscomments--digitaltrends',
     'quotes' => $quotesDT,
     'cta' => [

@@ -6,7 +6,7 @@
 }
 
 .hero-registration.hero-registration--digitaltrends-pre {
-  background-image: url("../../../img/backgrounds/bg-digitaltrends-hero-2026.png");
+  background-image: url("../../../img/backgrounds/bg-hero-aniversario.png");
 }
 
 .hero-registration__columns {
@@ -49,7 +49,7 @@
   line-height: var(--font-h1-line);
   letter-spacing: -1px;
   color: var(--color-bg);
-  max-width: 445px;
+  max-width: 490px;
 }
 
 .hero-registration.post .hero-registration__text h1,
@@ -172,9 +172,10 @@
   letter-spacing: 4px;
   font-style: normal;
   font-weight: 800;
-  font-size: 123px;
+  font-size: 98px;
+  text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
   line-height: 37px;
-  line-height: 110px;
+  line-height: 72px;
   background: var(--gradient-secondary);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -185,7 +186,7 @@
 .hero-registration .hero-registration__text p {
   font-size: var(--font-p-size);
   line-height: var(--font-p-line);
-  font-weight: 700;
+  font-weight: 600;
   margin: 24px 0 0 0;
   max-width: 430px;
 }
@@ -197,9 +198,12 @@
     "clig" off;
   font-style: normal;
   font-weight: 800;
-  font-size: 32px;
-  line-height: 36px;
+  font-size: 29px;
+  line-height: 33px;
   max-width: 444px;
+  color: #18ff8c;
+  letter-spacing: 6.2px;
+  text-transform: uppercase;
 }
 
 .hero-registration--digitaltrends-pre .hero-registration__text__subtitle span {
@@ -710,7 +714,9 @@
 }
 
 .hero-registration--registered.hero-registration--registered--digitaltrends-pre {
-  background: #0b0627 url("../../../img/backgrounds/bg-digitaltrends-hero-registered-2026.png") center/cover no-repeat;
+  background: #0b0627 url("../../../img/backgrounds/bg-hero-aniversario-registered.png") no-repeat;
+  background-size: 100% 100%;
+  background-position: center center;
 }
 
 .hero-registration--registered.hero-registration--registered--post .emms__calendar__list {

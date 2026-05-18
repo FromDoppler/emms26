@@ -39,8 +39,14 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/utils/DB.php');
   <!-- Header -->
   <header class="emms__header">
     <div class="emms__container--lg emms__fade-in">
-      <div class="emms__header__logo">
-        <a href="/"><img src="/src/img/logos/logo-emms.png" alt="Emms 2025"></a>
+      <div class="emms__header__logo-group">
+        <div class="emms__header__logo emms__header__logo--digital-trends">
+          <a href="/"><img src="/src/img/logos/logo-emms.png" alt="Emms 2026"></a>
+        </div>
+        <span class="emms__header__logo-separator"></span>
+        <div class="emms__header__logo emms__header__logo--aniversario">
+          <img src="/src/img/logos/logo-20-aniversario.png" alt="Edición 20 Aniversario">
+        </div>
       </div>
       <?php if ($digitalTrendsStates['isLive']) : ?>
         <div class="emms__header__live">

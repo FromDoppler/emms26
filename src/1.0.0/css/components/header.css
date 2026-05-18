@@ -54,8 +54,26 @@
   align-items: center;
 }
 
+.emms__header__logo-group {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+.emms__header__logo-separator {
+  display: block;
+  width: 1px;
+  height: 37px;
+  background-color: #fff;
+  align-self: flex-end;
+}
+
 .emms__header__logo {
-  width: 101px;
+  width: 121px;
+}
+
+.emms__header__logo--aniversario {
+  width: 121px;
 }
 
 .emms__header__logo--ecommerce {
@@ -286,6 +304,15 @@
 @media (max-width: 620px) {
   .emms__header__logo--ecommerce {
     width: 214px;
+  }
+
+  .emms__header__logo-group {
+    gap: 10px;
+  }
+
+  .emms__header__logo,
+  .emms__header__logo--aniversario {
+    width: 90px;
   }
 
   .emms__header.hellobar-space {

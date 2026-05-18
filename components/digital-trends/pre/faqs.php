@@ -67,8 +67,10 @@ foreach ($faqItems as $item) {
 
 
 <!-- Frequent Questions -->
-<section class="emms__frequentquestions emms__frequentquestions--during" id="preguntas-frecuentes">
+<section class="emms__frequentquestions emms__frequentquestions--during emms__frequentquestions--aniversario" id="preguntas-frecuentes">
   <div class="emms__background-a"></div>
+  <img class="emms__frequentquestions__cake" src="/src/img/cake-aniversario.png" alt="" aria-hidden="true">
+  <img class="emms__frequentquestions__number" src="/src/img/number-20-aniversario.png" alt="" aria-hidden="true">
   <div class="emms__container--md">
     <h2 class="emms__fade-in">Preguntas frecuentes</h2>
     <ul class="emms__frequentquestions__list emms__frequentquestions__list--during emms__fade-in">

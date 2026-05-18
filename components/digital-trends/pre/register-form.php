@@ -1,25 +1,15 @@
 <section class="hero-registration hero-registration--digitaltrends-pre">
   <?php
-  $heroRegistrationChecklist = [
-    'Conferencias de e-commerce y marketing digital.',
-    'Los mejores Speakers de la historia del EMMS.',
-    'WORKSHOPS PRÁCTICOS',
-    'Gratis y online.',
-    'Premios, recursos exclusivos y más.',
-  ];
+  $heroRegistrationDescription = 'Los mejores Speakers que pasaron por el EMMS, juntos en una misma edición. Conferencias y Workshops prácticos sobre E-commerce y Marketing.';
   ?>
   <div class="hero-registration__columns">
 
     <div class="hero-registration__text emms__fade-in">
-      <h1><em>EVENTO ONLINE Y GRATUITO - 14, 15 y 16 de Julio</em><span class="main">EMMS </span> <span class="main">2026</span></h1>
+      <h1><em>ONLINE Y GRATUITO - 22, 23 Y 24 DE SEPTIEMBRE</em><span class="main">EMMS'26</span></h1>
       <p class="hero-registration__text__subtitle">
-        La Edición especial que celebra 20 años de Doppler
+       EDICIÓN ANIVERSARIO <br> Doppler 20 años
       </p>
-      <ul class="hero-registration__text__checklist dk">
-        <?php foreach ($heroRegistrationChecklist as $heroRegistrationChecklistItem): ?>
-          <li><?= $heroRegistrationChecklistItem ?></li>
-        <?php endforeach; ?>
-      </ul>
+      <p class="hero-registration__text__description dk"><?= $heroRegistrationDescription ?></p>
     </div>
     <!-- Form -->
     <?php
@@ -31,11 +21,7 @@
     <!-- End form -->
 
     <div class="hero-registration__text emms__fade-in mb">
-      <ul class="hero-registration__text__checklist">
-        <?php foreach ($heroRegistrationChecklist as $heroRegistrationChecklistItem): ?>
-          <li><?= $heroRegistrationChecklistItem ?></li>
-        <?php endforeach; ?>
-      </ul>
+      <p class="hero-registration__text__description"><?= $heroRegistrationDescription ?></p>
     </div>
   </div>
 

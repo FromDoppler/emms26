@@ -47,9 +47,14 @@ if (!isset($gridItems)) {
 
 $gridClass = $gridColumns === 3 ? 'emms__grid--3' : 'emms__grid--2';
 $showVipFooter = $block['block'] === 'TextBlock' && $normalizedUrl !== '/digital-trends-registrado';
+$confettiClass = !empty($showAnniversaryConfetti) ? ' emms__grid--with-confetti' : '';
 ?>
 
-<section class="emms__grid emms__grid--compact-cards <?= $gridClass ?>">
+<section class="emms__grid emms__grid--compact-cards <?= $gridClass ?><?= $confettiClass ?>">
+  <?php if (!empty($showAnniversaryConfetti)) : ?>
+    <img class="emms__grid__confetti" src="/src/img/confetti-aniversario.png" alt="" aria-hidden="true">
+    <img class="emms__grid__balloon" src="/src/img/balloon-aniversario.png" alt="" aria-hidden="true">
+  <?php endif; ?>
   <div class="emms__container--md">
     <div class="emms__grid__title emms__fade-in">
       <h2><?= $gridTitle ?></h2>

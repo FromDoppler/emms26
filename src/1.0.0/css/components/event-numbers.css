@@ -4,8 +4,7 @@
 }
 
 .emms__eventnumbers--globos {
-  background:
-    #210b63 url("../../../img/backgrounds/event-numbers-balloons-bg.png") no-repeat center center;
+  background: #210b63 url("../../../img/backgrounds/event-numbers-balloons-bg.png") no-repeat center center;
   background-size: contain;
 }
 

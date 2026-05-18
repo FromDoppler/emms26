@@ -3,8 +3,7 @@
 }
 
 .academy-banner.academy-banner--aniversario {
-  background:
-    #13092d url("../../../img/backgrounds/academy-balloons-bg.png") no-repeat;
+  background: #13092d url("../../../img/backgrounds/academy-balloons-bg.png") no-repeat;
   background-size: 100% auto;
   background-position: center top;
 }

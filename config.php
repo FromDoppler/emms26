@@ -42,6 +42,11 @@ if (!defined('SECURITYHELPER_ENABLE')) define('SECURITYHELPER_ENABLE', false);
 if (!defined('SITE_URL')) define('SITE_URL', 'http://localhost/');
 if (!defined('ENABLE_DIGITALTRENDS_SPONSORS')) define('ENABLE_DIGITALTRENDS_SPONSORS', true);
 
+// Prevent indexing in non-production environments (e.g. QA)
+if (!PRODUCTION && PHP_SAPI !== 'cli' && !headers_sent()) {
+    header('X-Robots-Tag: noindex, nofollow', true);
+}
+
 if (!defined('CACHE_TIME')) define('CACHE_TIME', 60); // En segundos(60) (1 minuto)
 if (!defined('CACHE_TIME_ID')) define('CACHE_TIME_ID', 1800); // En segundos(1800) (30 minutos)
 if (!defined('CACHE_BACKUP_TIME')) define('CACHE_BACKUP_TIME', 3600); // En segundos (1 Hora)

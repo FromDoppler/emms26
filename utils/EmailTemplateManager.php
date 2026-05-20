@@ -67,7 +67,7 @@ class EmailTemplateManager
       $html = self::$templateFunction($user['encode_email'], $user);
     } elseif (isset($templateMappings[$type][$phase])) {
       $templateFunction = $templateMappings[$type][$phase];
-      $html = self::$templateFunction($user['encode_email']);
+      $html = self::$templateFunction($user['encode_email'], $user);
     } else {
       Logger::error("Template mapping not found", [
         'user_type' => $type,
@@ -98,10 +98,13 @@ class EmailTemplateManager
     return self::getTemplate('ecommerce', $templateName, $encodeEmail);
   }
 
-  public static function getDigitalTEmailTemplatePREEarlyBirds($encodeEmail)
+  public static function getDigitalTEmailTemplatePREEarlyBirds($encodeEmail, $user = [])
   {
     $templateName = 'dt-earybirds-template.html';
-    return self::getTemplate('dt', $templateName, $encodeEmail);
+    $userData = [
+      'name' => $user['firstname'] ?? 'Asistente',
+    ];
+    return self::getTemplate('dt', $templateName, $encodeEmail, $userData);
   }
 
   public static function getDigitalTEmailTemplatePRE($encodeEmail)

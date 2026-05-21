@@ -7,8 +7,8 @@
   <meta property="og:url" content="https://goemms.com/">
   <meta property="og:title" content="EMMS 2025: Conferencias online y gratuitas de Marketing Digital">
   <meta property="og:description" content="¡Estamos en vivo! Regístrate gratis y súmate a la transmisión. Conoce las tendencias de Marketing Digital en el evento más esperado del año">
-  <meta property="og:image" content="https://goemms.com/share-2025-dt.png">
-  <meta name="twitter:image" content="https://goemms.com/share-2025-dt.png">
+  <meta property="og:image" content="https://goemms.com/share-2026-aniversario.png">
+  <meta name="twitter:image" content="https://goemms.com/share-2026-aniversario.png">
 
   <meta property="og:site_name" content="EMMS 2025: Conferencias online y gratuitas de Marketing Digital">
   <meta name="twitter:image:alt" content="EMMS 2025: Conferencias online y gratuitas de Marketing Digital">
@@ -25,8 +25,8 @@
   <meta property="og:url" content="https://goemms.com/">
   <meta property="og:title" content="EMMS 2025: Conferencias online y gratuitas de Marketing Digital">
   <meta property="og:description" content="¡Estamos en vivo! Regístrate gratis y súmate a la transmisión. Conoce las tendencias de Marketing Digital en el evento más esperado del año">
-  <meta property="og:image" content="https://goemms.com/share-2025-dt.png">
-  <meta name="twitter:image" content="https://goemms.com/share-2025-dt.png">
+  <meta property="og:image" content="https://goemms.com/share-2026-aniversario.png">
+  <meta name="twitter:image" content="https://goemms.com/share-2026-aniversario.png">
 
   <meta property="og:site_name" content="EMMS 2025: Conferencias online y gratuitas de Marketing Digital">
   <meta name="twitter:image:alt" content="EMMS 2025: Conferencias online y gratuitas de Marketing Digital">

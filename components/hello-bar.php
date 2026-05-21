@@ -1,9 +1,9 @@
 <?php
 $contentsPre = [
   '/' => [
-    'helloBarText' => '⏳ ¡Cuenta regresiva para el EMMS Digital Trends! Del 28 al 30 de octubre: conferencias, workshops y beneficios especiales.',
-    'helloBarCtaTxt' => 'REGÍSTRATE GRATIS',
-    'helloBarCtaLink' => '/digital-trends',
+    'helloBarText' => 'Regístrate gratis y te regalamos un pase VIP.',
+    'helloBarCtaTxt' => 'Reserva tu lugar',
+    'helloBarCtaLink' => '#registro',
   ],
   '/registrado' => [
     'helloBarText' => '⏳ ¡Cuenta regresiva para el EMMS Digital Trends! Del 28 al 30 de octubre: conferencias, workshops y beneficios especiales.',
@@ -21,9 +21,12 @@ $contentsPre = [
     'helloBarCtaLink' => '#entradas',
   ],
   '/sponsors' => [
-    'helloBarText' => 'Regístrate ahora y obtén tu entrada VIP  de regalo',
+    'helloBarText' => 'Regístrate gratis y te regalamos un pase VIP.',
     'helloBarCtaTxt' => 'Reserva tu lugar',
-    'helloBarCtaLink' => '#registro',
+    'helloBarCtaLink' => '/#registro',
+  ],
+  '/sponsors-registrado' => [
+    'hide' => true,
   ],
   '/*' => [
     'helloBarText' => '⏳ ¡Cuenta regresiva para el EMMS Digital Trends! Del 28 al 30 de octubre: conferencias, workshops y beneficios especiales.',
@@ -87,7 +90,7 @@ $contentsDuring = [
   '/sponsors' => [
     'helloBarText' => '¡Queda más EMMS Digital Trends! ¿Aún no te has registrado?',
     'helloBarCtaTxt' => 'Reserva tu lugar',
-    'helloBarCtaLink' => '#registro',
+    'helloBarCtaLink' => '/#registro',
   ],
   '/sponsors-registrado' => [
     'helloBarText' => '¡Aprovecha 25% OFF en la compra de entradas VIP por tiempo limitado !',
@@ -103,6 +106,7 @@ $contentsDuring = [
 
 include_once($_SERVER['DOCUMENT_ROOT'] . '/components/helpers/urlHelper.php');
 $normalizedUrl = getNormalizeUrl();
+if ($normalizedUrl === '') $normalizedUrl = '/';
 $contentPre = $contentsPre[$normalizedUrl] ?? $contentsPre['/*'];
 $contentLive = $contentsLive[$normalizedUrl] ?? $contentsLive['/*'];
 $contentDuring = $contentsDuring[$normalizedUrl] ?? $contentsDuring['/*'];
@@ -113,7 +117,7 @@ $contentDuring = $contentsDuring[$normalizedUrl] ?? $contentsDuring['/*'];
 
 ?>
 
-<?php if ($digitalTrendsStates['isPre']) : ?>
+<?php if ($digitalTrendsStates['isPre'] && empty($contentPre['hide'])) : ?>
   <div class="hellobar hellobar--pre">
     <div class="hellobar__container  emms__fade-in">
       <p><strong><?= $contentPre['helloBarText'] ?></strong><a href="<?= $contentPre['helloBarCtaLink'] ?>"><?= $contentPre['helloBarCtaTxt'] ?></a></p>

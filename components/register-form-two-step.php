@@ -13,15 +13,15 @@
         </li>
       </ul>
       <div class="emms__form__btn">
-        <button class="emms__cta" type="button"><span class="button__text">REGÍSTRATE GRATIS</span></button>
+        <button class="emms__cta" type="button"><span class="button__text">SIGUIENTE</span></button>
       </div>
       <p class="emms__form__reassurance"><em>Tu información está protegida.</em></p>
     </div>
 
     <div class="emms__form__step" data-step="2" hidden>
       <img class="emms__form__badge" src="/src/img/icons/icon-form-user.png" alt="">
-      <h2>Completa tus datos</h2>
-      <p class="emms__form__subtitle">Prepárate para disfrutar el EMMS 2026.</p>
+      <h2>¡Ya casi estás dentro!</h2>
+      <p class="emms__form__subtitle">Falta un paso más, pero vale la pena.<br> Completa tus datos y prepárate para disfrutar el EMMS 2026.</p>
       <ul class="emms__form__field-group">
         <li class="emms__form__field-item">
           <div class="holder">
@@ -31,7 +31,7 @@
         </li>
         <li class="emms__form__field-item">
           <div class="holder">
-            <label class="required-label" for="phone">*Whatsapp</label>
+            <label class="required-label" for="phone">*WhatsApp</label>
             <input type="tel" name="phone" id="phone" placeholder="011-15 65954489" class="phone phone-number required" autocomplete="off">
           </div>
         </li>

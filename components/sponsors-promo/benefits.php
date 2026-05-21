@@ -2,7 +2,7 @@
 $benefits = [
     "Destaca tu marca en el evento líder de Marketing en LATAM y España",
     "Brinda una conferencia main stage en el evento",
-    "Ten tu propia Landing Page en el sitio del evento y capta leads de calidad",
+    "Linkeamos tu Landing Page en el sitio del evento y capta Leads de calidad",
     "Llega con un envío exclusivo a toda la base de registrados al EMMS",
     "Únete a las marcas más influyentes de la industria y potencia tu networking"
 ];

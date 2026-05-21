@@ -9,8 +9,8 @@ $faqItems = [
     "answer" => "Con tu registro podrás acceder a todas las Conferencias de esta y todas las ediciones anteriores para siempre. Además, podrás acceder a una biblioteca repleta de recursos como E-books, Plantillas, descuentos y material audiovisual para que puedas hacer crecer tu negocio aún más."
   ],
   [
-    "question" => "📅 ¿Cuándo se realizará el EMMS 2025?",
-    "answer" => "El EMMS 2025 tiene 2 ediciones:  Digital Trends, que tendrá lugar el 28, 29 y 30 de octubre de 2025 y E-commerce, que se celebró el 28 y 29 de abril de 2025. Registrándote al evento recibirás por Email todos las novedades."
+    "question" => "📅 ¿Cuándo se realizará el EMMS 2026?",
+    "answer" => "El EMMS 2026 se realizará el 22, 23 y 24 de septiembre. Será una edición especial por los 20 años de Doppler que volverá a convocar a los mejores Speakers de la historia del evento. Registrándote al EMMS recibirás por Email todos las novedades."
   ],
   [
     "question" => "📍 ¿Dónde serán los eventos?",

@@ -4,6 +4,7 @@ $normalizedUrl = getNormalizeUrl();
 $gridBlocks = [
   '/digital-trends' => ['block' => 'CtaBlock'],
   '/digital-trends-registrado' => ['block' => 'TextBlock'],
+  '/registrado' => ['block' => 'TextBlock'],
   '/*' => ['block' => 'CtaBlock'],
 ];
 $block = $gridBlocks[$normalizedUrl] ?? $gridBlocks['/*'];
@@ -46,7 +47,7 @@ if (!isset($gridItems)) {
 }
 
 $gridClass = $gridColumns === 3 ? 'emms__grid--3' : 'emms__grid--2';
-$showVipFooter = $block['block'] === 'TextBlock' && $normalizedUrl !== '/digital-trends-registrado';
+$showVipFooter = $block['block'] === 'TextBlock' && $normalizedUrl !== '/digital-trends-registrado' && $normalizedUrl !== '/registrado';
 $confettiClass = !empty($showAnniversaryConfetti) ? ' emms__grid--with-confetti' : '';
 ?>
 

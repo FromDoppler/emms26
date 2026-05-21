@@ -27,8 +27,7 @@ $isPost = false;
 
 <body class="emms__digitaltrends">
   <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/gtm.php'); ?>
-
-
+  <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/hello-bar.php'); ?>
   <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/navbar-unreg.php') ?>
   <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/share.php') ?>
 

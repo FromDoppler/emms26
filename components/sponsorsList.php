@@ -83,8 +83,8 @@ foreach ($sponsorTypes as $type => $config) {
       </p>
     <?php else: ?>
       <p class="companies__body">
-        ¿Quieres ser aliado del EMMS 2025? ¡Hablemos! <br>
-        Escríbenos a <a href="mailto:partners@fromdoppler.com" class="companies__body-link">partners@fromdoppler.com </a> y te contamos cómo sumarte al evento
+        ¿Quieres ser aliado del EMMS 2026? ¡Hablemos! <br>
+        Escríbenos a <a href="mailto:partners@fromdoppler.com" class="companies__body-link">partners@fromdoppler.com</a>
         <a href="/sponsors-promo" class="emms__cta emms__cta--secondary">QUIERO SER ALIADO</a>
       </p>
     <?php endif; ?>

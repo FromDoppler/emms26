@@ -10,7 +10,7 @@ $faqItems = [
   ],
   [
     "question" => "📅 ¿Cuándo se realizará el EMMS 2026?",
-    "answer" => "El EMMS 2026 se realizará el 14, 15 y 16 de julio. Será una edición especial por los 20 años de Doppler que volverá a convocar a los mejores Speakers de la historia del evento. Registrándote al EMMS recibirás por Email todos las novedades."
+    "answer" => "El EMMS 2026 se realizará el 22, 23 y 24 de septiembre. Será una edición especial por los 20 años de Doppler que volverá a convocar a los mejores Speakers de la historia del evento. Registrándote al EMMS recibirás por Email todos las novedades."
   ],
   [
     "question" => "📍 ¿Dónde serán los eventos?",

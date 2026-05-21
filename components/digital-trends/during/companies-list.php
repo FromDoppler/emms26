@@ -43,8 +43,8 @@ $block = getGridBlock($normalizedUrl);
         <?php if ($block['block'] === 'none') : ?>
         <?php elseif ($block['block'] === 'CtaBlock') : ?>
             <p class="companies__body">
-                ¿Quieres ser aliado del EMMS 2025? ¡Hablemos! <br>
-                Escríbenos a <a href="mailto:partners@fromdoppler.com">partners@fromdoppler.com</a>
+                ¿Quieres ser aliado del EMMS 2026? ¡Hablemos! <br>
+                Escríbenos a <a href="mailto:partners@fromdoppler.com" class="companies__body-link">partners@fromdoppler.com </a> y te contamos cómo sumarte al evento
             </p>
         <?php endif; ?>
 

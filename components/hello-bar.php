@@ -23,7 +23,10 @@ $contentsPre = [
   '/sponsors' => [
     'helloBarText' => 'Regístrate gratis y te regalamos un pase VIP.',
     'helloBarCtaTxt' => 'Reserva tu lugar',
-    'helloBarCtaLink' => '#registro',
+    'helloBarCtaLink' => '/#registro',
+  ],
+  '/sponsors-registrado' => [
+    'hide' => true,
   ],
   '/*' => [
     'helloBarText' => '⏳ ¡Cuenta regresiva para el EMMS Digital Trends! Del 28 al 30 de octubre: conferencias, workshops y beneficios especiales.',
@@ -87,7 +90,7 @@ $contentsDuring = [
   '/sponsors' => [
     'helloBarText' => '¡Queda más EMMS Digital Trends! ¿Aún no te has registrado?',
     'helloBarCtaTxt' => 'Reserva tu lugar',
-    'helloBarCtaLink' => '#registro',
+    'helloBarCtaLink' => '/#registro',
   ],
   '/sponsors-registrado' => [
     'helloBarText' => '¡Aprovecha 25% OFF en la compra de entradas VIP por tiempo limitado !',
@@ -114,7 +117,7 @@ $contentDuring = $contentsDuring[$normalizedUrl] ?? $contentsDuring['/*'];
 
 ?>
 
-<?php if ($digitalTrendsStates['isPre']) : ?>
+<?php if ($digitalTrendsStates['isPre'] && empty($contentPre['hide'])) : ?>
   <div class="hellobar hellobar--pre">
     <div class="hellobar__container  emms__fade-in">
       <p><strong><?= $contentPre['helloBarText'] ?></strong><a href="<?= $contentPre['helloBarCtaLink'] ?>"><?= $contentPre['helloBarCtaTxt'] ?></a></p>

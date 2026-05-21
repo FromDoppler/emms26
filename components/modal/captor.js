@@ -1,10 +1,11 @@
 import { openModal } from "./openModal.js";
-import { createCanShowModal } from "./scripts/modalConditions.js";
 
 const EXIT_TOP_THRESHOLD_PX = 8;
 const SHOW_ONCE_PER_SESSION = true;
 
 const initExitIntentCapture = async () => {
+  const version = window.APP.VERSION;
+  const { createCanShowModal } = await import(`./scripts/modalConditions.js?v=${encodeURIComponent(version)}`);
   const canShowModal = await createCanShowModal();
 
   document.querySelectorAll('.popup-modal[data-captor="1"]').forEach((modalEl) => setupExitIntentForModal(modalEl, canShowModal));

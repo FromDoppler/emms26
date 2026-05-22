@@ -1,14 +1,12 @@
 export const createCanShowModal = async () => {
-  const version = window.APP?.VERSION;
+  const version = window.APP.VERSION;
 
-  if (!version) {
-    throw new Error("Se requiere window.APP.VERSION para cargar los assets del modal.");
-  }
+  const versionQuery = `?v=${encodeURIComponent(version)}`;
 
-  const eventsModule = await import(`/src/${version}/js/enums/eventsType.enum.js`);
+  const eventsModule = await import(`/src/${version}/js/enums/eventsType.enum.js${versionQuery}`);
   const { eventsType } = eventsModule;
 
-  const { modalIds } = await import("./modalIds.enum.js");
+  const { modalIds } = await import(`./modalIds.enum.js${versionQuery}`);
 
   const getUserEvents = () => {
     try {

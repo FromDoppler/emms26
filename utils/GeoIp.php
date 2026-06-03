@@ -265,25 +265,30 @@ class GeoIp
         return $ipAddress;
     }
 
+    private static function getCountryCode()
+    {
+        $countryCode = $_SERVER["HTTP_CF_IPCOUNTRY"] ?? 'XX';
+        $countryCode = strtoupper(trim($countryCode));
+
+        return isset(self::$countries[$countryCode]) ? $countryCode : 'XX';
+    }
+
     public static function getGeoLocalitationCountryNameAndCode()
     {
-        $countryName = (self::getCountryName() === "Not Recognized") ? 'Argentina' : self::getCountryName();
-        $countryCode = "AR";
-        if (isset($_SERVER["HTTP_CF_IPCOUNTRY"])) {
-            $countryCode = $_SERVER["HTTP_CF_IPCOUNTRY"];
+        $countryCode = self::getCountryCode();
+
+        if ($countryCode === 'XX') {
+            return array("countryName" => "Argentina", "countryCode" => "AR");
         }
 
-        return array("countryName" => $countryName, "countryCode" => $countryCode);
+        return array("countryName" => self::$countries[$countryCode], "countryCode" => $countryCode);
     }
 
     public static function getCountryNameByIp()
     {
+        $countryCode = self::getCountryCode();
 
-        $countryName = "Not Recognized";
-        if (isset($_SERVER["HTTP_CF_IPCOUNTRY"])) {
-            $countryName = self::$countries[$_SERVER["HTTP_CF_IPCOUNTRY"]];
-        }
-        return $countryName;
+        return ($countryCode === 'XX') ? "Not Recognized" : self::$countries[$countryCode];
     }
 
     public static function init()

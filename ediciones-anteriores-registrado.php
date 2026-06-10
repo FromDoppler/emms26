@@ -37,40 +37,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/utils/DB.php');
 <body class="emms__previous-editions">
 
   <!-- Header -->
-  <header class="emms__header">
-    <div class="emms__container--lg emms__fade-in">
-      <div class="emms__header__logo-group">
-        <div class="emms__header__logo emms__header__logo--digital-trends">
-          <a href="/"><img src="/src/img/logos/logo-emms.png" alt="Emms 2026"></a>
-        </div>
-        <span class="emms__header__logo-separator"></span>
-        <div class="emms__header__logo emms__header__logo--aniversario">
-          <img src="/src/img/logos/logo-20-aniversario.png" alt="Edición 20 Aniversario">
-        </div>
-      </div>
-      <?php if ($digitalTrendsStates['isLive']) : ?>
-        <div class="emms__header__live">
-          <p>¡ESTAMOS EN VIVO EN EMMS DIGITAL TRENDS!</p>
-        </div>
-      <?php endif ?>
-      <a class="emms__header__nav--mb" id="btn-burger"></a>
-      <nav class="emms__header__nav emms__header__nav--hidden" id="nav-mb">
-        <ul class="emms__header__nav__menu">
-          <li><a href="/registrado">home</a></li>
-          <li><a href="/digital-trends-registrado">DIGITAL TREND</a></li>
-          </li>
-          <li><a href="./sponsors-registrado">biblioteca de recursos</a></li>
-          <li class="emms__header__nav__menu__dropdown"><a href="#" class="active">Qué es el EMMS</a>
-            <ul class="emms__header__nav__submenu">
-              <li><a href="#sobre-emms">Sobre el EMMS</a></li>
-              <li><a href="#ediciones-anteriores">Revive ediciones anteriores</a></li>
-            </ul>
-          </li>
-          <li><a href="/sponsors-promo">sponsors</a></li>
-        </ul>
-      </nav>
-    </div>
-  </header>
+  <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/navbar-reg.php') ?>
 
   <!-- Share -->
   <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/share.php'); ?>

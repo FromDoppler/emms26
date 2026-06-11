@@ -62,9 +62,9 @@ document.addEventListener("DOMContentLoaded", () => {
     await loadMomentAndTimezoneScripts();
 
     const eventDateTime = {
-      eventYear: "2024",
-      eventMonth: "11",
-      eventDay: "26",
+      eventYear: "2026",
+      eventMonth: "09",
+      eventDay: "15",
     };
     const moment = window.moment;
 

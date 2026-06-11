@@ -5,7 +5,7 @@
   <div class="hero-registration__columns">
 
     <div class="hero-registration__text emms__fade-in">
-      <h1><em>ONLINE Y GRATUITO - 22, 23 Y 24 DE SEPTIEMBRE</em><span class="main">EMMS'26</span></h1>
+      <h1><em>ONLINE Y GRATUITO - 15, 16 Y 17 DE SEPTIEMBRE</em><span class="main">EMMS'26</span></h1>
       <p class="hero-registration__text__subtitle">
        EDICIÓN ANIVERSARIO <br> Doppler 20 años
       </p>

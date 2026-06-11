@@ -16,9 +16,9 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/components/schedule/speaker-card/spea
     ];
   } else {
     $days = [
-      1 => ['date' => '28 DE OCTUBRE', 'short' => 'DÍA 1'],
-      2 => ['date' => '29 DE OCTUBRE', 'short' => 'DÍA 2'],
-      3 => ['date' => '30 DE OCTUBRE', 'short' => 'DÍA 3'],
+      1 => ['date' => '15 DE SEPTIEMBRE', 'short' => 'DÍA 1'],
+      2 => ['date' => '16 DE SEPTIEMBRE', 'short' => 'DÍA 2'],
+      3 => ['date' => '17 DE SEPTIEMBRE', 'short' => 'DÍA 3'],
     ];
   }
 

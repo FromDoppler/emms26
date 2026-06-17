@@ -28,8 +28,8 @@ $block = getScheduleBlock2($normalizedUrl);
       <h2>AGENDA EMMS DIGITAL TRENDS 2025</h2>
       <?php if ($normalizedUrl === '/checkout-lp-landing'): ?>
         <p>
-          Conoce a las figuras internacionales que se sumarán a los Workshops privados del 17 de septiembre <br>
-          y el line up de todas las Conferencias gratuitas que también podrás disfrutar los días 15 y 16 de septiembre.
+          Conoce a las figuras internacionales que se sumarán a los Workshops privados del 1 de octubre <br>
+          y el line up de todas las Conferencias gratuitas que también podrás disfrutar los días 29 y 30 de septiembre.
         </p>
       <?php elseif ($normalizedUrl && $isPost): ?>
         <p>

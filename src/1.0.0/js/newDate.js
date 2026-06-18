@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const eventDateTime = {
       eventYear: "2026",
       eventMonth: "09",
-      eventDay: "15",
+      eventDay: "29",
     };
     const moment = window.moment;
 

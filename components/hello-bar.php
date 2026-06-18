@@ -6,7 +6,7 @@ $contentsPre = [
     'helloBarCtaLink' => '#registro',
   ],
   '/registrado' => [
-    'helloBarText' => '⏳ ¡Cuenta regresiva para el EMMS Digital Trends! Del 15 al 17 de septiembre: conferencias, workshops y beneficios especiales.',
+    'helloBarText' => '⏳ ¡Cuenta regresiva para el EMMS Digital Trends! Del 29 de septiembre al 1 de octubre: conferencias, workshops y beneficios especiales.',
     'helloBarCtaTxt' => 'REGÍSTRATE GRATIS',
     'helloBarCtaLink' => '/digital-trends-registrado',
   ],
@@ -29,7 +29,7 @@ $contentsPre = [
     'hide' => true,
   ],
   '/*' => [
-    'helloBarText' => '⏳ ¡Cuenta regresiva para el EMMS Digital Trends! Del 15 al 17 de septiembre: conferencias, workshops y beneficios especiales.',
+    'helloBarText' => '⏳ ¡Cuenta regresiva para el EMMS Digital Trends! Del 29 de septiembre al 1 de octubre: conferencias, workshops y beneficios especiales.',
     'helloBarCtaTxt' => 'REGÍSTRATE GRATIS',
     'helloBarCtaLink' => '/digital-trends',
   ],

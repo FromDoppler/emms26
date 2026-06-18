@@ -1,5 +1,5 @@
 <?php
-$state = $isTransition ? 'EVENTO ONLINE Y GRATUITO - 15, 16 y 17 DE SEPTIEMBRE' : '<span class="green">EN VIVO</span> | ¡COMENZÓ LA TRANSMISIÓN!';
+$state = $isTransition ? 'EVENTO ONLINE Y GRATUITO - 29 y 30 DE SEPTIEMBRE Y 1 DE OCTUBRE' : '<span class="green">EN VIVO</span> | ¡COMENZÓ LA TRANSMISIÓN!';
 $headerTopText = $isTransition ? '¡Ya empezó el' : '¡Súmate al';
 $headerTopClass = $isTransition ? 'top top--transition' : 'top';
 ?>

@@ -93,7 +93,8 @@ CREATE TABLE IF NOT EXISTS `registered` (
   `emms_ref` text DEFAULT NULL,
   `website` varchar(150) DEFAULT NULL,
   `emailPlatform` varchar(150) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_registered_email` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1783 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -351,6 +352,181 @@ CREATE TABLE IF NOT EXISTS `stripe_customers` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`customer_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `payment_tickets`
+--
+
+CREATE TABLE IF NOT EXISTS `payment_tickets` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `event_key` varchar(100) NOT NULL,
+  `ticket_code` varchar(100) NOT NULL,
+  `name` varchar(150) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `currency` varchar(10) NOT NULL DEFAULT 'USD',
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_payment_tickets_event_code` (`event_key`, `ticket_code`),
+  KEY `idx_payment_tickets_event_active` (`event_key`, `is_active`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `payment_tickets`
+--
+
+INSERT INTO `payment_tickets`
+  (`event_key`, `ticket_code`, `name`, `price`, `currency`, `is_active`)
+VALUES
+  ('DIGITALTRENDS', 'VIP', 'VIP', 10.00, 'USD', 1)
+ON DUPLICATE KEY UPDATE
+  `name` = VALUES(`name`),
+  `price` = VALUES(`price`),
+  `currency` = VALUES(`currency`),
+  `is_active` = VALUES(`is_active`),
+  `updated_at` = current_timestamp();
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `payment_coupons`
+--
+
+CREATE TABLE IF NOT EXISTS `payment_coupons` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `code` varchar(150) NOT NULL,
+  `link_code` varchar(150) DEFAULT NULL,
+  `discount_type` varchar(50) NOT NULL DEFAULT 'percentage',
+  `discount_value` decimal(10,2) NOT NULL,
+  `event_key` varchar(100) DEFAULT NULL,
+  `event_vip_id` varchar(150) DEFAULT NULL,
+  `ticket_id` bigint(20) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1,
+  `starts_at` timestamp NULL DEFAULT NULL,
+  `expires_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_payment_coupons_code` (`code`),
+  UNIQUE KEY `uq_payment_coupons_link_code` (`link_code`),
+  KEY `idx_payment_coupons_scope` (`event_key`, `event_vip_id`, `ticket_id`),
+  KEY `idx_payment_coupons_active` (`event_vip_id`, `is_active`),
+  CONSTRAINT `fk_payment_coupons_ticket` FOREIGN KEY (`ticket_id`) REFERENCES `payment_tickets` (`id`) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `payment_coupons`
+--
+
+INSERT INTO `payment_coupons`
+  (`code`, `link_code`, `discount_type`, `discount_value`, `event_key`, `event_vip_id`, `ticket_id`, `is_active`, `starts_at`, `expires_at`)
+VALUES
+  ('EMMSV1P250FF', 'EMMSV1P250FF', 'percentage', 25.00, 'DIGITALTRENDS', 'digital-trends26-vip', (SELECT id FROM payment_tickets WHERE event_key = 'DIGITALTRENDS' AND ticket_code = 'VIP' LIMIT 1), 1, NULL, NULL),
+  ('EMMSV1P500FF', 'EMMSV1P500FF', 'percentage', 50.00, 'DIGITALTRENDS', 'digital-trends26-vip', (SELECT id FROM payment_tickets WHERE event_key = 'DIGITALTRENDS' AND ticket_code = 'VIP' LIMIT 1), 1, NULL, NULL),
+  ('EMMSV1PF3EE', 'EMMSV1PF3EE', 'percentage', 100.00, 'DIGITALTRENDS', 'digital-trends26-vip', (SELECT id FROM payment_tickets WHERE event_key = 'DIGITALTRENDS' AND ticket_code = 'VIP' LIMIT 1), 1, NULL, NULL)
+ON DUPLICATE KEY UPDATE
+  `link_code` = VALUES(`link_code`),
+  `discount_type` = VALUES(`discount_type`),
+  `discount_value` = VALUES(`discount_value`),
+  `event_key` = VALUES(`event_key`),
+  `event_vip_id` = VALUES(`event_vip_id`),
+  `ticket_id` = VALUES(`ticket_id`),
+  `is_active` = VALUES(`is_active`),
+  `updated_at` = current_timestamp();
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `payment_transactions`
+--
+
+CREATE TABLE IF NOT EXISTS `payment_transactions` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `public_id` varchar(40) NOT NULL,
+  `correlation_id` varchar(64) NOT NULL,
+  `idempotency_key` varchar(255) NOT NULL,
+  `status` varchar(50) NOT NULL,
+  `provider` varchar(100) NOT NULL,
+  `payment_method` varchar(100) DEFAULT NULL,
+  `origin` varchar(50) DEFAULT NULL,
+  `customer_email` varchar(250) NOT NULL,
+  `customer_name` varchar(150) DEFAULT NULL,
+  `customer_phone` varchar(300) DEFAULT NULL,
+  `registered_id` bigint(20) DEFAULT NULL,
+  `ticket_id` bigint(20) NOT NULL,
+  `ticket_code` varchar(100) NOT NULL,
+  `ticket_name` varchar(150) NOT NULL,
+  `coupon_id` bigint(20) DEFAULT NULL,
+  `coupon_code` varchar(150) DEFAULT NULL,
+  `coupon_link_code` varchar(150) DEFAULT NULL,
+  `discount_type` varchar(50) DEFAULT NULL,
+  `discount_value` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `amount` decimal(10,2) NOT NULL,
+  `discount_amount` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `final_amount` decimal(10,2) NOT NULL,
+  `currency` varchar(10) NOT NULL DEFAULT 'USD',
+  `event_key` varchar(100) NOT NULL,
+  `event_free_id` varchar(150) NOT NULL,
+  `event_vip_id` varchar(150) NOT NULL,
+  `provider_transaction_id` varchar(255) DEFAULT NULL,
+  `authorization_number` varchar(255) DEFAULT NULL,
+  `transaction_link_id` varchar(255) DEFAULT NULL,
+  `authorization_response_code` varchar(50) DEFAULT NULL,
+  `purchase_response_code` varchar(50) DEFAULT NULL,
+  `response_code` varchar(100) DEFAULT NULL,
+  `response_message` text DEFAULT NULL,
+  `raw_request` longtext DEFAULT NULL,
+  `raw_response` longtext DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_payment_transactions_public_id` (`public_id`),
+  UNIQUE KEY `uq_payment_transactions_idempotency` (`idempotency_key`),
+  KEY `idx_payment_transactions_customer_email` (`customer_email`),
+  KEY `idx_payment_transactions_registered_id` (`registered_id`),
+  KEY `idx_payment_transactions_status` (`status`),
+  KEY `idx_payment_transactions_correlation_id` (`correlation_id`),
+  KEY `idx_payment_transactions_authorization_number` (`authorization_number`),
+  KEY `idx_payment_transactions_ticket_id` (`ticket_id`),
+  KEY `idx_payment_transactions_coupon_id` (`coupon_id`),
+  KEY `idx_payment_transactions_event` (`event_key`, `event_free_id`, `event_vip_id`),
+  CONSTRAINT `fk_payment_transactions_ticket` FOREIGN KEY (`ticket_id`) REFERENCES `payment_tickets` (`id`) ON DELETE RESTRICT,
+  CONSTRAINT `fk_payment_transactions_coupon` FOREIGN KEY (`coupon_id`) REFERENCES `payment_coupons` (`id`) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `user_event_jobs`
+--
+
+CREATE TABLE IF NOT EXISTS `user_event_jobs` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `event_type` varchar(100) NOT NULL,
+  `job_type` varchar(100) NOT NULL,
+  `aggregate_type` varchar(100) NOT NULL,
+  `aggregate_id` bigint(20) NOT NULL,
+  `registered_id` bigint(20) DEFAULT NULL,
+  `status` varchar(50) NOT NULL DEFAULT 'pending',
+  `payload` JSON NOT NULL,
+  `attempts` int(11) NOT NULL DEFAULT 0,
+  `available_at` timestamp NULL DEFAULT current_timestamp(),
+  `processed_at` timestamp NULL DEFAULT NULL,
+  `last_error` text DEFAULT NULL,
+  `idempotency_key` varchar(255) NOT NULL,
+  `correlation_id` varchar(64) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_user_event_jobs_idempotency` (`idempotency_key`),
+  KEY `idx_user_event_jobs_status` (`status`),
+  KEY `idx_user_event_jobs_type_status` (`job_type`, `status`),
+  KEY `idx_user_event_jobs_aggregate` (`aggregate_type`, `aggregate_id`),
+  KEY `idx_user_event_jobs_correlation_id` (`correlation_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 

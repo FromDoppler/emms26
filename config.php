@@ -51,6 +51,8 @@ if (!defined('CACHE_TIME')) define('CACHE_TIME', 60); // En segundos(60) (1 minu
 if (!defined('CACHE_TIME_ID')) define('CACHE_TIME_ID', 1800); // En segundos(1800) (30 minutos)
 if (!defined('CACHE_BACKUP_TIME')) define('CACHE_BACKUP_TIME', 3600); // En segundos (1 Hora)
 
+require_once(__DIR__ . '/config/payments.php');
+
 # LOAD EVENT ROUTES CONFIGURATION
 $routesConfig = include_once($_SERVER['DOCUMENT_ROOT'] . '/config/event-routes.php');
 $events = $routesConfig['events'];

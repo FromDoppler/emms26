@@ -7,6 +7,8 @@ class DB
     protected $show_errors = TRUE;
     protected $query_closed = TRUE;
     public $query_count = 0;
+    private $lastErrno = 0;
+    private $lastError = '';
 
     public function __construct($dbhost, $dbuser, $dbpass, $dbname, $charset = 'utf8')
     {
@@ -20,6 +22,9 @@ class DB
 
     public function query($query)
     {
+        $this->lastErrno = 0;
+        $this->lastError = '';
+
         if (!$this->query_closed) {
             $this->query->close();
         }
@@ -45,11 +50,15 @@ class DB
             }
             $this->query->execute();
             if ($this->query->errno) {
+                $this->lastErrno = (int) $this->query->errno;
+                $this->lastError = (string) $this->query->error;
                 $this->error('Unable to process MySQL query (check your params) - ' . $this->query->error);
             }
             $this->query_closed = FALSE;
             $this->query_count++;
         } else {
+            $this->lastErrno = (int) $this->connection->errno;
+            $this->lastError = (string) $this->connection->error;
             $this->error('Unable to prepare MySQL statement (check your syntax) - ' . $this->connection->error);
         }
         return $this;
@@ -107,6 +116,45 @@ class DB
         return $this->connection->close();
     }
 
+    public function beginTransaction()
+    {
+        $result = $this->connection->begin_transaction();
+        if (!$result) {
+            $this->lastErrno = (int) $this->connection->errno;
+            $this->lastError = (string) $this->connection->error;
+            $this->error('Unable to begin MySQL transaction - ' . $this->lastError);
+        } else {
+            $this->lastErrno = 0;
+            $this->lastError = '';
+        }
+        return $result;
+    }
+
+    public function commit()
+    {
+        $result = $this->connection->commit();
+        if (!$result) {
+            $this->lastErrno = (int) $this->connection->errno;
+            $this->lastError = (string) $this->connection->error;
+            $this->error('Unable to commit MySQL transaction - ' . $this->lastError);
+        } else {
+            $this->lastErrno = 0;
+            $this->lastError = '';
+        }
+        return $result;
+    }
+
+    public function rollback()
+    {
+        $result = $this->connection->rollback();
+        if (!$result) {
+            $this->lastErrno = (int) $this->connection->errno;
+            $this->lastError = (string) $this->connection->error;
+            $this->error('Unable to rollback MySQL transaction - ' . $this->lastError);
+        }
+        return $result;
+    }
+
     public function numRows()
     {
         $this->query->store_result();
@@ -121,6 +169,16 @@ class DB
     public function lastInsertID()
     {
         return $this->connection->insert_id;
+    }
+
+    public function lastErrno(): int
+    {
+        return $this->lastErrno;
+    }
+
+    public function lastError(): string
+    {
+        return $this->lastError;
     }
 
     public function error($error)
@@ -148,7 +206,7 @@ class DB
             $subscription['email'],
             $subscription['list'],
             $subscription['form_id'],
-            date("Y-m-d h:i:s A"),
+            date("Y-m-d H:i:s"),
             $subscription['firstname'],
             $subscription['phone'],
             $subscription['company'],

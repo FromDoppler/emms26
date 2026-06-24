@@ -1,0 +1,185 @@
+<?php
+
+require_once($_SERVER['DOCUMENT_ROOT'] . '/utils/Logger.php');
+
+class UserEventJobsRepository
+{
+    private $db;
+
+    public function __construct(DB $db)
+    {
+        $this->db = $db;
+    }
+
+    public function createJob(array $data): int
+    {
+        $sql = "INSERT INTO user_event_jobs (
+                    event_type, job_type, aggregate_type, aggregate_id, registered_id,
+                    status, payload, attempts, available_at, idempotency_key, correlation_id
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), ?, ?)";
+
+        $payloadJson = json_encode($data['payload'], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        if ($payloadJson === false) {
+            throw new Exception('Could not encode user event job payload: ' . json_last_error_msg());
+        }
+
+        try {
+            $this->db->query($sql, [
+                $data['event_type'],
+                $data['job_type'],
+                $data['aggregate_type'],
+                $data['aggregate_id'],
+                $data['registered_id'],
+                $data['status'],
+                $payloadJson,
+                $data['attempts'],
+                $data['idempotency_key'],
+                $data['correlation_id'],
+            ]);
+
+            return (int) $this->db->lastInsertID();
+        } catch (Exception $e) {
+            if ($this->db->lastErrno() !== 1062) {
+                throw $e;
+            }
+
+            $existing = $this->db->query(
+                "SELECT id, aggregate_type, aggregate_id, job_type
+                 FROM user_event_jobs
+                 WHERE idempotency_key = ?
+                 LIMIT 1",
+                [$data['idempotency_key']]
+            )->fetchAll();
+
+            if (empty($existing)) {
+                throw new Exception('user_event_job_not_found_after_duplicate_insert');
+            }
+
+            $existingJob = $existing[0];
+            $semanticMismatch =
+                $existingJob['aggregate_type'] !== $data['aggregate_type']
+                || (int) $existingJob['aggregate_id'] !== (int) $data['aggregate_id']
+                || $existingJob['job_type'] !== $data['job_type'];
+
+            // TODO: decide whether semantic mismatches must fail instead of being accepted as idempotent.
+            Logger::event('user_event_job_duplicate_idempotency_key', [
+                'idempotency_key' => $data['idempotency_key'],
+                'existing_job_id' => (int) $existingJob['id'],
+                'existing_aggregate_type' => $existingJob['aggregate_type'],
+                'existing_aggregate_id' => (int) $existingJob['aggregate_id'],
+                'existing_job_type' => $existingJob['job_type'],
+                'requested_aggregate_type' => $data['aggregate_type'],
+                'requested_aggregate_id' => (int) $data['aggregate_id'],
+                'requested_job_type' => $data['job_type'],
+                'semantic_mismatch' => $semanticMismatch,
+            ], 'USER_EVENT', $semanticMismatch ? Logger::WARNING : Logger::DUPLICATE);
+
+            return (int) $existingJob['id'];
+        }
+    }
+
+    public function createJobsBatch(array $jobsData): array
+    {
+        $this->db->beginTransaction();
+        try {
+            $ids = [];
+            foreach ($jobsData as $data) {
+                $ids[] = $this->createJob($data);
+            }
+            $this->db->commit();
+            return $ids;
+        } catch (Throwable $e) {
+            try {
+                $this->db->rollback();
+            } catch (Throwable $rollbackError) {
+                Logger::error('user_event_jobs_batch_rollback_failed', [
+                    'error' => $rollbackError->getMessage(),
+                    'original_error' => $e->getMessage(),
+                ], 'USER_EVENT');
+            }
+
+            throw $e;
+        }
+    }
+
+    public function getJobsByAggregate(string $aggregateType, int $aggregateId): array
+    {
+        $rows = $this->db->query(
+            "SELECT * FROM user_event_jobs
+             WHERE aggregate_type = ? AND aggregate_id = ?
+               AND status = 'pending' AND available_at <= NOW()
+             ORDER BY id ASC",
+            [$aggregateType, $aggregateId]
+        )->fetchAll();
+
+        return $rows;
+    }
+
+    public function decodePayload(array $job): array
+    {
+        $payload = json_decode($job['payload'], true);
+        if (json_last_error() !== JSON_ERROR_NONE || !is_array($payload)) {
+            throw new Exception('Invalid user event job payload for job_id=' . $job['id'] . ': ' . json_last_error_msg());
+        }
+
+        $job['payload'] = $payload;
+
+        return $job;
+    }
+
+    public function claimProcessing(int $jobId): bool
+    {
+        $this->db->query(
+            "UPDATE user_event_jobs
+             SET status = ?, attempts = attempts + 1, processed_at = NULL, last_error = NULL
+             WHERE id = ?
+               AND status = ?
+               AND available_at <= NOW()",
+            ['processing', $jobId, 'pending']
+        );
+
+        return $this->db->affectedRows() === 1;
+    }
+
+    public function markDone(int $jobId): bool
+    {
+        $this->db->query(
+            "UPDATE user_event_jobs
+             SET status = ?, processed_at = NOW(), last_error = NULL
+             WHERE id = ? AND status = ?",
+            ['done', $jobId, 'processing']
+        );
+
+        return $this->db->affectedRows() === 1;
+    }
+
+    public function annotateUncertain(int $jobId, string $reason, ?string $errorDetail = null): bool
+    {
+        $annotation = 'uncertain: ' . $reason;
+        if ($errorDetail !== null) {
+            $annotation .= ': ' . $errorDetail;
+        }
+
+        $this->db->query(
+            "UPDATE user_event_jobs
+             SET last_error = ?
+             WHERE id = ? AND status = ?",
+            [$annotation, $jobId, 'processing']
+        );
+
+        return $this->db->affectedRows() === 1;
+    }
+
+    public function markFailed(int $jobId, string $error): bool
+    {
+        $this->db->query(
+            "UPDATE user_event_jobs
+             SET status = ?, processed_at = NOW(), last_error = ?
+             WHERE id = ? AND status = ?",
+            ['failed', $error, $jobId, 'processing']
+        );
+
+        return $this->db->affectedRows() === 1;
+    }
+
+}

@@ -11,12 +11,21 @@ class SubscriberDopplerList
     const RESULT_SUCCESS_DOUBLE_OPTIN = 'success-doble-optin';
     const RESULT_FAIL_DOUBLE_OPTIN = 'fail-doble-optin';
 
+    private $lastError = null;
+
+    public function getLastError(): ?string
+    {
+        return $this->lastError;
+    }
+
     public function saveSubscription($user)
     {
+        $this->lastError = null;
         $email = $user['email'] ?? 'unknown';
         $list = $user['list'] ?? 'unknown';
 
         if (empty($user['email']) || empty($user['list'])) {
+            $this->lastError = 'Missing email or list';
             Logger::error('doppler_subscription_invalid_user', [
                 'email' => $email,
                 'list' => $list,
@@ -32,6 +41,7 @@ class SubscriberDopplerList
             return self::RESULT_SUCCESS;
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
+            $this->lastError = $errorMessage;
             if (stripos($errorMessage, 'Unsubscribed') !== false) {
                 Logger::info('doppler_user_unsubscribed', ['email' => $email], 'USER_EVENT');
                 return $this->doubleOptin($user);
@@ -67,6 +77,7 @@ class SubscriberDopplerList
             return self::RESULT_SUCCESS_DOUBLE_OPTIN;
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
+            $this->lastError = $errorMessage;
             Logger::error('doppler_double_optin_failed', [
                 'email' => $user['email'] ?? 'unknown',
                 'list' => $user['list'] ?? 'unknown',

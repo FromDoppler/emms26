@@ -7,20 +7,103 @@ class Doppler
 
     private const urlBase = 'https://restapi.fromdoppler.com/accounts/';
 
-    private static function executeCurl($url, $data, $headers, $method)
+    private static function executeCurl($url, $data, $headers, $method): array
     {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        return curl_exec($ch);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        $body = curl_exec($ch);
+
+        if ($body === false) {
+            $errno = curl_errno($ch);
+            $error = curl_error($ch);
+            curl_close($ch);
+            throw new Exception('Doppler: cURL error ' . $errno . ' - ' . $error);
+        }
+
+        $httpStatus = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        return ['body' => (string) $body, 'httpStatus' => $httpStatus];
     }
 
     public static function init($account, $apiKey)
     {
         self::$apiKey = $apiKey;
         self::$account = $account;
+    }
+
+    private static function throwIfErrorResponse($response, int $httpStatus, string $rawBody): void
+    {
+        if ($response === null) {
+            if (trim($rawBody) === '' && $httpStatus >= 200 && $httpStatus < 300) {
+                return;
+            }
+            throw new Exception('Doppler: HTTP ' . $httpStatus . ' | invalid response: ' . substr($rawBody, 0, 200));
+        }
+
+        if (!is_object($response) && !is_array($response)) {
+            throw new Exception('Doppler: HTTP ' . $httpStatus . ' | unexpected response type: ' . substr($rawBody, 0, 200));
+        }
+
+        if (is_array($response)) {
+            if ($httpStatus >= 400) {
+                $messages = [];
+                foreach ($response as $item) {
+                    if (is_object($item)) {
+                        $key = isset($item->key) ? $item->key : (isset($item->title) ? $item->title : 'error');
+                        $detail = isset($item->detail) ? $item->detail : (isset($item->message) ? $item->message : json_encode($item, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+                        $messages[] = $key . '->' . $detail;
+                    }
+                }
+                $detail = !empty($messages) ? implode('; ', $messages) : substr($rawBody, 0, 200);
+                throw new Exception('Doppler: HTTP ' . $httpStatus . ' | ' . $detail);
+            }
+            return;
+        }
+
+        if (isset($response->errors)) {
+            $errors = is_array($response->errors) ? $response->errors : [$response->errors];
+            $messages = [];
+            foreach ($errors as $error) {
+                $key = isset($error->key) ? $error->key : (isset($error->title) ? $error->title : 'unknown');
+                if (isset($error->detail)) {
+                    $detail = $error->detail;
+                } elseif (isset($error->message)) {
+                    $detail = $error->message;
+                } else {
+                    $detail = json_encode($error, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+                }
+                $messages[] = $key . '->' . $detail;
+            }
+            throw new Exception('Doppler: Error ' . implode('; ', $messages));
+        }
+
+        if (isset($response->errorCode)) {
+            $detail = isset($response->detail) ? $response->detail : 'Unknown error';
+            throw new Exception('Doppler: Error ' . $detail . ' | errorCode= ' . $response->errorCode);
+        }
+
+        if (isset($response->status) && (int) $response->status >= 400) {
+            $detail = isset($response->detail) ? $response->detail : 'Unknown error';
+            throw new Exception('Doppler: Error ' . $detail);
+        }
+
+        if ($httpStatus >= 400) {
+            $detail = 'Unknown error';
+            if (isset($response->detail)) {
+                $detail = $response->detail;
+            } elseif (isset($response->message)) {
+                $detail = $response->message;
+            } elseif (isset($response->title)) {
+                $detail = $response->title;
+            }
+            throw new Exception('Doppler: HTTP ' . $httpStatus . ' | ' . $detail);
+        }
     }
 
     private static function getCustomFields($data)
@@ -65,17 +148,11 @@ class Doppler
         $dataJson = json_encode($dataSubscriber);
         $headers = array(
             'Content-Type: application/json',
-            'Content: ' . strlen($dataJson)
+            'Content-Length: ' . strlen($dataJson)
         );
-        $response = json_decode(self::executeCurl($endPointSubscriber, $dataJson, $headers, 'POST'));
-        if (isset($response->errors)) :
-            foreach ($response->errors as $error) :
-                throw new Exception('Doppler: Error ' . $error->key . '->' . $error->detail);
-            endforeach;
-        endif;
-        if (isset($response->errorCode)) :
-            throw new Exception('Doppler: Error ' . $response->detail . ' | errorCode= ' . $response->errorCode);
-        endif;
+        $result = self::executeCurl($endPointSubscriber, $dataJson, $headers, 'POST');
+        $response = json_decode($result['body']);
+        self::throwIfErrorResponse($response, $result['httpStatus'], $result['body']);
     }
 
     public static function dobleOptin($data)
@@ -87,16 +164,10 @@ class Doppler
         $dataJson = json_encode($dataSubscriber);
         $headers = array(
             'Content-Type: application/json',
-            'Content: ' . strlen($dataJson)
+            'Content-Length: ' . strlen($dataJson)
         );
-        $response = json_decode(self::executeCurl($endPointSubscriber, $dataJson, $headers, 'POST'));
-        if (isset($response->errors)) :
-            foreach ($response->errors as $error) :
-                throw new Exception('Doppler: Error ' . $error->key . '->' . $error->detail);
-            endforeach;
-        endif;
-        if (isset($response->errorCode)) :
-            throw new Exception('Doppler: Error ' . $response->detail . ' | errorCode= ' . $response->errorCode);
-        endif;
+        $result = self::executeCurl($endPointSubscriber, $dataJson, $headers, 'POST');
+        $response = json_decode($result['body']);
+        self::throwIfErrorResponse($response, $result['httpStatus'], $result['body']);
     }
 }

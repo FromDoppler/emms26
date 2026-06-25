@@ -1,7 +1,7 @@
 <?php
 
 
-function write_to_sheet($spreadsheetId, $range, $values, $db, $googleClientId = null, $googleClientSecret = null) {
+function write_to_sheet($spreadsheetId, $range, $values, $db, $googleClientId = null, $googleClientSecret = null, $authRetryCount = 0) {
     // Use global constants if parameters not provided
     if (!$googleClientId) {
         global $GOOGLE_CLIENT_ID, $GOOGLE_CLIENT_SECRET;
@@ -47,12 +47,14 @@ function write_to_sheet($spreadsheetId, $range, $values, $db, $googleClientId = 
 
         $result = $service->spreadsheets_values->append($spreadsheetId, $range, $body, $params);
     } catch (Exception $e) {
-        if (401 == $e->getCode()) {
-            write_to_sheet($spreadsheetId, $range, $values, $db, $googleClientId, $googleClientSecret);
-        } else {
-            $error = json_decode($e->getMessage()); //print the error just in case your data is not added.
-            throw new Exception($error->error->message);
-
+        if (401 == $e->getCode() && $authRetryCount < 1) {
+            write_to_sheet($spreadsheetId, $range, $values, $db, $googleClientId, $googleClientSecret, $authRetryCount + 1);
+            return;
         }
+
+        $error = json_decode($e->getMessage());
+        $message = $error->error->message ?? $e->getMessage();
+
+        throw new Exception($message, (int) $e->getCode(), $e);
     }
 }

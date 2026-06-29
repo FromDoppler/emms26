@@ -61,7 +61,6 @@ class UserEventJobsRepository
                 || (int) $existingJob['aggregate_id'] !== (int) $data['aggregate_id']
                 || $existingJob['job_type'] !== $data['job_type'];
 
-            // TODO: decide whether semantic mismatches must fail instead of being accepted as idempotent.
             Logger::event('user_event_job_duplicate_idempotency_key', [
                 'idempotency_key' => $data['idempotency_key'],
                 'existing_job_id' => (int) $existingJob['id'],
@@ -74,32 +73,23 @@ class UserEventJobsRepository
                 'semantic_mismatch' => $semanticMismatch,
             ], 'USER_EVENT', $semanticMismatch ? Logger::WARNING : Logger::DUPLICATE);
 
+            if ($semanticMismatch) {
+                throw new Exception('user_event_job_idempotency_key_semantic_mismatch');
+            }
+
             return (int) $existingJob['id'];
         }
     }
 
+    // Caller owns the transaction boundary. Do not open a transaction here —
+    // checkout needs jobs to participate in the same local commit as VIP access and payment approval.
     public function createJobsBatch(array $jobsData): array
     {
-        $this->db->beginTransaction();
-        try {
-            $ids = [];
-            foreach ($jobsData as $data) {
-                $ids[] = $this->createJob($data);
-            }
-            $this->db->commit();
-            return $ids;
-        } catch (Throwable $e) {
-            try {
-                $this->db->rollback();
-            } catch (Throwable $rollbackError) {
-                Logger::error('user_event_jobs_batch_rollback_failed', [
-                    'error' => $rollbackError->getMessage(),
-                    'original_error' => $e->getMessage(),
-                ], 'USER_EVENT');
-            }
-
-            throw $e;
+        $ids = [];
+        foreach ($jobsData as $data) {
+            $ids[] = $this->createJob($data);
         }
+        return $ids;
     }
 
     public function getJobsByAggregate(string $aggregateType, int $aggregateId): array

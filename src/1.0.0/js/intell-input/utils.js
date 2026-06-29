@@ -9,7 +9,7 @@
     a = a.split(".");
     var c = aa;
     a[0] in c || "undefined" == typeof c.execScript || c.execScript("var " + a[0]);
-    for (var d; a.length && (d = a.shift()); ) a.length || void 0 === b ? (c[d] && c[d] !== Object.prototype[d] ? (c = c[d]) : (c = c[d] = {})) : (c[d] = b);
+    for (var d; a.length && (d = a.shift());) a.length || void 0 === b ? (c[d] && c[d] !== Object.prototype[d] ? (c = c[d]) : (c = c[d] = {})) : (c[d] = b);
   }
   function m(a, b) {
     function c() {}
@@ -11293,7 +11293,7 @@
     if (17 < a) throw Error("The string supplied is too long to be a phone number");
     if (1 < d.length && "0" == d.charAt(0)) {
       q(e, 4, !0);
-      for (a = 1; a < d.length - 1 && "0" == d.charAt(a); ) a++;
+      for (a = 1; a < d.length - 1 && "0" == d.charAt(a);) a++;
       1 != a && q(e, 8, a);
     }
     q(e, 2, parseInt(d, 10));

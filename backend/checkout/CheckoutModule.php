@@ -1,6 +1,6 @@
 <?php
 
-require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/checkout/CheckoutCalculateRequires.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/checkout/CheckoutRequires.php');
 
 class CheckoutModule
 {

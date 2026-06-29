@@ -16,8 +16,7 @@ class CheckoutResponseFactory
             'correlationId' => $transaction['correlation_id'],
         ];
 
-        if ($isTechnicalError) {
-            $payload['success'] = false;
+        if ($isTechnicalError || $transaction['status'] === CheckoutTransactionStatus::ERROR) {
             $payload['error'] = 'payment_error';
         }
 

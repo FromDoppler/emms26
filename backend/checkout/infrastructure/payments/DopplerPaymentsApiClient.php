@@ -71,32 +71,17 @@ class DopplerPaymentsApiClient implements PaymentProviderClient
 
         try {
             $authorizationResponse = $this->jsonRequest(DOPPLER_PAYMENTS_API_URL . '/authorization', $authorizationPayload, $jwt, $request);
-            if ((int) $authorizationResponse['status'] === 400) {
-                $paymentError = $this->tryDecodeResponse($authorizationResponse['body']);
-
-                if ($paymentError !== null && $this->looksLikePaymentError($paymentError)) {
-                    return $this->buildResultFromPaymentError(
-                        $request,
-                        $startedAt,
-                        $paymentError,
-                        null,
-                        null,
-                        null,
-                        is_array($paymentError) ? $this->extractProviderTransactionId($paymentError) : null,
-                        'authorization_error'
-                    );
-                }
-
-                return $this->finish($request, $startedAt, new ProviderPaymentResult([
-                    'status' => ProviderPaymentResult::ERROR,
-                    'provider' => 'doppler-payments-api',
-                    'providerTransactionId' => is_array($paymentError) ? $this->extractProviderTransactionId($paymentError) : null,
-                    'responseCode' => 'provider_invalid_response',
-                    'responseMessage' => 'Provider returned HTTP 400 with an unexpected body.',
-                    'rawResponse' => [
-                        'authorization_error_raw' => $this->summarizeProviderErrorBody($authorizationResponse['body'], 'authorization', 400),
-                    ],
-                ]));
+            if ($this->isProviderErrorResponse($authorizationResponse)) {
+                return $this->buildResultFromProviderErrorResponse(
+                    $request,
+                    $startedAt,
+                    $authorizationResponse,
+                    'authorization',
+                    null,
+                    null,
+                    null,
+                    null
+                );
             }
 
             $authorizationData = $this->decodeResponse($authorizationResponse['body']);
@@ -158,39 +143,17 @@ class DopplerPaymentsApiClient implements PaymentProviderClient
             }
 
             $purchaseResponse = $this->jsonRequest(DOPPLER_PAYMENTS_API_URL . '/purchase', $purchasePayload, $jwt, $request);
-            if ((int) $purchaseResponse['status'] === 400) {
-                $paymentError = $this->tryDecodeResponse($purchaseResponse['body']);
-
-                if ($paymentError !== null && $this->looksLikePaymentError($paymentError)) {
-                    $purchaseErrorProviderTransactionId = $this->extractProviderTransactionId($paymentError) ?? $authorizationProviderTransactionId;
-
-                    return $this->buildResultFromPaymentError(
-                        $request,
-                        $startedAt,
-                        $paymentError,
-                        $authorizationData,
-                        $authorizationCode,
-                        $transactionLinkId,
-                        $purchaseErrorProviderTransactionId,
-                        'purchase_error'
-                    );
-                }
-
-                $purchaseErrorProviderTransactionId = $this->extractProviderTransactionId($paymentError) ?? $authorizationProviderTransactionId;
-
-                return $this->finish($request, $startedAt, new ProviderPaymentResult([
-                    'status' => ProviderPaymentResult::ERROR,
-                    'provider' => 'doppler-payments-api',
-                    'providerTransactionId' => $purchaseErrorProviderTransactionId,
-                    'transactionLinkId' => $transactionLinkId,
-                    'authorizationResponseCode' => $authorizationCode,
-                    'responseCode' => 'provider_invalid_response',
-                    'responseMessage' => 'Provider returned HTTP 400 with an unexpected body.',
-                    'rawResponse' => [
-                        'authorization' => $authorizationData,
-                        'purchase_error_raw' => $this->summarizeProviderErrorBody($purchaseResponse['body'], 'purchase', 400),
-                    ],
-                ]));
+            if ($this->isProviderErrorResponse($purchaseResponse)) {
+                return $this->buildResultFromProviderErrorResponse(
+                    $request,
+                    $startedAt,
+                    $purchaseResponse,
+                    'purchase',
+                    $authorizationData,
+                    $authorizationCode,
+                    $transactionLinkId,
+                    $authorizationProviderTransactionId
+                );
             }
 
             $purchaseData = $this->decodeResponse($purchaseResponse['body']);
@@ -292,6 +255,64 @@ class DopplerPaymentsApiClient implements PaymentProviderClient
         ];
     }
 
+    private function isProviderErrorResponse(array $response): bool
+    {
+        $statusCode = (int) ($response['status'] ?? 0);
+        return $statusCode < 200 || $statusCode >= 300;
+    }
+
+    private function buildResultFromProviderErrorResponse(
+        ProviderPaymentRequest $request,
+        float $startedAt,
+        array $providerResponse,
+        string $providerStep,
+        ?array $authorizationData,
+        ?string $authorizationCode,
+        ?string $transactionLinkId,
+        ?string $fallbackProviderTransactionId
+    ): ProviderPaymentResult {
+        $statusCode = (int) ($providerResponse['status'] ?? 0);
+        $body = (string) ($providerResponse['body'] ?? '');
+        $paymentError = $this->tryDecodeResponse($body);
+        $rawResponseKey = $providerStep . '_error';
+
+        if ($paymentError !== null && $this->looksLikePaymentError($paymentError)) {
+            return $this->buildResultFromPaymentError(
+                $request,
+                $startedAt,
+                $paymentError,
+                $authorizationData,
+                $authorizationCode,
+                $transactionLinkId,
+                $this->extractProviderTransactionId($paymentError) ?? $fallbackProviderTransactionId,
+                $rawResponseKey
+            );
+        }
+
+        $providerTransactionId = $paymentError !== null
+            ? ($this->extractProviderTransactionId($paymentError) ?? $fallbackProviderTransactionId)
+            : $fallbackProviderTransactionId;
+
+        $rawResponse = [];
+
+        if ($authorizationData !== null) {
+            $rawResponse['authorization'] = $authorizationData;
+        }
+
+        $rawResponse[$rawResponseKey . '_raw'] = $this->summarizeProviderErrorBody($body, $providerStep, $statusCode);
+
+        return $this->finish($request, $startedAt, new ProviderPaymentResult([
+            'status' => ProviderPaymentResult::ERROR,
+            'provider' => 'doppler-payments-api',
+            'providerTransactionId' => $providerTransactionId,
+            'transactionLinkId' => $transactionLinkId,
+            'authorizationResponseCode' => $authorizationCode,
+            'responseCode' => 'provider_invalid_response',
+            'responseMessage' => 'Provider returned HTTP ' . $statusCode . ' with an unexpected body.',
+            'rawResponse' => $rawResponse,
+        ]));
+    }
+
     private function jsonRequest(string $url, array $payload, string $jwt, ProviderPaymentRequest $request): array
     {
         $body = json_encode($payload, JSON_UNESCAPED_SLASHES);
@@ -342,17 +363,6 @@ class DopplerPaymentsApiClient implements PaymentProviderClient
 
         $statusCode = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
-
-        if ($statusCode < 200 || $statusCode >= 300) {
-            if ($statusCode === 400) {
-                return [
-                    'status' => $statusCode,
-                    'body' => $responseBody,
-                ];
-            }
-
-            throw new Exception('Provider returned HTTP ' . $statusCode);
-        }
 
         return [
             'status' => $statusCode,

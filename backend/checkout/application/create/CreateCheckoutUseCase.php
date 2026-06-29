@@ -267,16 +267,66 @@ class CreateCheckoutUseCase
             $emptyField = 'payment.ccType';
         }
 
-        if ($emptyField === null) {
+        if ($emptyField !== null) {
+            return $this->buildPaymentValidationError($emptyField, $runtime);
+        }
+
+        $month = trim((string) $payment['ccExpMonth']);
+        $year = trim((string) $payment['ccExpYear']);
+        $type = trim((string) $payment['ccType']);
+
+        if (!ctype_digit($month) || (int) $month < 1 || (int) $month > 12) {
+            return $this->buildPaymentValidationError('payment.ccExpMonth', $runtime);
+        }
+
+        $normalizedYear = $this->normalizeExpirationYear($year);
+        if ($normalizedYear === null) {
+            return $this->buildPaymentValidationError('payment.ccExpYear', $runtime);
+        }
+
+        $currentYear = (int) date('Y');
+        $currentMonth = (int) date('n');
+
+        if ($normalizedYear < $currentYear || ($normalizedYear === $currentYear && (int) $month < $currentMonth)) {
+            return $this->buildPaymentValidationError('payment.ccExpYear', $runtime);
+        }
+
+        if ($normalizedYear > $currentYear + 30) {
+            return $this->buildPaymentValidationError('payment.ccExpYear', $runtime);
+        }
+
+        if (!ctype_digit($type) || (int) $type <= 0) {
+            return $this->buildPaymentValidationError('payment.ccType', $runtime);
+        }
+
+        return null;
+    }
+
+    private function normalizeExpirationYear(string $year): ?int
+    {
+        if (!ctype_digit($year)) {
             return null;
         }
 
+        if (strlen($year) === 2) {
+            return 2000 + (int) $year;
+        }
+
+        if (strlen($year) === 4) {
+            return (int) $year;
+        }
+
+        return null;
+    }
+
+    private function buildPaymentValidationError(string $field, CheckoutExecutionRuntime $runtime): array
+    {
         return [
             'httpStatus' => 422,
             'payload' => [
                 'success' => false,
                 'error' => 'validation_error',
-                'field' => $emptyField,
+                'field' => $field,
                 'correlationId' => $runtime->correlationId(),
             ],
         ];

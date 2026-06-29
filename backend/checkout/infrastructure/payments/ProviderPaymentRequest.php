@@ -29,7 +29,10 @@ class ProviderPaymentRequest
         $this->customerName = $data['customerName'] ?? null;
         $this->worldPayLowValueToken = $data['worldPayLowValueToken'] ?? null;
         $this->ccExpMonth = $data['ccExpMonth'] ?? null;
-        $this->ccExpYear = $data['ccExpYear'] ?? null;
+        $rawYear = trim((string) ($data['ccExpYear'] ?? ''));
+        $this->ccExpYear = (strlen($rawYear) === 2 && ctype_digit($rawYear))
+            ? 2000 + (int) $rawYear
+            : (int) $rawYear;
         $this->ccType = $data['ccType'] ?? null;
     }
 

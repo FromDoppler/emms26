@@ -28,6 +28,20 @@ if (!defined('DOPPLER_PAYMENTS_API_JWT_ISSUER')) {
     define('DOPPLER_PAYMENTS_API_JWT_ISSUER', (string) (getenv('DOPPLER_PAYMENTS_API_JWT_ISSUER') ?: ''));
 }
 
+if (!defined('DOPPLER_PAYMENTS_API_CONNECT_TIMEOUT_SECONDS')) {
+    define(
+        'DOPPLER_PAYMENTS_API_CONNECT_TIMEOUT_SECONDS',
+        (int) (getenv('DOPPLER_PAYMENTS_API_CONNECT_TIMEOUT_SECONDS') ?: 5)
+    );
+}
+
+if (!defined('DOPPLER_PAYMENTS_API_TIMEOUT_SECONDS')) {
+    define(
+        'DOPPLER_PAYMENTS_API_TIMEOUT_SECONDS',
+        (int) (getenv('DOPPLER_PAYMENTS_API_TIMEOUT_SECONDS') ?: 30)
+    );
+}
+
 if (!defined('EPROTECT_SCRIPT_URL')) {
     define('EPROTECT_SCRIPT_URL', (string) (getenv('EPROTECT_SCRIPT_URL') ?: ''));
 }

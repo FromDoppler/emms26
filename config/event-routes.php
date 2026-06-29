@@ -53,8 +53,6 @@ $sharedPages = [
         'page' => 'landing.php',
         'folder' => 'checkout-lp',
     ],
-
-
     'speaker' => [
         'url' => 'speaker-interna',
         'page' => 'speaker-interna.php',
@@ -65,8 +63,11 @@ $sharedPages = [
 // Configuración específica por evento
 $events = [
     'ECOMMERCE' => [
+        'type' => 'ecommerce',
         'freeId' => 'ecommerce26',
         'vipId'  => 'ecommerce26-vip',
+        'registeredFreeColumn' => 'ecommerce',
+        'registeredVipColumn' => 'ecommerce-vip',
         'name'   => 'E-commerce',
         'folder' => 'ecommerce',
         'pages'  => [
@@ -75,8 +76,11 @@ $events = [
         ],
     ],
     'DIGITALTRENDS' => [
+        'type' => 'digital-trends',
         'freeId' => 'digital-trends26',
         'vipId'  => 'digital-trends26-vip',
+        'registeredFreeColumn' => 'digital-trends',
+        'registeredVipColumn' => 'digital-trends-vip',
         'name'   => 'Digital Trends',
         'folder' => 'digital-trends',
         'pages'  => [

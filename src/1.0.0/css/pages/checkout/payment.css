@@ -1,0 +1,109 @@
+/* Payment and phone input */
+.emms__checkout__eprotect {
+  width: 100%;
+  margin-top: 0;
+}
+
+.emms__checkout__payment-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.emms__checkout__accepted-cards {
+  display: block;
+  flex: 0 0 auto;
+  width: 96px;
+  max-width: 96px;
+  margin-left: auto;
+  height: auto;
+  object-fit: contain;
+}
+
+.emms__checkout__payment-frame {
+  position: relative;
+  min-height: 240px;
+}
+
+.emms__checkout__payment-loading {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 24px;
+  border: 1px solid #ececec;
+  border-radius: 10px;
+  background: #ffffff;
+  color: var(--checkout-muted);
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.emms__checkout__payment-loading-spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #ede7ff;
+  border-top-color: var(--checkout-accent);
+  border-radius: 50%;
+  animation: checkout-payment-spin 0.8s linear infinite;
+}
+
+.emms__checkout__payment-frame[data-eprotect-loading="true"] .emms__checkout__payframe {
+  visibility: hidden;
+}
+
+.emms__checkout__payframe {
+  width: 100%;
+  min-height: 240px;
+  padding: 0 16px 14px;
+  border: 1px solid #ececec;
+  border-radius: 10px;
+  background: #ffffff;
+  box-sizing: border-box;
+  overflow: visible;
+}
+
+@keyframes checkout-payment-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+#eprotect-payframe iframe {
+  display: block;
+  width: calc(100% - 2px);
+  margin: 0 auto;
+  border: 0;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .emms__checkout__payment-card {
+    padding: 16px;
+  }
+
+  .emms__checkout__accepted-cards {
+    width: 76px;
+    max-width: 76px;
+  }
+
+  .emms__checkout__step-card-head .emms__checkout__accepted-cards {
+    align-self: flex-start;
+  }
+
+  .emms__checkout__payment-frame,
+  .emms__checkout__payframe,
+  #eprotect-payframe iframe {
+    min-height: 350px;
+  }
+
+  #eprotect-payframe iframe {
+    height: 350px;
+  }
+}

@@ -1,0 +1,12 @@
+/* Visibility states.
+   Keep this file imported last so hidden UI state wins by cascade and specificity,
+   without forcing the cascade outside third-party overrides. */
+
+.emms__checkout.emms__checkout__page [hidden],
+.emms__checkout.emms__checkout__page .emms__checkout__container.emms__checkout__container--hidden {
+  display: none;
+}
+
+.emms__checkout.emms__checkout__page .emms__checkout__payment-frame > .emms__checkout__payment-loading[hidden] {
+  display: none;
+}

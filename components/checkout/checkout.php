@@ -1,99 +1,47 @@
-<div class="emms__checkout">
-    <div class="loader-page--new" id="spinner">
-        <img src="/src/img/logoemms-nobg.png" class="loader-goemms" alt="Loader goemms">
-    </div>
+<?php
+$checkoutOrigin = 'checkout';
+$checkoutSuccessPath = '/checkout-success';
+$checkoutBackPath = '/';
+$checkoutPhoneCountry = 'AR';
+$checkoutItiFlags1x = '/src/' . VERSION . '/vendor/intl-tel-input/29.1.1/img/flags.webp';
+$checkoutItiFlags2x = '/src/' . VERSION . '/vendor/intl-tel-input/29.1.1/img/flags@2x.webp';
+if (class_exists('GeoIp') && method_exists('GeoIp', 'getGeoLocalitationCountryNameAndCode')) {
+    $checkoutGeoCountry = GeoIp::getGeoLocalitationCountryNameAndCode();
+    if (!empty($checkoutGeoCountry['countryCode'])) {
+        $checkoutPhoneCountry = $checkoutGeoCountry['countryCode'];
+    }
+}
+?>
+<div
+    class="emms__checkout emms__checkout__page"
+    data-checkout
+    data-origin="<?= htmlspecialchars($checkoutOrigin, ENT_QUOTES, 'UTF-8'); ?>"
+    data-success-path="<?= htmlspecialchars($checkoutSuccessPath, ENT_QUOTES, 'UTF-8'); ?>"
+    data-phone-country="<?= htmlspecialchars($checkoutPhoneCountry, ENT_QUOTES, 'UTF-8'); ?>"
+    style="--checkout-iti-path-flags-1x: url('<?= htmlspecialchars($checkoutItiFlags1x, ENT_QUOTES, 'UTF-8'); ?>'); --checkout-iti-path-flags-2x: url('<?= htmlspecialchars($checkoutItiFlags2x, ENT_QUOTES, 'UTF-8'); ?>');"
+>
+    <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/checkout/states/spinner.php'); ?>
+
     <div class="emms__checkout__container emms__checkout__card__container--form emms__fade-in">
-        <div class="emms__checkout__card">
-            <div id="checkout"></div>
+        <div class="emms__checkout__card emms__checkout__card--form">
+            <header class="emms__checkout__header" aria-labelledby="checkout-title">
+                <span class="emms__checkout__eyebrow">Checkout seguro</span>
+                <h1 id="checkout-title">Finalizá tu acceso VIP</h1>
+                <p>Completá los pasos para confirmar tu pase al EMMS 2026.</p>
+            </header>
+
+            <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/checkout/form/stepper.php'); ?>
+            <div class="emms__checkout__layout">
+                <section class="emms__checkout__steps-column">
+                    <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/checkout/form/customer.php'); ?>
+                    <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/checkout/form/eprotect.php'); ?>
+                </section>
+                <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/checkout/sidebar/summary.php'); ?>
+            </div>
         </div>
-        <a href="./digital-trends-registrado.php" class="emms__checkout__back">← Volver al sitio</a>
+        <a href="<?= htmlspecialchars($checkoutBackPath, ENT_QUOTES, 'UTF-8'); ?>" class="emms__checkout__back">← Volver al sitio</a>
     </div>
 </div>
 
-<script src="https://js.stripe.com/v3/"></script>
-<script>
-const events = JSON.parse(localStorage.getItem("events") || "[]");
-if (events.includes(window.APP.EVENTS.EVENTCODES.DIGITALTRENDSVIP)) {
-  window.location.href = "/";
-}
-const stripe = Stripe(`<?= STRIPE_PUBLIC_KEY; ?>`);
-const spinner = document.getElementById('spinner');
-
-function showSpinner(show) {
-    spinner.classList.toggle('visible', show);
-}
-
-function hexToString(hex) {
-    try {
-        let str = '';
-        for (let i = 0; i < hex.length; i += 2) {
-            str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-        }
-        return str;
-    } catch {
-        return null;
-    }
-}
-
-function getCustomerEmail() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const hex = localStorage.getItem('dplrid') || urlParams.get('dplrid');
-    const decoded = hexToString(hex);
-    if (!decoded) return null;
-    try {
-        return JSON.parse(decoded)?.userEmail || decoded;
-    } catch {
-        return decoded;
-    }
-}
-
-
-function getUtmParams() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const promotionCode = urlParams.get('promotionCode');
-    const utmParams = {};
-
-    ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'origin']
-        .forEach(param => {
-            const value = urlParams.get(param);
-            if (value) utmParams[param] = value;
-        });
-
-    return { promotionCode, utmParams };
-}
-
-async function initialize() {
-    try {
-        const customerEmail = getCustomerEmail();
-        const { promotionCode, utmParams } = getUtmParams();
-
-        const response = await fetch(`/services/create-checkout-session`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                customerEmail,
-                ...(promotionCode && { promotionCode }),
-                ...utmParams
-            })
-        });
-
-        if (!response.ok) {
-            throw new Error(`Error en la respuesta del servidor: ${response.statusText}`);
-        }
-
-        const { clientSecret } = await response.json();
-
-        const checkout = await stripe.initEmbeddedCheckout({ clientSecret });
-        checkout.mount('#checkout');
-    } catch (error) {
-        console.error("Error al inicializar el checkout:", error);
-        window.location.href = '/';
-    }
-}
-
-(async () => {
-    showSpinner(true);
-    await initialize();
-    showSpinner(false);
-})();
-</script>
+<script src="/src/<?= VERSION ?>/vendor/intl-tel-input/29.1.1/js/intlTelInputWithUtils.min.js" defer></script>
+<script type="module" src="/src/<?= VERSION ?>/js/checkout/checkout.js"></script>

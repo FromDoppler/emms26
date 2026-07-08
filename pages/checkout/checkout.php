@@ -9,6 +9,8 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/utils/cacheSettings.php');
 <head>
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/digital-trends/head.php'); ?>
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/head.php'); ?>
+    <link rel="stylesheet" href="/src/<?= VERSION ?>/vendor/intl-tel-input/29.1.1/css/intlTelInput.min.css">
+    <link rel="stylesheet" href="/src/<?= VERSION ?>/css/pages/checkout.css">
 </head>
 
 <body class="emms__ecommerce emms__ecommerce-logueado">

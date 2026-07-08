@@ -38,21 +38,6 @@ $sharedPages = [
         'page' => 'checkout-success.php',
         'folder' => 'checkout',
     ],
-    'checkout-lp' => [
-        'url'  => 'checkout-lp',
-        'page' => 'checkout.php',
-        'folder' => 'checkout-lp',
-    ],
-    'checkout-lp-success' => [
-        'url'  => 'checkout-lp-success',
-        'page' => 'checkout-success.php',
-        'folder' => 'checkout-lp',
-    ],
-    'checkout-lp-landing' => [
-        'url'  => 'checkout-lp-landing',
-        'page' => 'landing.php',
-        'folder' => 'checkout-lp',
-    ],
     'speaker' => [
         'url' => 'speaker-interna',
         'page' => 'speaker-interna.php',
@@ -104,8 +89,6 @@ function getRedirectsForEvent($event, $sharedPages) {
             'digital-trends-registrado' => $event['pages']['unregistered']['url'],
             'sponsors-registrado' => $sharedPages['sponsors']['unregistered']['url'],
             'ediciones-anteriores-registrado' => $sharedPages['ediciones-anteriores']['unregistered']['url'],
-            'checkout' => $event['pages']['unregistered']['url'],
-            'checkout-success' => $event['pages']['unregistered']['url'],
             'speaker-interna' => $event['pages']['unregistered']['url'],
             'sponsors-interna' => $sharedPages['sponsors-interna']['url'],
         ],

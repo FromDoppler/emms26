@@ -21,6 +21,17 @@ $locale = $locale ?? 'es';
 
 function renderAppScripts() {
     global $currentEvent, $locale;
+    $eprotectStyle = trim((string) EPROTECT_STYLE);
+    if ($eprotectStyle === '') {
+        $eprotectStyle = $locale === 'en' ? 'enhancedstyleDB5ENGL' : 'enhancedstyleDB5ESPA';
+    }
+    $eprotectConfig = [
+        'scriptUrl' => EPROTECT_SCRIPT_URL,
+        'paypageId' => EPROTECT_PAYPAGE_ID,
+        'reportGroup' => EPROTECT_REPORT_GROUP,
+        'style' => $eprotectStyle,
+        'timeoutMs' => (int) EPROTECT_TIMEOUT_MS,
+    ];
     ?>
     <script>
       window.APP = {
@@ -38,6 +49,9 @@ function renderAppScripts() {
         URLS: {
           REFRESH: "<?= URL_REFRESH ?>",
           PATH_REFRESH: "<?= PATH_REFRESH ?>"
+        },
+        PAYMENTS: {
+          EPROTECT: <?= json_encode($eprotectConfig, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>
         },
         utils: {
             addParams: (baseUrl) => {

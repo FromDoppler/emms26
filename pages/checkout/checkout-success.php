@@ -9,6 +9,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/utils/cacheSettings.php');
 <head>
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/digital-trends/head.php'); ?>
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/head.php'); ?>
+    <link rel="stylesheet" href="/src/<?= VERSION ?>/css/pages/checkout-success.css">
 </head>
 
 <body class="emms__ecommerce emms__ecommerce-logueado">

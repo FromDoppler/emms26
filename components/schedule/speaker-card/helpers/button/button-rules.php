@@ -80,39 +80,17 @@ function shouldShowSpeakerButton(array $speaker, string $eventPhase, bool $isReg
  */
 function shouldHideButton(array $speaker, string $currentPath): bool
 {
-  $isVipButton = ($speaker['exposes'] === 'workshop');
-  return $currentPath === '/checkout-lp-success' ||
-    ($currentPath === '/checkout-lp-landing' && !$isVipButton);
+  return false;
 }
 
 
 
 /**
  * Overrides por ruta para forzar o anular botones.
- * - /checkout-lp-landing: solo workshops con CTA directo a /checkout-lp
- * - /checkout-lp-success: ningún botón
+ * - checkout V1 unificado: no hay variantes por ruta en esta capa
  *
  */
 function applyRouteButtonOverrides(array $buttons, array $speaker, string $currentPath): array
 {
-  // /checkout-lp-success -> nunca hay botones
-  if ($currentPath === '/checkout-lp-success') {
-    return [];
-  }
-
-  // /checkout-lp-landing -> solo workshop con CTA de compra
-  if ($currentPath === '/checkout-lp-landing') {
-    $isWorkshop = ($speaker['exposes'] ?? 'conference') === 'workshop';
-    if (!$isWorkshop) {
-      return [];
-    }
-
-    return [[
-      'text'  => 'COMPRA TU ENTRADA VIP',
-      'href'  => '/checkout-lp',
-      'class' => 'speaker-card__button--primary'
-    ]];
-  }
-
   return $buttons;
 }

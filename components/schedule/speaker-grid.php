@@ -25,15 +25,7 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/components/schedule/speaker-card/spea
 
   $dayDuring = DAY_DURING;
 
-  // Suprimimos el comportamiento de los labels de finalizado para la landing del checkout
-  $isCheckoutLanding = (strpos($_SERVER['REQUEST_URI'] ?? '', 'checkout-lp-landing') !== false);
   $suppressFinalizedLabels = false;
-  if ($isCheckoutLanding) {
-    if ($dayDuring !== 3) {
-      $dayDuring = 3;
-      $suppressFinalizedLabels = true;
-    }
-  }
 
   // Tabs de la agenda
   render_schedule_tabs($digitalTrendsStates, $days, $dayDuring, $suppressFinalizedLabels);

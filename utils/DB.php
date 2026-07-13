@@ -10,7 +10,7 @@ class DB
     private $lastErrno = 0;
     private $lastError = '';
 
-    public function __construct($dbhost, $dbuser, $dbpass, $dbname, $charset = 'utf8')
+    public function __construct($dbhost, $dbuser, $dbpass, $dbname, $charset = 'utf8mb4')
     {
         $this->connection = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
         if ($this->connection->connect_error) {

@@ -22,20 +22,26 @@ class GetCheckoutUseCase
             ];
         }
 
+        $payment = [
+            'publicId' => $transaction['public_id'],
+            'status' => $transaction['status'],
+            'ticketName' => $transaction['ticket_name'],
+            'customerName' => $transaction['customer_name'],
+            'finalAmount' => (float) $transaction['final_amount'],
+            'amount' => (float) $transaction['amount'],
+            'discountAmount' => (float) $transaction['discount_amount'],
+            'currency' => $transaction['currency'],
+            'paymentMethod' => $transaction['payment_method'],
+            'createdAt' => $transaction['created_at'],
+        ];
+
+        if ($transaction['status'] === CheckoutTransactionStatus::APPROVED) {
+            $payment['customerEmail'] = $transaction['customer_email'];
+        }
+
         $payload = [
             'success' => $transaction['status'] === CheckoutTransactionStatus::APPROVED,
-            'payment' => [
-                'publicId' => $transaction['public_id'],
-                'status' => $transaction['status'],
-                'ticketName' => $transaction['ticket_name'],
-                'customerName' => $transaction['customer_name'],
-                'finalAmount' => (float) $transaction['final_amount'],
-                'amount' => (float) $transaction['amount'],
-                'discountAmount' => (float) $transaction['discount_amount'],
-                'currency' => $transaction['currency'],
-                'paymentMethod' => $transaction['payment_method'],
-                'createdAt' => $transaction['created_at'],
-            ],
+            'payment' => $payment,
             'correlationId' => $transaction['correlation_id'],
         ];
 

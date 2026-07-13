@@ -48,8 +48,11 @@ class CalculateCheckoutUseCase
             ], 'PAYMENTS', Logger::INFO);
         }
 
+        $isTicketDiscovery = ($result['error'] ?? null) === 'ticket_required'
+            && !empty($result['availableTickets']);
+
         return [
-            'httpStatus' => $result['success'] ? 200 : 422,
+            'httpStatus' => ($result['success'] || $isTicketDiscovery) ? 200 : 422,
             'payload' => $publicResult,
         ];
     }

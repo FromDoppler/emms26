@@ -156,7 +156,7 @@ class CheckoutPaymentProcessor
         $runtime->markDbTransactionClosed();
         $runtime->markLocalCommitCompleted();
 
-        $fulfilledTransaction = $this->postCheckoutService->afterApprovedCheckoutCommitted($fulfilledTransaction);
+        $this->deferAfterApprovedCheckoutCommitted($fulfilledTransaction);
 
         return [
             'httpStatus' => 200,
@@ -180,5 +180,25 @@ class CheckoutPaymentProcessor
     private function buildCreatePaymentResponse(array $transaction, bool $isTechnicalError = false): array
     {
         return $this->responseFactory->buildCreatePaymentResponse($transaction, $isTechnicalError);
+    }
+
+    private function deferAfterApprovedCheckoutCommitted(array $fulfilledTransaction): void
+    {
+        // Post-checkout inline effects are best effort and must not delay the
+        // approved payment response. The durable work already happened before:
+        // local commit, VIP access and job persistence.
+        $postCheckoutService = $this->postCheckoutService;
+
+        register_shutdown_function(static function () use ($postCheckoutService, $fulfilledTransaction): void {
+            try {
+                $postCheckoutService->afterApprovedCheckoutCommitted($fulfilledTransaction);
+            } catch (Throwable $e) {
+                Logger::event('post_checkout_after_commit_deferred_failed', [
+                    'checkout_transaction_id' => $fulfilledTransaction['id'] ?? null,
+                    'checkout_public_id' => $fulfilledTransaction['public_id'] ?? null,
+                    'error' => $e->getMessage(),
+                ], 'PAYMENTS', Logger::ERROR);
+            }
+        });
     }
 }

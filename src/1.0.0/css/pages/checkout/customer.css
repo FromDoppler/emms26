@@ -1,0 +1,117 @@
+.emms__checkout__customer-panel,
+.emms__checkout__fields {
+  display: grid;
+}
+
+.emms__checkout__fields--compact {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.emms__checkout__customer-panel {
+  gap: 12px;
+}
+
+.emms__checkout__customer-summary {
+  padding: 16px;
+  border: 1px solid var(--checkout-border);
+  border-radius: 10px;
+  background: var(--checkout-panel-soft);
+  box-sizing: border-box;
+}
+
+.emms__checkout__customer-summary-title {
+  margin: 0 0 6px;
+  color: var(--checkout-text);
+  font-size: 18px;
+  line-height: 22px;
+  font-weight: 700;
+}
+
+.emms__checkout__customer-copy,
+.emms__checkout__customer-summary-copy {
+  margin: 0 0 14px;
+  color: var(--checkout-muted);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.emms__checkout__customer-summary-list {
+  display: grid;
+  margin: 0;
+  border-top: 1px solid #e5e5e5;
+}
+
+.emms__checkout__customer-summary-list div {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.emms__checkout__customer-summary-list dt,
+.emms__checkout__customer-summary-list dd {
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.emms__checkout__customer-summary-list dt {
+  color: var(--checkout-muted-soft);
+  font-weight: 700;
+}
+
+.emms__checkout__customer-summary-list dd {
+  color: var(--checkout-text);
+  overflow-wrap: anywhere;
+}
+
+.emms__checkout__customer-summary--warning {
+  border-color: #d49a2a;
+  background: #fffaf1;
+}
+
+.emms__checkout__customer-summary--error {
+  border-color: var(--checkout-danger);
+  background: #fff6f4;
+}
+
+.emms__checkout__customer-summary--vip {
+  border-color: #e7e0f8;
+  background: #faf8ff;
+}
+
+.emms__checkout__checkboxes {
+  display: grid;
+  gap: 8px;
+  margin: 16px 0 20px 0;
+}
+
+.emms__checkout__fields {
+  gap: 14px;
+}
+
+.emms__checkout__customer-form + .emms__checkout__step-actions {
+  margin-top: 18px;
+}
+
+.emms__checkout__checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.emms__checkout__privacy-link {
+  color: var(--checkout-accent);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .emms__checkout__customer-summary-list div {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}

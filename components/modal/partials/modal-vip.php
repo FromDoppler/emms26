@@ -1,6 +1,5 @@
 <?php
-  $currentUrl = $_SERVER['REQUEST_URI'];
-  $buttonLink = ($currentUrl === '/checkout-lp-landing') ? '/checkout-lp' : '/checkout';
+  $buttonLink = '/checkout';
 ?>
 <div class="popup-modal__vip-inner">
   <div class="popup-modal__vip-copy">

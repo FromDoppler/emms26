@@ -84,7 +84,10 @@ export function getCustomerDataSummary(state, customerReadyForPayment = false) {
 
     return {
       type: "lines",
-      lines: [state.customerData.name, state.customerData.phone].filter(Boolean),
+      lines: [
+        { type: "name", text: state.customerData.name },
+        { type: "phone", text: getCustomerDisplayPhone(state) },
+      ].filter((line) => Boolean(line.text)),
     };
   }
 
@@ -99,6 +102,18 @@ export function getCustomerDataSummary(state, customerReadyForPayment = false) {
     type: "text",
     text: "Completá nombre, teléfono y política de privacidad.",
   };
+}
+
+export function getCustomerDisplayPhone(state) {
+  if (typeof state.phoneControl?.getDisplayNumber === "function") {
+    const displayPhone = String(state.phoneControl.getDisplayNumber() || "").trim();
+
+    if (displayPhone) {
+      return displayPhone;
+    }
+  }
+
+  return String(state.customerData.phone || "").trim();
 }
 
 export function getPaymentSummary(state) {

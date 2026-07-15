@@ -31,7 +31,14 @@ function renderSummaryText(element, summary) {
     element.innerHTML = "";
     summary.lines.forEach((line) => {
       const span = document.createElement("span");
-      span.textContent = line;
+      const text = typeof line === "string" ? line : line?.text;
+      const lineType = typeof line === "string" ? "" : line?.type;
+
+      if (lineType) {
+        span.classList.add(`emms__checkout__step-summary-${lineType}`);
+      }
+
+      span.textContent = text || "";
       element.appendChild(span);
     });
     return;

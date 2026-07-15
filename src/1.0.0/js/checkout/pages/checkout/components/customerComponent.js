@@ -1,6 +1,6 @@
 import { buildCustomerData } from "../state/checkoutState.js";
 import { clearValidationFeedback, setFieldInvalidState, setStatusMessage, setElementText } from "./checkoutComponents.js";
-import { isEditableCustomerMode, isValidEmail, normalizeEmail, shouldAskConsents, STEPS } from "../state/checkoutSelectors.js";
+import { getCustomerDisplayPhone, isEditableCustomerMode, isValidEmail, normalizeEmail, shouldAskConsents, STEPS } from "../state/checkoutSelectors.js";
 import { getCustomerPayload } from "../checkoutPayloads.js";
 import { readCheckoutSnapshot } from "../checkoutSnapshot.js";
 import { isPhoneInputEditable, validateCustomerStep as validateCustomerStepRules } from "../checkoutRules.js";
@@ -102,7 +102,7 @@ export function renderCustomerView(state, view) {
   }
 
   setElementText(view.customerSummaryName, state.customerData.name || "Datos pendientes");
-  setElementText(view.customerSummaryPhone, state.customerData.phone || "");
+  setElementText(view.customerSummaryPhone, getCustomerDisplayPhone(state));
 
   if (!consentsVisible) {
     view.policiesCheckbox.checked = false;

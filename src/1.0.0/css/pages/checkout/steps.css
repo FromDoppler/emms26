@@ -193,9 +193,8 @@
 
 .emms__checkout__step-card-copy p.emms__checkout__step-summary--customer {
   display: grid;
-  gap: 2px;
-  margin-top: 2px;
-  line-height: 19px;
+  gap: 3px;
+  margin-top: 3px;
   white-space: normal;
 }
 
@@ -205,6 +204,22 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.emms__checkout__step-summary-name {
+  color: var(--checkout-text);
+  font-size: 14px;
+  line-height: 19px;
+  font-weight: 600;
+}
+
+.emms__checkout__step-summary-phone {
+  color: var(--checkout-muted);
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  font-variant-numeric: tabular-nums;
 }
 
 .emms__checkout__step-card-body {

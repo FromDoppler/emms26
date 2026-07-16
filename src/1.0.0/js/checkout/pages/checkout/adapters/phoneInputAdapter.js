@@ -1,13 +1,18 @@
 (function () {
-  const DEFAULT_COUNTRY = String(document.documentElement.lang || "")
-    .toLowerCase()
-    .startsWith("en")
-    ? "us"
-    : "ar";
+  const CHECKOUT_LANGUAGE = resolveCheckoutLanguage();
+  const DEFAULT_COUNTRY = CHECKOUT_LANGUAGE === "en" ? "us" : "ar";
   const CHECKOUT_ROOT = document.querySelector("[data-checkout]");
   const CHECKOUT_PHONE_COUNTRY = normalizeCountryCode(CHECKOUT_ROOT && CHECKOUT_ROOT.dataset ? CHECKOUT_ROOT.dataset.phoneCountry : "");
   const INITIAL_COUNTRY = CHECKOUT_PHONE_COUNTRY || DEFAULT_COUNTRY;
   const COUNTRY_ORDER = buildCountryOrder(INITIAL_COUNTRY);
+
+  function resolveCheckoutLanguage() {
+    const language = String(window.APP?.LOCALE || document.documentElement.lang || "es")
+      .trim()
+      .toLowerCase();
+
+    return language.startsWith("en") ? "en" : "es";
+  }
 
   function normalizeCountryCode(value) {
     const countryCode = String(value || "")
@@ -34,6 +39,28 @@
     return /^(\d)\1{7,}$/.test(digits);
   }
 
+  function getPhoneInputTranslations(language) {
+    if (language === "en") {
+      return {};
+    }
+
+    return {
+      searchPlaceholder: "Buscar",
+      clearSearchAriaLabel: "Limpiar búsqueda",
+      noCountrySelected: "Seleccionar país",
+      selectedCountryAriaLabel: "Cambiar país del teléfono, actualmente ${countryName} (${dialCode})",
+      countryListAriaLabel: "Lista de países",
+      searchEmptyState: "No se encontraron países",
+      searchSummaryAria: function (count) {
+        if (count === 0) {
+          return "No se encontraron países";
+        }
+
+        return count === 1 ? "1 país encontrado" : `${count} países encontrados`;
+      },
+    };
+  }
+
   function buildFallbackControl(input, error, options) {
     if (typeof options.onError === "function") {
       options.onError(error);
@@ -47,6 +74,9 @@
         return true;
       },
       getNumber: function () {
+        return String(input && input.value ? input.value : "").trim();
+      },
+      getDisplayNumber: function () {
         return String(input && input.value ? input.value : "").trim();
       },
       isValid: function () {
@@ -73,6 +103,8 @@
     const instance = window.intlTelInput(input, {
       initialCountry: INITIAL_COUNTRY,
       countryOrder: COUNTRY_ORDER,
+      countryNameLocale: CHECKOUT_LANGUAGE,
+      uiTranslations: getPhoneInputTranslations(CHECKOUT_LANGUAGE),
       matchDropdownWidth: true,
       dropdownContainer: document.body,
       showFlags: true,
@@ -121,6 +153,13 @@
         }
 
         return String(input.value || "").trim();
+      },
+      getDisplayNumber: function () {
+        if (typeof instance.getNumber === "function" && window.intlTelInput?.NUMBER_FORMAT?.INTERNATIONAL) {
+          return String(instance.getNumber(window.intlTelInput.NUMBER_FORMAT.INTERNATIONAL) || "").trim();
+        }
+
+        return control.getNumber();
       },
       isValid: function () {
         const phoneNumber = control.getNumber();

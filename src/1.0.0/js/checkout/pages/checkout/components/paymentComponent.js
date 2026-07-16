@@ -21,7 +21,7 @@ export function renderPaymentView(state, view, snapshot = {}) {
 
   view.submitButton.hidden = !shouldShowSubmit;
   view.submitButton.disabled = isDisabled;
-  view.submitButton.textContent = isFree ? "Completar acceso VIP" : "Completar compra VIP";
+  view.submitButton.textContent = isFree ? "Confirmar acceso VIP" : "Completar compra VIP";
   view.submitButton.setAttribute("aria-disabled", isDisabled ? "true" : "false");
 }
 

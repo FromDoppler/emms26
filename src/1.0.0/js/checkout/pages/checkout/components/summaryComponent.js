@@ -28,13 +28,19 @@ function formatCurrencyAmount(currency, amount, options = {}) {
   return `${prefix}${currency} ${Number(Math.abs(amount || 0)).toFixed(2)}`;
 }
 
-function resolveTicketPrice(ticket) {
-  if (!ticket) {
+function formatDiscountPercent(percent) {
+  const value = Number(percent);
+
+  if (!Number.isFinite(value)) {
     return "";
   }
 
-  if (ticket.priceLabel) {
-    return ticket.priceLabel;
+  return Number.isInteger(value) ? String(value) : value.toFixed(2).replace(/\.?0+$/, "");
+}
+
+function resolveTicketPrice(ticket) {
+  if (!ticket) {
+    return "";
   }
 
   if (ticket.price !== undefined && ticket.currency) {
@@ -129,11 +135,13 @@ function renderTicketEstimate(view, state) {
 }
 
 function renderPricingSummary(view, pricing) {
-  const currency = pricing?.currency || pricing?.ticket?.currency || "USD";
-  const subtotal = Number(pricing?.amount ?? pricing?.ticket?.price ?? 0);
-  const total = Number(pricing?.finalAmount ?? subtotal);
-  const discountAmount = Number(pricing?.discount?.amount || Math.max(subtotal - total, 0));
-  const ticketName = pricing?.ticket?.name || pricing?.ticket?.code || "VIP";
+  const currency = pricing.currency;
+  const subtotal = Number(pricing.amount);
+  const total = Number(pricing.finalAmount);
+  const discount = pricing.discount || null;
+  const discountAmount = Number(discount?.amount ?? 0);
+  const discountPercent = formatDiscountPercent(discount?.percent);
+  const ticketName = pricing.ticket?.name || pricing.ticket?.code || "VIP";
 
   view.summaryTicket.textContent = ticketName;
   view.summaryTicket.classList.toggle("emms__checkout__summary-ticket-badge", Boolean(ticketName));
@@ -141,6 +149,7 @@ function renderPricingSummary(view, pricing) {
   view.summaryTotal.textContent = formatCurrencyAmount(currency, total);
 
   view.summaryDiscountRow.hidden = discountAmount <= 0;
+  view.summaryDiscountLabel.textContent = discountAmount > 0 && discountPercent ? `Descuento ${discountPercent}%` : "Descuento";
   view.summaryDiscount.textContent = formatCurrencyAmount(currency, discountAmount, { negative: true });
 }
 

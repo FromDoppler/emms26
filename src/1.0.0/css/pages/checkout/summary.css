@@ -132,14 +132,13 @@
 }
 
 .emms__checkout__summary-row--discount span {
-  color: #6d6b7a;
-  font-weight: 500;
-}
-
-.emms__checkout__summary-row--discount strong,
-.emms__checkout__summary-row--discount #summary-discount {
   color: #16824a;
   font-weight: 700;
+}
+
+.emms__checkout__summary-row--discount strong {
+  color: #16824a;
+  font-weight: 800;
 }
 
 .emms__checkout__summary-row--total {

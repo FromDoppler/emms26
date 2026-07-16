@@ -144,6 +144,7 @@ export function createCheckoutComponents(root) {
     summaryTicket: getRequiredElement(root, "#summary-ticket", "summary ticket"),
     summaryAmount: getRequiredElement(root, "#summary-amount", "summary amount"),
     summaryDiscountRow: getRequiredElement(root, "#summary-discount-row", "summary discount row"),
+    summaryDiscountLabel: getRequiredElement(root, "#summary-discount-label", "summary discount label"),
     summaryDiscount: getRequiredElement(root, "#summary-discount", "summary discount"),
     summaryTotal: getRequiredElement(root, "#summary-total", "summary total"),
     secureNote: getRequiredElement(root, ".emms__checkout__secure-note", "secure note"),

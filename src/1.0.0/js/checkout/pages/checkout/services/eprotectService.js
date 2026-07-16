@@ -266,7 +266,7 @@ export function createEprotectService({ store, payframeElement }) {
       const payframeReadyWaiter = createPayframeReadyWaiter(resolvePayframeReadyTimeoutMs(config));
       activePayframeReadyWaiter = payframeReadyWaiter;
 
-      const payframeHeight = window.matchMedia("(max-width: 768px)").matches ? "300" : "230";
+      const payframeHeight = window.matchMedia("(max-width: 768px)").matches ? "350" : "250";
       const client = new window.EprotectIframeClient({
         paypageId: config.paypageId,
         reportGroup: config.reportGroup,

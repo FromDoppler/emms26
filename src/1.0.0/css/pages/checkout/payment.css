@@ -77,13 +77,25 @@
 
 #eprotect-payframe iframe {
   display: block;
-  width: calc(100% - 2px);
+  width: 100%;
+  /*
+   * Keep the eProtect iframe below the 550px breakpoint used by the
+   * configured remote style, where expiration and CVV wrap into
+   * separate rows.
+   */
+  max-width: 548px;
+  min-height: var(--checkout-payframe-height);
+  height: var(--checkout-payframe-height);
   margin: 0 auto;
   border: 0;
   box-sizing: border-box;
 }
 
 @media (max-width: 768px) {
+  .emms__checkout__payment-frame {
+    --checkout-payframe-height: 350px;
+  }
+
   .emms__checkout__payment-card {
     padding: 16px;
   }
@@ -95,15 +107,5 @@
 
   .emms__checkout__step-card-head .emms__checkout__accepted-cards {
     align-self: flex-start;
-  }
-
-  .emms__checkout__payment-frame,
-  .emms__checkout__payframe,
-  #eprotect-payframe iframe {
-    min-height: 350px;
-  }
-
-  #eprotect-payframe iframe {
-    height: 350px;
   }
 }

@@ -19,7 +19,7 @@ $summaryBackPath = $checkoutBackPath ?? '/';
             <strong id="summary-amount">USD 0.00</strong>
         </div>
         <div id="summary-discount-row" class="emms__checkout__summary-row emms__checkout__summary-row--discount" hidden>
-            <span>Descuento</span>
+            <span id="summary-discount-label">Descuento</span>
             <strong id="summary-discount">USD 0.00</strong>
         </div>
         <div class="emms__checkout__summary-row emms__checkout__summary-row--total">
@@ -29,7 +29,7 @@ $summaryBackPath = $checkoutBackPath ?? '/';
     </div>
 
     <button id="submit-payment" type="button" class="emms__checkout__submit" hidden>
-        Completar acceso VIP
+        Confirmar acceso VIP
     </button>
 
     <small class="emms__checkout__secure-note">

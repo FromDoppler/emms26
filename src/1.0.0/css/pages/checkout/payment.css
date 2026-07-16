@@ -21,8 +21,9 @@
 }
 
 .emms__checkout__payment-frame {
+  --checkout-payframe-height: 250px;
   position: relative;
-  min-height: 240px;
+  min-height: var(--checkout-payframe-height);
 }
 
 .emms__checkout__payment-loading {
@@ -60,7 +61,7 @@
 
 .emms__checkout__payframe {
   width: 100%;
-  min-height: 240px;
+  min-height: var(--checkout-payframe-height);
   padding: 0 16px 14px;
   border: 1px solid #ececec;
   border-radius: 10px;

@@ -19,6 +19,12 @@ class CalculateCheckoutUseCase
     public function execute(array $input): array
     {
         $input = $this->normalizeInput($input);
+        if ($input === null) {
+            return [
+                'httpStatus' => 422,
+                'payload' => ['success' => false, 'error' => 'validation_error'],
+            ];
+        }
         $eventContext = $this->eventContextResolver->resolve();
         $result = $this->pricingService->calculate($eventContext, $input);
         $customerProfile = $this->resolveCustomerProfile($eventContext, $input);
@@ -126,12 +132,30 @@ class CalculateCheckoutUseCase
         ];
     }
 
-    private function normalizeInput(array $input): array
+    private function normalizeInput(array $input): ?array
     {
+        if (array_key_exists('couponCode', $input)
+            && $input['couponCode'] !== null
+            && !is_string($input['couponCode'])) {
+            return null;
+        }
+        if (array_key_exists('customerEmail', $input)
+            && $input['customerEmail'] !== null
+            && !is_string($input['customerEmail'])) {
+            return null;
+        }
+        if (array_key_exists('origin', $input) && !is_scalar($input['origin'])) {
+            return null;
+        }
+
+        $couponCode = array_key_exists('couponCode', $input)
+            ? CheckoutCouponCode::normalize(is_string($input['couponCode']) ? $input['couponCode'] : null)
+            : null;
+
         return [
-            'couponCode'    => isset($input['couponCode'])    && is_scalar($input['couponCode'])    ? (string) $input['couponCode']    : null,
-            'customerEmail' => isset($input['customerEmail']) && is_scalar($input['customerEmail']) ? (string) $input['customerEmail'] : null,
-            'origin'        => isset($input['origin'])        && is_scalar($input['origin'])        ? (string) $input['origin']        : null,
+            'couponCode' => $couponCode,
+            'customerEmail' => isset($input['customerEmail']) ? trim((string) $input['customerEmail']) : null,
+            'origin' => isset($input['origin']) ? trim((string) $input['origin']) : null,
         ];
     }
 }

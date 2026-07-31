@@ -11,6 +11,11 @@ class CheckoutCouponsRepository
 
     public function findByCode(string $couponCode): ?array
     {
+        $couponCode = CheckoutCouponCode::normalize($couponCode);
+        if ($couponCode === null) {
+            return null;
+        }
+
         $result = $this->db->query(
             "SELECT * FROM payment_coupons WHERE code = ? LIMIT 1",
             [$couponCode]

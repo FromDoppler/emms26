@@ -28,6 +28,10 @@ class CheckoutPricingService
         }
 
         $ticket = $availableTickets[0];
+        $amountCents = $this->decimalToCents((string) $ticket['price']);
+        if ($amountCents <= 0) {
+            throw new Exception('invalid_active_ticket_price_configuration');
+        }
 
         $couponResolution = $this->couponService->resolve(
             $input['couponCode'] ?? null,
@@ -45,7 +49,6 @@ class CheckoutPricingService
         }
 
         $coupon = $couponResolution['coupon'];
-        $amountCents = $this->decimalToCents((string) $ticket['price']);
         $discountCents = 0;
         $discount = null;
 

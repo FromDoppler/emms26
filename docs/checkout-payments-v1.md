@@ -200,6 +200,18 @@ El ticket se resuelve en backend a partir de la configuración activa del evento
 
 `couponCode` ausente, `null` o vacío se normaliza a `null`.
 
+Requests con forma inválida producen `422 validation_error` antes de cualquier lookup, pricing o INSERT.
+
+La request pública valida explícitamente:
+
+- `paymentId` como UUID v4 string;
+- `customer` como objeto;
+- `customer.email` como string email válido;
+- `couponCode` como string o `null`;
+- `origin`, si existe, como string o escalar aceptado;
+- `checkout`, si existe, como objeto;
+- `payment`, si existe, como objeto.
+
 Si una `paymentId` existente se reutiliza con otra intención, el backend responde:
 
 ```text
@@ -220,15 +232,15 @@ Checkout Payments V1 vende un único ticket VIP por evento.
 
 El ticket se resuelve en backend a partir de la configuración activa del evento.
 
-El backend requiere exactamente un ticket activo para el evento:
+El backend requiere exactamente un ticket activo y un precio base positivo para el evento:
 
 - cero tickets activos → `ticket_unavailable`;
 - un ticket activo → continuar;
 - más de un ticket activo → configuración inconsistente y fail closed.
 
-`couponCode` identifica el descuento opcional.
+`couponCode` es el único código público opcional.
 
-Ambos conceptos son independientes.
+El ticket no forma parte de la request pública.
 
 ### Cupones
 
@@ -245,10 +257,13 @@ Un cupón válido puede reducir el precio final.
 Cuando el precio final es `0.00`:
 
 - no se llama al proveedor;
+- el cupón fue validado para el evento y el ticket;
 - la transacción utiliza `payment_method = coupon`;
 - el provider local es `coupon`;
 - el cupón aplicado queda persistido;
 - la completion local aplica VIP y crea los jobs correspondientes.
+
+Un ticket con precio base `0.00` o negativo falla closed antes del INSERT.
 
 ### Importes
 
@@ -602,6 +617,8 @@ tokenizedPan
 transactionLinkID
 ```
 
+Una respuesta HTTP `401` o `403` se clasifica como `ERROR`.
+
 Un `responseCode` distinto de `000` sólo se considera `REJECTED` cuando está incluido en el catálogo contractual.
 
 Cualquier otro resultado es `UNKNOWN`.
@@ -629,6 +646,7 @@ Se consideran `UNKNOWN`, entre otros casos:
 
 - timeout;
 - error de conexión después de iniciar cURL;
+- cualquier falla durante Purchase después de `Authorization 000`;
 - redirect;
 - HTTP no contractual;
 - JSON inválido;
@@ -643,6 +661,13 @@ El cliente:
 - no reintenta Authorization;
 - no reintenta Purchase;
 - no persiste bodies remotos completos.
+
+La frontera del transporte distingue entre fallas que demuestran que Authorization no pudo ejecutarse y fallas ambiguas posteriores:
+
+- DNS, URL malformada o conexión imposible antes de Authorization → `ERROR`;
+- `Authorization 401/403` → `ERROR`;
+- timeout, send/receive incierto, `5xx`, redirect o JSON inválido → `UNKNOWN`;
+- cualquier falla durante Purchase después de `Authorization 000` → `UNKNOWN`.
 
 ---
 
@@ -824,6 +849,20 @@ No ejecuta:
 - jobs;
 - transiciones financieras.
 
+### Terminales conocidos
+
+`REJECTED` y `ERROR` realizan un recovery acotado dentro del processor:
+
+```text
+primer CAS terminal
+→ recarga del ledger
+→ si el ledger ya es terminal consistente, gana el ledger
+→ si sigue processing sin marker ni evidencia, segundo CAS único
+→ última recarga
+```
+
+El recovery no vuelve al proveedor y no convierte un marker aprobado en `rejected` o `error`.
+
 ### Resultado remoto ambiguo
 
 Cuando el resultado es `UNKNOWN`:
@@ -950,6 +989,8 @@ No crea un intento financiero.
 `get-payment`:
 
 - recibe `payment_id`;
+- responde `400 payment_id_required` cuando `payment_id` falta o está vacío;
+- responde `422 validation_error` cuando `payment_id` existe pero no es un string;
 - valida que sea UUID v4;
 - normaliza la UUID;
 - busca solamente en el ledger;
@@ -1019,7 +1060,11 @@ El frontend mantiene en memoria un `activeAttempt`:
 
 ```js
 {
-  (paymentId, serializedBody, customerEmail, correlationId, approvedFinished);
+  paymentId,
+  serializedBody,
+  customerEmail,
+  correlationId,
+  approvedFinished
 }
 ```
 
@@ -1184,10 +1229,13 @@ Antes de habilitar Checkout Payments V1 debe verificarse, como mínimo:
 
 ### Provider
 
+- Authorization `401` o `403` terminan en `ERROR`;
 - Authorization aprobada permite Purchase;
 - rechazo incluido en el catálogo termina en `rejected`;
 - código no incluido termina en `UNKNOWN`;
-- timeout, redirect y JSON inválido terminan en `UNKNOWN`;
+- DNS o conexión fallida antes de Authorization terminan en `ERROR`;
+- timeout, redirect, `5xx` y JSON inválido terminan en `UNKNOWN`;
+- cualquier falla durante Purchase después de Authorization `000` termina en `UNKNOWN`;
 - Purchase `000` sin número de autorización no se considera aprobada;
 - no existen retries automáticos de cURL.
 
@@ -1196,6 +1244,8 @@ Antes de habilitar Checkout Payments V1 debe verificarse, como mínimo:
 - una tarjeta no completa sin marker;
 - el marker es write-once;
 - el recovery del marker realiza como máximo un segundo CAS;
+- `REJECTED` conocido hace un segundo CAS acotado si la persistencia inicial falla;
+- `ERROR` demostrado antes de cualquier operación financiera remota hace un segundo CAS acotado si la persistencia inicial falla;
 - el recovery nunca vuelve al proveedor;
 - VIP, payment y jobs participan del mismo commit;
 - una falla de commit no deja `approved`;
@@ -1205,8 +1255,10 @@ Antes de habilitar Checkout Payments V1 debe verificarse, como mínimo:
 
 - un cupón válido aplica el descuento;
 - un cupón del 100 % no llama al proveedor;
-- `couponCode` resuelve solamente por código canónico;
+- `couponCode` se canonicaliza como `trim + uppercase`;
+- la request inválida de cupón responde `422` y no crea ledger;
 - exactamente un ticket activo por evento habilita el checkout;
+- el ticket activo tiene precio base estrictamente positivo;
 - una completion de cupón exige precio final cero y cupón durable.
 
 ### Frontend y success

@@ -14,11 +14,23 @@ class GetCheckoutController
             return;
         }
 
-        $paymentId = trim((string) ($_GET['payment_id'] ?? ''));
-        if ($paymentId === '') {
+        if (!array_key_exists('payment_id', $_GET)) {
             self::json(400, ['success' => false, 'error' => 'payment_id_required']);
             return;
         }
+
+        $rawPaymentId = $_GET['payment_id'];
+        if (!is_string($rawPaymentId)) {
+            self::json(422, ['success' => false, 'error' => 'validation_error']);
+            return;
+        }
+
+        if (trim($rawPaymentId) === '') {
+            self::json(400, ['success' => false, 'error' => 'payment_id_required']);
+            return;
+        }
+
+        $paymentId = trim($rawPaymentId);
 
         try {
             $result = CheckoutModule::createGetCheckoutService()->execute($paymentId);

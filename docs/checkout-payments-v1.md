@@ -6,13 +6,13 @@ Checkout Payments V1 define el contrato funcional y técnico del flujo de compra
 
 El objetivo de este documento es establecer:
 
-* las responsabilidades de EMMS y de los servicios externos;
-* la identidad durable de cada intento;
-* los estados y las invariantes del ledger;
-* la clasificación de resultados del proveedor;
-* las condiciones necesarias para considerar un pago aprobado;
-* el comportamiento de los endpoints públicos;
-* los límites de recuperación y operación aceptados para V1.
+- las responsabilidades de EMMS y de los servicios externos;
+- la identidad durable de cada intento;
+- los estados y las invariantes del ledger;
+- la clasificación de resultados del proveedor;
+- las condiciones necesarias para considerar un pago aprobado;
+- el comportamiento de los endpoints públicos;
+- los límites de recuperación y operación aceptados para V1.
 
 Este documento es la fuente canónica del comportamiento de Checkout Payments V1.
 
@@ -22,34 +22,34 @@ Este documento es la fuente canónica del comportamiento de Checkout Payments V1
 
 Checkout Payments V1 incluye:
 
-* un checkout único para comprar el pase VIP;
-* cálculo de precio, descuento y precio final;
-* cupones aplicables al checkout;
-* aprobación local mediante cupón del 100 %;
-* tokenización de tarjeta con eProtect;
-* pago mediante Doppler Payments API;
-* ledger local identificado por `paymentId`;
-* idempotencia local por intento;
-* marker durable de aprobación remota;
-* completion local atómica;
-* aplicación del acceso VIP;
-* persistencia de efectos post-checkout;
-* consulta del estado local mediante `get-payment`;
-* success page y tracking para pagos aprobados.
+- un checkout único para comprar el pase VIP;
+- cálculo de precio, descuento y precio final;
+- cupones aplicables al checkout;
+- aprobación local mediante cupón del 100 %;
+- tokenización de tarjeta con eProtect;
+- pago mediante Doppler Payments API;
+- ledger local identificado por `paymentId`;
+- idempotencia local por intento;
+- marker durable de aprobación remota;
+- completion local atómica;
+- aplicación del acceso VIP;
+- persistencia de efectos post-checkout;
+- consulta del estado local mediante `get-payment`;
+- success page y tracking para pagos aprobados.
 
 Quedan fuera de V1:
 
-* carrito o múltiples productos;
-* suscripciones;
-* reembolsos;
-* exclusión global de compras por email y evento;
-* idempotencia downstream no garantizada por Doppler Payments API;
-* reintentos automáticos de Authorization o Purchase;
-* reconciliador financiero;
-* worker o scheduler financiero;
-* recuperación administrativa mediante SQL;
-* endpoints o comandos de recuperación financiera;
-* persistencia del instrumento de pago entre recargas del navegador.
+- carrito o múltiples productos;
+- suscripciones;
+- reembolsos;
+- exclusión global de compras por email y evento;
+- idempotencia downstream no garantizada por Doppler Payments API;
+- reintentos automáticos de Authorization o Purchase;
+- reconciliador financiero;
+- worker o scheduler financiero;
+- recuperación administrativa mediante SQL;
+- endpoints o comandos de recuperación financiera;
+- persistencia del instrumento de pago entre recargas del navegador.
 
 ---
 
@@ -59,12 +59,12 @@ Quedan fuera de V1:
 
 El frontend:
 
-* recopila la intención comercial;
-* tokeniza la tarjeta mediante eProtect;
-* genera la `paymentId`;
-* envía la request completa a EMMS;
-* consulta el estado local ante resultados no terminales;
-* redirige a success exclusivamente cuando el ledger indica `approved`.
+- recopila la intención comercial;
+- tokeniza la tarjeta mediante eProtect;
+- genera la `paymentId`;
+- envía la request completa a EMMS;
+- consulta el estado local ante resultados no terminales;
+- redirige a success exclusivamente cuando el ledger indica `approved`.
 
 ### eProtect
 
@@ -72,27 +72,27 @@ eProtect protege los datos sensibles de tarjeta y entrega un token de bajo valor
 
 EMMS no debe recibir ni almacenar:
 
-* PAN;
-* CVV;
-* número de tarjeta sin tokenizar;
-* información equivalente que permita reconstruir el instrumento.
+- PAN;
+- CVV;
+- número de tarjeta sin tokenizar;
+- información equivalente que permita reconstruir el instrumento.
 
 ### Backend de EMMS
 
 EMMS:
 
-* valida la request;
-* resuelve el evento;
-* calcula pricing;
-* valida elegibilidad;
-* crea y administra el ledger;
-* reclama el intento para procesamiento;
-* invoca Doppler Payments API cuando corresponde;
-* clasifica el resultado;
-* persiste la aprobación remota;
-* aplica acceso VIP;
-* crea los jobs post-checkout;
-* expone el estado público del pago.
+- valida la request;
+- resuelve el evento;
+- calcula pricing;
+- valida elegibilidad;
+- crea y administra el ledger;
+- reclama el intento para procesamiento;
+- invoca Doppler Payments API cuando corresponde;
+- clasifica el resultado;
+- persiste la aprobación remota;
+- aplica acceso VIP;
+- crea los jobs post-checkout;
+- expone el estado público del pago.
 
 ### Doppler Payments API
 
@@ -132,10 +132,10 @@ El backend normaliza la UUID a minúsculas antes de buscarla o persistirla.
 
 Checkout Payments V1 no utiliza:
 
-* `public_id`;
-* `idempotency_key`;
-* `checkout.idempotencyKey`;
-* aliases alternativos para identificar el pago.
+- `public_id`;
+- `idempotency_key`;
+- `checkout.idempotencyKey`;
+- aliases alternativos para identificar el pago.
 
 La base garantiza una sola fila por `paymentId` mediante una restricción única sobre `payment_transactions.payment_id`.
 
@@ -145,20 +145,20 @@ La garantía de idempotencia es por `paymentId`.
 
 Para una misma `paymentId`:
 
-* sólo un claim puede habilitar la llamada al proveedor;
-* una operación terminal se responde desde el ledger;
-* una operación `processing` sin marker no vuelve a llamar al proveedor;
-* una operación `processing` con marker ejecuta solamente completion local.
+- sólo un claim puede habilitar la llamada al proveedor;
+- una operación terminal se responde desde el ledger;
+- una operación `processing` sin marker no vuelve a llamar al proveedor;
+- una operación `processing` con marker ejecuta solamente completion local.
 
 Dos UUID diferentes representan dos intentos distintos.
 
 V1 no garantiza exclusión global por:
 
-* email;
-* evento;
-* ticket;
-* navegador;
-* dispositivo.
+- email;
+- evento;
+- ticket;
+- navegador;
+- dispositivo.
 
 Dos intentos diferentes pueden alcanzar al proveedor aunque pertenezcan al mismo usuario.
 
@@ -194,9 +194,9 @@ Ejemplo para tarjeta:
 
 La intención durable se identifica mediante:
 
-* email normalizado;
-* `ticketCode`;
-* `couponCode`.
+- email normalizado;
+- `ticketCode`;
+- `couponCode`.
 
 Si una `paymentId` existente se reutiliza con otra intención, el backend responde:
 
@@ -234,11 +234,11 @@ Un cupón válido puede reducir el precio final.
 
 Cuando el precio final es `0.00`:
 
-* no se llama al proveedor;
-* la transacción utiliza `payment_method = coupon`;
-* el provider local es `coupon`;
-* el cupón aplicado queda persistido;
-* la completion local aplica VIP y crea los jobs correspondientes.
+- no se llama al proveedor;
+- la transacción utiliza `payment_method = coupon`;
+- el provider local es `coupon`;
+- el cupón aplicado queda persistido;
+- la completion local aplica VIP y crea los jobs correspondientes.
 
 ### Importes
 
@@ -264,12 +264,12 @@ Una moneda diferente de USD falla antes de crear el intento y nunca alcanza al p
 
 `payment_transactions` es la autoridad durable para:
 
-* identificar el intento;
-* decidir si puede llamarse al proveedor;
-* resolver replays;
-* completar aprobaciones;
-* construir respuestas públicas;
-* diagnosticar el estado local.
+- identificar el intento;
+- decidir si puede llamarse al proveedor;
+- resolver replays;
+- completar aprobaciones;
+- construir respuestas públicas;
+- diagnosticar el estado local.
 
 La definición física del schema se mantiene en `.docker/db/EMMS26.sql`.
 
@@ -277,33 +277,33 @@ La definición física del schema se mantiene en `.docker/db/EMMS26.sql`.
 
 El ledger conserva:
 
-* `payment_id`;
-* `correlation_id`;
-* estado;
-* provider;
-* método de pago;
-* origen;
-* datos allowlisted del cliente;
-* ticket;
-* cupón;
-* importes;
-* moneda;
-* familia y edición del evento;
-* marker de aprobación;
-* evidencia estructurada de resultados terminales;
-* `registered_id`;
-* timestamps.
+- `payment_id`;
+- `correlation_id`;
+- estado;
+- provider;
+- método de pago;
+- origen;
+- datos allowlisted del cliente;
+- ticket;
+- cupón;
+- importes;
+- moneda;
+- familia y edición del evento;
+- marker de aprobación;
+- evidencia estructurada de resultados terminales;
+- `registered_id`;
+- timestamps.
 
 `raw_request` contiene únicamente una proyección allowlisted del contexto necesario para completion.
 
 No contiene:
 
-* token de eProtect;
-* tarjeta;
-* CVV;
-* tokenized PAN;
-* request completa al proveedor;
-* response completa del proveedor.
+- token de eProtect;
+- tarjeta;
+- CVV;
+- tokenized PAN;
+- request completa al proveedor;
+- response completa del proveedor.
 
 ---
 
@@ -325,10 +325,10 @@ El intento fue creado localmente y todavía no fue reclamado.
 
 Un intento `pending` no tiene:
 
-* marker;
-* `registered_id`;
-* resultado público;
-* evidencia del proveedor.
+- marker;
+- `registered_id`;
+- resultado público;
+- evidencia del proveedor.
 
 ### `processing`
 
@@ -367,23 +367,23 @@ Un replay puede ejecutar completion, pero nunca vuelve a llamar al proveedor.
 
 Para tarjeta implica:
 
-* marker durable válido;
-* Authorization aprobada;
-* Purchase aprobada;
-* número de autorización presente;
-* acceso VIP aplicado;
-* `registered_id` persistido;
-* jobs post-checkout creados;
-* estado local actualizado a `approved`.
+- marker durable válido;
+- Authorization aprobada;
+- Purchase aprobada;
+- número de autorización presente;
+- acceso VIP aplicado;
+- `registered_id` persistido;
+- jobs post-checkout creados;
+- estado local actualizado a `approved`.
 
 Para cupón implica:
 
-* precio final `0.00`;
-* cupón durable;
-* acceso VIP aplicado;
-* `registered_id` persistido;
-* jobs post-checkout creados;
-* estado local actualizado a `approved`.
+- precio final `0.00`;
+- cupón durable;
+- acceso VIP aplicado;
+- `registered_id` persistido;
+- jobs post-checkout creados;
+- estado local actualizado a `approved`.
 
 `approved` no significa que todos los efectos externos hayan finalizado correctamente.
 
@@ -393,14 +393,14 @@ Representa una condición terminal conocida.
 
 Puede corresponder a:
 
-* usuario ya VIP antes del claim;
-* rechazo contractual del proveedor.
+- usuario ya VIP antes del claim;
+- rechazo contractual del proveedor.
 
 Un rechazo del proveedor debe:
 
-* no tener marker;
-* conservar el código estructurado aplicable;
-* utilizar una categoría pública incluida en el catálogo contractual.
+- no tener marker;
+- conservar el código estructurado aplicable;
+- utilizar una categoría pública incluida en el catálogo contractual.
 
 ### `error`
 
@@ -408,9 +408,9 @@ Representa una falla técnica demostrablemente anterior al intento remoto.
 
 Debe:
 
-* no tener marker;
-* no tener evidencia del proveedor;
-* utilizar `response_code = payment_error`.
+- no tener marker;
+- no tener evidencia del proveedor;
+- utilizar `response_code = payment_error`.
 
 Una falla posterior al inicio de una llamada remota no se transforma en `error`; se conserva como `processing`.
 
@@ -422,10 +422,10 @@ Toda lectura relevante valida las invariantes del estado.
 
 Una fila inconsistente falla de forma cerrada:
 
-* no habilita una llamada al proveedor;
-* no habilita completion;
-* no se publica como resultado terminal válido;
-* produce una respuesta interna controlada.
+- no habilita una llamada al proveedor;
+- no habilita completion;
+- no se publica como resultado terminal válido;
+- produce una respuesta interna controlada.
 
 ### Invariantes de tarjeta
 
@@ -517,12 +517,12 @@ pending
 
 Un replay nunca recalcula ni reemplaza:
 
-* ticket;
-* cupón;
-* pricing;
-* evento;
-* importes;
-* identidad del cliente.
+- ticket;
+- cupón;
+- pricing;
+- evento;
+- importes;
+- identidad del cliente.
 
 La primera fila creada define la intención durable.
 
@@ -530,14 +530,14 @@ La primera fila creada define la intención durable.
 
 Antes del INSERT se validan:
 
-* UUID;
-* request completa;
-* cliente;
-* evento;
-* pricing;
-* cupón;
-* moneda;
-* instrumento, cuando corresponda.
+- UUID;
+- request completa;
+- cliente;
+- evento;
+- pricing;
+- cupón;
+- moneda;
+- instrumento, cuando corresponda.
 
 Después:
 
@@ -600,8 +600,8 @@ Cualquier otro resultado es `UNKNOWN`.
 
 Purchase se interpreta mediante:
 
-* HTTP 200 con `responseCode`; o
-* HTTP 400 con un `PaymentError` estructurado.
+- HTTP 200 con `responseCode`; o
+- HTTP 400 con un `PaymentError` estructurado.
 
 Una aprobación exige:
 
@@ -617,22 +617,22 @@ Si falta cualquiera de esos elementos, el resultado es `UNKNOWN`.
 
 Se consideran `UNKNOWN`, entre otros casos:
 
-* timeout;
-* error de conexión después de iniciar cURL;
-* redirect;
-* HTTP no contractual;
-* JSON inválido;
-* respuesta sin campos obligatorios;
-* código no incluido en el catálogo;
-* aprobación sin número de autorización.
+- timeout;
+- error de conexión después de iniciar cURL;
+- redirect;
+- HTTP no contractual;
+- JSON inválido;
+- respuesta sin campos obligatorios;
+- código no incluido en el catálogo;
+- aprobación sin número de autorización.
 
 El cliente:
 
-* no sigue redirects;
-* no realiza retries HTTP;
-* no reintenta Authorization;
-* no reintenta Purchase;
-* no persiste bodies remotos completos.
+- no sigue redirects;
+- no realiza retries HTTP;
+- no reintenta Authorization;
+- no reintenta Purchase;
+- no persiste bodies remotos completos.
 
 ---
 
@@ -687,11 +687,11 @@ response_code = provider_approved
 
 El marker:
 
-* es write-once;
-* sólo puede escribirse sobre una tarjeta `processing`;
-* requiere evidencia de aprobación completa;
-* nunca puede transformarse posteriormente en `rejected` o `error`;
-* es la única autoridad local de aprobación remota.
+- es write-once;
+- sólo puede escribirse sobre una tarjeta `processing`;
+- requiere evidencia de aprobación completa;
+- nunca puede transformarse posteriormente en `rejected` o `error`;
+- es la única autoridad local de aprobación remota.
 
 ### Escritura incierta del marker
 
@@ -725,10 +725,10 @@ Si el segundo CAS tampoco puede confirmarse:
 
 No existe:
 
-* recursividad;
-* tercer intento;
-* regreso al proveedor;
-* inferencia terminal basada únicamente en memoria.
+- recursividad;
+- tercer intento;
+- regreso al proveedor;
+- inferencia terminal basada únicamente en memoria.
 
 ---
 
@@ -756,10 +756,10 @@ payment → registered
 
 La transacción garantiza que:
 
-* acceso VIP;
-* `registered_id`;
-* estado `approved`;
-* jobs post-checkout;
+- acceso VIP;
+- `registered_id`;
+- estado `approved`;
+- jobs post-checkout;
 
 se confirmen o reviertan juntos.
 
@@ -767,18 +767,18 @@ Una tarjeta no puede completarse sin marker.
 
 Un cupón sólo puede completarse con:
 
-* precio final `0.00`;
-* cupón persistido;
-* claim previo confirmado.
+- precio final `0.00`;
+- cupón persistido;
+- claim previo confirmado.
 
 ### Contexto del evento
 
 El ledger conserva:
 
-* `event_key`;
-* `event_free_id`;
-* `event_vip_id`;
-* `event_phase`.
+- `event_key`;
+- `event_free_id`;
+- `event_vip_id`;
+- `event_phase`.
 
 `event_key` identifica una familia estable dentro del catálogo de eventos configurado por EMMS.
 
@@ -807,31 +807,31 @@ abre una conexión nueva
 
 No ejecuta:
 
-* rollback de una transacción ajena;
-* provider;
-* marker;
-* completion;
-* jobs;
-* transiciones financieras.
+- rollback de una transacción ajena;
+- provider;
+- marker;
+- completion;
+- jobs;
+- transiciones financieras.
 
 ### Resultado remoto ambiguo
 
 Cuando el resultado es `UNKNOWN`:
 
-* el payment permanece `processing`;
-* no se persiste evidencia financiera parcial en el ledger;
-* no se vuelve a llamar al proveedor para esa `paymentId`;
-* no se convierte en `rejected`;
-* no se convierte en `error`;
-* la respuesta pública es `202`.
+- el payment permanece `processing`;
+- no se persiste evidencia financiera parcial en el ledger;
+- no se vuelve a llamar al proveedor para esa `paymentId`;
+- no se convierte en `rejected`;
+- no se convierte en `error`;
+- la respuesta pública es `202`.
 
 La investigación puede utilizar:
 
-* `paymentId`;
-* `correlationId`;
-* ledger;
-* logs de EMMS;
-* logs de Doppler Payments API.
+- `paymentId`;
+- `correlationId`;
+- ledger;
+- logs de EMMS;
+- logs de Doppler Payments API.
 
 La investigación es read-only y no autoriza reconstruir o terminalizar el outcome mediante heurísticas.
 
@@ -839,11 +839,11 @@ Mientras una `paymentId` permanezca ambigua, soporte no debe crear ni recomendar
 
 V1 no incorpora:
 
-* escritura manual del marker;
-* completion manual;
-* mutación SQL del outcome;
-* consulta contractual de outcome remoto;
-* retry financiero administrativo.
+- escritura manual del marker;
+- completion manual;
+- mutación SQL del outcome;
+- consulta contractual de outcome remoto;
+- retry financiero administrativo.
 
 ---
 
@@ -851,15 +851,15 @@ V1 no incorpora:
 
 Los efectos post-checkout incluyen:
 
-* envío de email;
-* registro en spreadsheet;
-* agregado a listas.
+- envío de email;
+- registro en spreadsheet;
+- agregado a listas.
 
 Los jobs se crean dentro del mismo commit que:
 
-* aplica VIP;
-* persiste `registered_id`;
-* marca el payment como `approved`.
+- aplica VIP;
+- persiste `registered_id`;
+- marca el payment como `approved`.
 
 Por lo tanto, un payment `approved` garantiza que los jobs fueron persistidos.
 
@@ -871,10 +871,10 @@ La ejecución es best effort.
 
 Una falla del runner:
 
-* no revierte el pago;
-* no revierte el acceso VIP;
-* no cambia el estado `approved`;
-* no vuelve a llamar al proveedor.
+- no revierte el pago;
+- no revierte el acceso VIP;
+- no cambia el estado `approved`;
+- no vuelve a llamar al proveedor.
 
 ### Límite de recuperación
 
@@ -882,13 +882,13 @@ Los jobs son durables y auditables, pero V1 no garantiza su reejecución posteri
 
 V1 no incluye:
 
-* worker;
-* cron;
-* scheduler;
-* CLI de reejecución;
-* endpoint administrativo;
-* reclaim automático de jobs `processing`;
-* retry automático de jobs `failed`.
+- worker;
+- cron;
+- scheduler;
+- CLI de reejecución;
+- endpoint administrativo;
+- reclaim automático de jobs `processing`;
+- retry automático de jobs `failed`.
 
 Si el proceso termina después del commit y antes de ejecutar el shutdown, los jobs pueden permanecer `pending`.
 
@@ -912,13 +912,13 @@ La superficie pública es:
 
 Resuelve:
 
-* ticket;
-* cupón;
-* precio base;
-* descuento;
-* precio final;
-* moneda;
-* necesidad de pago con tarjeta.
+- ticket;
+- cupón;
+- precio base;
+- descuento;
+- precio final;
+- moneda;
+- necesidad de pago con tarjeta.
 
 No crea un intento financiero.
 
@@ -939,15 +939,15 @@ No crea un intento financiero.
 
 `get-payment`:
 
-* recibe `payment_id`;
-* valida que sea UUID v4;
-* normaliza la UUID;
-* busca solamente en el ledger;
-* no llama al proveedor;
-* no ejecuta completion;
-* no crea jobs;
-* no modifica el payment;
-* utiliza `Cache-Control: no-store`.
+- recibe `payment_id`;
+- valida que sea UUID v4;
+- normaliza la UUID;
+- busca solamente en el ledger;
+- no llama al proveedor;
+- no ejecuta completion;
+- no crea jobs;
+- no modifica el payment;
+- utiliza `Cache-Control: no-store`.
 
 Respuestas:
 
@@ -985,19 +985,19 @@ Cuando corresponde, la respuesta incluye un error público allowlisted.
 
 No se exponen:
 
-* email;
-* nombre;
-* teléfono;
-* IP;
-* token de pago;
-* códigos internos de Authorization o Purchase;
-* número de autorización;
-* transaction link;
-* raw requests;
-* raw responses;
-* mensajes del proveedor;
-* jobs internos;
-* stack traces.
+- email;
+- nombre;
+- teléfono;
+- IP;
+- token de pago;
+- códigos internos de Authorization o Purchase;
+- número de autorización;
+- transaction link;
+- raw requests;
+- raw responses;
+- mensajes del proveedor;
+- jobs internos;
+- stack traces.
 
 ---
 
@@ -1009,11 +1009,7 @@ El frontend mantiene en memoria un `activeAttempt`:
 
 ```js
 {
-  paymentId,
-  serializedBody,
-  customerEmail,
-  correlationId,
-  approvedFinished
+  (paymentId, serializedBody, customerEmail, correlationId, approvedFinished);
 }
 ```
 
@@ -1031,10 +1027,10 @@ Dos submits concurrentes comparten la misma promesa activa.
 
 Ante:
 
-* timeout;
-* error de red;
-* HTTP 5xx;
-* HTTP 202;
+- timeout;
+- error de red;
+- HTTP 5xx;
+- HTTP 202;
 
 el frontend consulta `get-payment` de forma acotada.
 
@@ -1044,10 +1040,10 @@ No ejecuta un segundo POST automático.
 
 Mientras `activeAttempt` permanezca en memoria, una acción manual reutiliza:
 
-* la misma `paymentId`;
-* el mismo body serializado;
-* el mismo token;
-* la misma intención.
+- la misma `paymentId`;
+- el mismo body serializado;
+- el mismo token;
+- la misma intención.
 
 No vuelve a tokenizar ni genera otra operación.
 
@@ -1075,18 +1071,18 @@ y consulta `get-payment`.
 
 La página:
 
-* muestra comprobante sólo si el ledger indica `approved`;
-* no consulta Doppler Payments API;
-* no ejecuta completion;
-* no modifica el estado financiero;
-* utiliza `Cache-Control: no-store`;
-* utiliza `Referrer-Policy: no-referrer`.
+- muestra comprobante sólo si el ledger indica `approved`;
+- no consulta Doppler Payments API;
+- no ejecuta completion;
+- no modifica el estado financiero;
+- utiliza `Cache-Control: no-store`;
+- utiliza `Referrer-Policy: no-referrer`.
 
 Después de confirmar `approved`:
 
-* renderiza el comprobante;
-* actualiza los eventos locales correspondientes;
-* ejecuta tracking de conversión deduplicado por `paymentId`.
+- renderiza el comprobante;
+- actualiza los eventos locales correspondientes;
+- ejecuta tracking de conversión deduplicado por `paymentId`.
 
 El tracking es best effort.
 
@@ -1098,15 +1094,15 @@ Una falla de analytics, storage o tracking no modifica el estado del payment ni 
 
 Checkout Payments V1 aplica las siguientes reglas:
 
-* no persistir PAN ni CVV;
-* no persistir tokens de eProtect;
-* no persistir tokenized PAN;
-* no persistir bodies completos del proveedor;
-* no exponer evidencia financiera en respuestas públicas;
-* no registrar secretos ni instrumentos en logs;
-* limitar `raw_request` a campos allowlisted;
-* mantener mensajes públicos desacoplados de mensajes remotos;
-* utilizar `correlationId` y `paymentId` para trazabilidad.
+- no persistir PAN ni CVV;
+- no persistir tokens de eProtect;
+- no persistir tokenized PAN;
+- no persistir bodies completos del proveedor;
+- no exponer evidencia financiera en respuestas públicas;
+- no registrar secretos ni instrumentos en logs;
+- limitar `raw_request` a campos allowlisted;
+- mantener mensajes públicos desacoplados de mensajes remotos;
+- utilizar `correlationId` y `paymentId` para trazabilidad.
 
 `Logger::event()` es best effort: una falla de observabilidad no debe alterar el resultado financiero ni romper el flujo principal.
 
@@ -1118,11 +1114,11 @@ Checkout Payments V1 reemplaza destructivamente el ledger anterior del checkout 
 
 No existe:
 
-* migración incremental;
-* dual-read;
-* dual-write;
-* compatibilidad temporal entre ambos schemas;
-* preservación de transacciones de una versión anterior no activa.
+- migración incremental;
+- dual-read;
+- dual-write;
+- compatibilidad temporal entre ambos schemas;
+- preservación de transacciones de una versión anterior no activa.
 
 Procedimiento obligatorio:
 
@@ -1150,15 +1146,15 @@ Ante una falla de despliegue, el checkout permanece deshabilitado hasta restaura
 
 V1 acepta explícitamente los siguientes límites:
 
-* Dos `paymentId` diferentes pueden representar y cobrar dos intentos del mismo usuario.
-* Un refresh puede perder el intento activo del navegador.
-* Un payment puede quedar indefinidamente `processing` sin marker.
-* Una falla después del claim y antes de llamar al proveedor no tiene reclaim automático.
-* Un resultado remoto ambiguo no se terminaliza mediante heurísticas.
-* Los jobs pueden quedar `pending` si el proceso termina después del commit y antes del runner.
-* La completion tardía depende de que la familia y las columnas del evento permanezcan estables.
-* Doppler Payments API no ofrece para V1 una garantía downstream de idempotencia que EMMS pueda asumir.
-* V1 prioriza no duplicar un cobro antes que recuperar automáticamente un intento ambiguo.
+- Dos `paymentId` diferentes pueden representar y cobrar dos intentos del mismo usuario.
+- Un refresh puede perder el intento activo del navegador.
+- Un payment puede quedar indefinidamente `processing` sin marker.
+- Una falla después del claim y antes de llamar al proveedor no tiene reclaim automático.
+- Un resultado remoto ambiguo no se terminaliza mediante heurísticas.
+- Los jobs pueden quedar `pending` si el proceso termina después del commit y antes del runner.
+- La completion tardía depende de que la familia y las columnas del evento permanezcan estables.
+- Doppler Payments API no ofrece para V1 una garantía downstream de idempotencia que EMMS pueda asumir.
+- V1 prioriza no duplicar un cobro antes que recuperar automáticamente un intento ambiguo.
 
 Estos límites deben tratarse como decisiones de producto y operación, no como autorización para modificar el ledger manualmente.
 
@@ -1170,53 +1166,53 @@ Antes de habilitar Checkout Payments V1 debe verificarse, como mínimo:
 
 ### Identidad e idempotencia
 
-* una `paymentId` crea una sola fila;
-* dos requests concurrentes con la misma `paymentId` no llaman dos veces al proveedor;
-* una intención incompatible devuelve `409`;
-* una operación terminal se responde desde el ledger;
-* una operación `processing` sin marker devuelve `202`.
+- una `paymentId` crea una sola fila;
+- dos requests concurrentes con la misma `paymentId` no llaman dos veces al proveedor;
+- una intención incompatible devuelve `409`;
+- una operación terminal se responde desde el ledger;
+- una operación `processing` sin marker devuelve `202`.
 
 ### Provider
 
-* Authorization aprobada permite Purchase;
-* rechazo incluido en el catálogo termina en `rejected`;
-* código no incluido termina en `UNKNOWN`;
-* timeout, redirect y JSON inválido terminan en `UNKNOWN`;
-* Purchase `000` sin número de autorización no se considera aprobada;
-* no existen retries automáticos de cURL.
+- Authorization aprobada permite Purchase;
+- rechazo incluido en el catálogo termina en `rejected`;
+- código no incluido termina en `UNKNOWN`;
+- timeout, redirect y JSON inválido terminan en `UNKNOWN`;
+- Purchase `000` sin número de autorización no se considera aprobada;
+- no existen retries automáticos de cURL.
 
 ### Marker y completion
 
-* una tarjeta no completa sin marker;
-* el marker es write-once;
-* el recovery del marker realiza como máximo un segundo CAS;
-* el recovery nunca vuelve al proveedor;
-* VIP, payment y jobs participan del mismo commit;
-* una falla de commit no deja `approved`;
-* un replay con marker ejecuta únicamente completion.
+- una tarjeta no completa sin marker;
+- el marker es write-once;
+- el recovery del marker realiza como máximo un segundo CAS;
+- el recovery nunca vuelve al proveedor;
+- VIP, payment y jobs participan del mismo commit;
+- una falla de commit no deja `approved`;
+- un replay con marker ejecuta únicamente completion.
 
 ### Cupones
 
-* un cupón válido aplica el descuento;
-* un cupón del 100 % no llama al proveedor;
-* `couponCode` resuelve solamente por código canónico;
-* una completion de cupón exige precio final cero y cupón durable.
+- un cupón válido aplica el descuento;
+- un cupón del 100 % no llama al proveedor;
+- `couponCode` resuelve solamente por código canónico;
+- una completion de cupón exige precio final cero y cupón durable.
 
 ### Frontend y success
 
-* el doble click comparte una sola operación;
-* existe un único POST automático;
-* la recuperación automática utiliza GET;
-* el retry manual conserva UUID y body;
-* sólo `approved` redirige a success;
-* success no ejecuta acciones financieras;
-* las respuestas públicas no exponen PII ni evidencia del proveedor.
+- el doble click comparte una sola operación;
+- existe un único POST automático;
+- la recuperación automática utiliza GET;
+- el retry manual conserva UUID y body;
+- sólo `approved` redirige a success;
+- success no ejecuta acciones financieras;
+- las respuestas públicas no exponen PII ni evidencia del proveedor.
 
 ### Operación
 
-* el checkout se deshabilita antes del reset;
-* no existen operaciones activas durante el cambio;
-* se limpian los jobs de checkout antes de recrear el ledger;
-* código y schema se habilitan como una única unidad compatible.
+- el checkout se deshabilita antes del reset;
+- no existen operaciones activas durante el cambio;
+- se limpian los jobs de checkout antes de recrear el ledger;
+- código y schema se habilitan como una única unidad compatible.
 
 Este documento concentra el contrato funcional y técnico de V1, incluyendo sus límites operativos y de cutover.

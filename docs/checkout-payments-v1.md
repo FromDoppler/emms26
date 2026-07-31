@@ -1005,7 +1005,6 @@ La request de `calculate-payment` valida y normaliza:
 - `couponCode` como string o `null`;
 - `customerEmail` como string o `null` y de hasta 250 caracteres;
 - `origin` como string o scalar compatible como hasta ahora; si no viene o viene vacío, se normaliza a `checkout`; si viene `null`, se rechaza con `422 validation_error`.
-- `ccType` sólo admite `1`, `2` o `3`.
 
 Valores con tipos inválidos producen `422 validation_error` antes de lookup o pricing.
 

@@ -276,7 +276,11 @@ final class CheckoutRequestNormalizer
         }
 
         $normalized = strtolower(trim((string) $email));
-        if ($normalized === '' || strlen($normalized) > self::CUSTOMER_TEXT_MAX_LENGTHS['email']) {
+        if ($normalized === '') {
+            return '';
+        }
+
+        if (strlen($normalized) > self::CUSTOMER_TEXT_MAX_LENGTHS['email']) {
             return self::INVALID_VALUE;
         }
 

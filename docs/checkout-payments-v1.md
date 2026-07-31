@@ -179,7 +179,9 @@ Ejemplo para tarjeta:
   "customer": {
     "email": "user@example.com",
     "name": "User",
-    "phone": "+541100000000"
+    "phone": "+541100000000",
+    "acceptPolicies": true,
+    "acceptPromotions": false
   },
   "couponCode": null,
   "payment": {
@@ -200,6 +202,12 @@ El ticket se resuelve en backend a partir de la configuración activa del evento
 
 `couponCode` ausente, `null` o vacío se normaliza a `null`.
 
+`acceptPolicies` y `acceptPromotions` deben viajar como booleanos JSON reales.
+`acceptPolicies=true` es obligatorio cuando la elegibilidad de un usuario nuevo lo requiere.
+`acceptPromotions` es opcional y `false` por defecto.
+El frontend debe enviar el estado booleano real del checkbox y no convertir strings
+arbitrarios mediante `Boolean("false")`, porque eso produce `true` en JavaScript.
+
 Requests con forma inválida producen `422 validation_error` antes de cualquier lookup, pricing o INSERT.
 
 La request pública valida explícitamente:
@@ -207,10 +215,20 @@ La request pública valida explícitamente:
 - `paymentId` como UUID v4 string;
 - `customer` como objeto;
 - `customer.email` como string email válido;
+- `customer.name`, `customer.lastname`, `customer.phone`, `customer.company`, `customer.jobPosition`, `customer.website`, `customer.emailPlatform`, `customer.utm_*` y `customer.emms_ref` como string o `null`;
+- `customer.acceptPolicies` y `customer.acceptPromotions` como booleanos JSON reales cuando están presentes;
 - `couponCode` como string o `null`;
 - `origin`, si existe, como string o escalar aceptado;
 - `checkout`, si existe, como objeto;
 - `payment`, si existe, como objeto.
+
+Cuando `payment` está presente:
+
+- `worldPayLowValueToken` como string;
+- `ccExpMonth` como integer o digit-string;
+- `ccExpYear` como integer o digit-string;
+- `ccType` como integer o digit-string;
+- cualquier tipo incorrecto produce `422 validation_error` antes de lookup, pricing o INSERT.
 
 Si una `paymentId` existente se reutiliza con otra intención, el backend responde:
 
@@ -971,6 +989,14 @@ Resuelve:
 
 No crea un intento financiero.
 
+La request de `calculate-payment` valida y normaliza:
+
+- `couponCode` como string o `null`;
+- `customerEmail` como string o `null`;
+- `origin` como string, `null` o scalar compatible como hasta ahora.
+
+Valores con tipos inválidos producen `422 validation_error` antes de lookup o pricing.
+
 ### `create-payment`
 
 | Resultado              | HTTP |
@@ -1060,7 +1086,11 @@ El frontend mantiene en memoria un `activeAttempt`:
 
 ```js
 {
-  (paymentId, serializedBody, customerEmail, correlationId, approvedFinished);
+  paymentId,
+  serializedBody,
+  customerEmail,
+  correlationId,
+  approvedFinished,
 }
 ```
 

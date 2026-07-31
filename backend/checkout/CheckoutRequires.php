@@ -25,6 +25,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/checkout/infrastructure/payme
 require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/checkout/infrastructure/payments/DopplerPaymentsApiClient.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/checkout/pricing/CheckoutPricingService.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/checkout/pricing/coupons/CheckoutCouponCode.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/checkout/application/CheckoutRequestNormalizer.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/checkout/pricing/coupons/CheckoutCouponService.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/checkout/services/CheckoutEligibilityService.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/checkout/services/CheckoutEventContextResolver.php');

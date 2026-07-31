@@ -31,13 +31,11 @@ class CreateCheckoutUseCase
     public function execute(array $input): array
     {
         $requestCorrelationId = 'corr_' . bin2hex(random_bytes(16));
-        if (!array_key_exists('paymentId', $input) || !is_string($input['paymentId'])) {
+        $input = CheckoutRequestNormalizer::normalizeCreate($input);
+        if ($input === null) {
             return ['httpStatus' => 422, 'payload' => $this->responses->validation($requestCorrelationId)];
         }
-        $paymentId = strtolower(trim($input['paymentId']));
-        if (!$this->isUuid($paymentId) || !$this->hasValidRequestShape($input)) {
-            return ['httpStatus' => 422, 'payload' => $this->responses->validation($requestCorrelationId)];
-        }
+        $paymentId = $input['paymentId'];
 
         try {
             $existing = $this->transactions->findByPaymentId($paymentId);
@@ -103,7 +101,6 @@ class CreateCheckoutUseCase
         if ($intent === null) {
             return ['httpStatus' => 422, 'payload' => $this->responses->validation($correlationId)];
         }
-        $input['checkout'] = ['origin' => $this->resolveOrigin($input)];
 
         $event = $this->events->resolve();
         $customer = $this->normalizeCustomer($input, $event);
@@ -131,7 +128,7 @@ class CreateCheckoutUseCase
             'correlation_id' => $correlationId,
             'provider' => $pricing['requiresPayment'] ? 'doppler-payments-api' : 'coupon',
             'payment_method' => $pricing['requiresPayment'] ? 'card' : 'coupon',
-            'origin' => $input['checkout']['origin'],
+            'origin' => $input['origin'],
             'customer_email' => $customer['email'],
             'customer_name' => $customer['firstname'],
             'customer_phone' => $customer['phone'],
@@ -207,6 +204,7 @@ class CreateCheckoutUseCase
             throw new Exception('invalid_payment_raw_request');
         }
         $event = $this->events->resolveByPayment($transaction);
+        $input['origin'] = $transaction['origin'];
         $input['checkout'] = ['origin' => $transaction['origin']];
         return [
             'input' => $input,
@@ -234,10 +232,8 @@ class CreateCheckoutUseCase
             || !is_string($input['customer']['email'])) {
             return null;
         }
-        $email = strtolower(trim((string) $input['customer']['email']));
-        $couponCode = array_key_exists('couponCode', $input) && $input['couponCode'] !== null
-            ? CheckoutCouponCode::normalize(is_string($input['couponCode']) ? $input['couponCode'] : null)
-            : null;
+        $email = $input['customer']['email'];
+        $couponCode = $input['couponCode'] ?? null;
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return null;
         }
@@ -261,23 +257,23 @@ class CreateCheckoutUseCase
     {
         $customer = $input['customer'] ?? [];
         return [
-            'email' => strtolower(trim((string) ($customer['email'] ?? ''))),
-            'firstname' => trim((string) ($customer['name'] ?? '')),
-            'lastname' => trim((string) ($customer['lastname'] ?? '')),
-            'phone' => trim((string) ($customer['phone'] ?? '')),
-            'company' => trim((string) ($customer['company'] ?? '')),
-            'jobPosition' => trim((string) ($customer['jobPosition'] ?? '')),
-            'website' => trim((string) ($customer['website'] ?? '')),
-            'emailPlatform' => trim((string) ($customer['emailPlatform'] ?? '')),
+            'email' => $customer['email'] ?? '',
+            'firstname' => $customer['firstname'] ?? '',
+            'lastname' => $customer['lastname'] ?? '',
+            'phone' => $customer['phone'] ?? '',
+            'company' => $customer['company'] ?? '',
+            'jobPosition' => $customer['jobPosition'] ?? '',
+            'website' => $customer['website'] ?? '',
+            'emailPlatform' => $customer['emailPlatform'] ?? '',
             'country' => GeoIp::getCountryName(),
-            'privacy' => !empty($customer['acceptPolicies']),
-            'promotions' => !empty($customer['acceptPromotions']),
-            'source_utm' => trim((string) ($customer['utm_source'] ?? '')),
-            'medium_utm' => trim((string) ($customer['utm_medium'] ?? '')),
-            'campaign_utm' => trim((string) ($customer['utm_campaign'] ?? '')),
-            'content_utm' => trim((string) ($customer['utm_content'] ?? '')),
-            'term_utm' => trim((string) ($customer['utm_term'] ?? '')),
-            'emms_ref' => trim((string) ($customer['emms_ref'] ?? '')),
+            'privacy' => $customer['acceptPolicies'] === true,
+            'promotions' => $customer['acceptPromotions'] === true,
+            'source_utm' => $customer['utm_source'] ?? '',
+            'medium_utm' => $customer['utm_medium'] ?? '',
+            'campaign_utm' => $customer['utm_campaign'] ?? '',
+            'content_utm' => $customer['utm_content'] ?? '',
+            'term_utm' => $customer['utm_term'] ?? '',
+            'emms_ref' => $customer['emms_ref'] ?? '',
             'type' => $event['eventFreeId'],
             'form_id' => $event['eventPhase'],
             'register' => date('Y-m-d H:i:s'),
@@ -287,12 +283,29 @@ class CreateCheckoutUseCase
 
     private function validPayment(array $payment): bool
     {
-        $month = trim((string) ($payment['ccExpMonth'] ?? ''));
-        $year = trim((string) ($payment['ccExpYear'] ?? ''));
-        $type = trim((string) ($payment['ccType'] ?? ''));
-        if (trim((string) ($payment['worldPayLowValueToken'] ?? '')) === ''
-            || !ctype_digit($month) || (int) $month < 1 || (int) $month > 12
-            || !ctype_digit($type) || (int) $type <= 0) {
+        if (!isset($payment['worldPayLowValueToken']) || !is_string($payment['worldPayLowValueToken'])
+            || trim($payment['worldPayLowValueToken']) === '') {
+            return false;
+        }
+
+        if (!isset($payment['ccExpMonth']) || !is_string($payment['ccExpMonth'])
+            || !ctype_digit($payment['ccExpMonth'])) {
+            return false;
+        }
+        if (!isset($payment['ccExpYear']) || !is_string($payment['ccExpYear'])
+            || !ctype_digit($payment['ccExpYear'])) {
+            return false;
+        }
+        if (!isset($payment['ccType']) || !is_string($payment['ccType'])
+            || !ctype_digit($payment['ccType'])) {
+            return false;
+        }
+
+        $month = $payment['ccExpMonth'];
+        $year = $payment['ccExpYear'];
+        $type = $payment['ccType'];
+
+        if ((int) $month < 1 || (int) $month > 12 || (int) $type <= 0) {
             return false;
         }
 
@@ -332,65 +345,4 @@ class CreateCheckoutUseCase
         ) === 1;
     }
 
-    private function hasValidRequestShape(array $input): bool
-    {
-        if (array_key_exists('couponCode', $input)
-            && $input['couponCode'] !== null
-            && !is_string($input['couponCode'])) {
-            return false;
-        }
-        if (!isset($input['customer']) || !is_array($input['customer'])) {
-            return false;
-        }
-        if (!isset($input['customer']['email']) || !is_string($input['customer']['email'])) {
-            return false;
-        }
-        if (!filter_var(trim($input['customer']['email']), FILTER_VALIDATE_EMAIL)) {
-            return false;
-        }
-        if (array_key_exists('checkout', $input)) {
-            if (!is_array($input['checkout'])) {
-                return false;
-            }
-            if (array_key_exists('origin', $input['checkout'])) {
-                $origin = $input['checkout']['origin'];
-                if (!is_scalar($origin)) {
-                    return false;
-                }
-            }
-        }
-        if (array_key_exists('origin', $input) && !is_scalar($input['origin'])) {
-            return false;
-        }
-        if (array_key_exists('payment', $input)) {
-            if (!is_array($input['payment'])) {
-                return false;
-            }
-            foreach ($input['payment'] as $value) {
-                if (is_array($value) || is_object($value)) {
-                    return false;
-                }
-            }
-        }
-        foreach ([
-            'name', 'lastname', 'phone', 'company', 'jobPosition', 'website',
-            'emailPlatform', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content',
-            'utm_term', 'emms_ref',
-        ] as $field) {
-            if (array_key_exists($field, $input['customer'])
-                && $input['customer'][$field] !== null
-                && (is_array($input['customer'][$field]) || is_object($input['customer'][$field]))) {
-                return false;
-            }
-        }
-
-        foreach (['acceptPolicies', 'acceptPromotions'] as $field) {
-            if (array_key_exists($field, $input['customer'])
-                && (is_array($input['customer'][$field]) || is_object($input['customer'][$field]))) {
-                return false;
-            }
-        }
-
-        return true;
-    }
 }

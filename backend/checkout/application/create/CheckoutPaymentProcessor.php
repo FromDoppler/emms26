@@ -37,7 +37,7 @@ class CheckoutPaymentProcessor
             'currency' => $transaction['currency'],
             'customerEmail' => $transaction['customer_email'],
             'customerName' => $transaction['customer_name'],
-            'worldPayLowValueToken' => trim((string) ($context['input']['payment']['worldPayLowValueToken'] ?? '')),
+            'worldPayLowValueToken' => $context['input']['payment']['worldPayLowValueToken'] ?? '',
             'ccExpMonth' => $context['input']['payment']['ccExpMonth'] ?? null,
             'ccExpYear' => $context['input']['payment']['ccExpYear'] ?? null,
             'ccType' => $context['input']['payment']['ccType'] ?? null,

@@ -18,7 +18,7 @@ class CalculateCheckoutUseCase
 
     public function execute(array $input): array
     {
-        $input = $this->normalizeInput($input);
+        $input = CheckoutRequestNormalizer::normalizeCalculate($input);
         if ($input === null) {
             return [
                 'httpStatus' => 422,
@@ -47,7 +47,7 @@ class CalculateCheckoutUseCase
                     'registered_id' => $customerProfile['registeredId'],
                 ], 'PAYMENTS', Logger::INFO);
             }
-        } elseif (!empty($input['customerEmail'])) {
+        } elseif (($input['customerEmail'] ?? '') !== '') {
             Logger::event('checkout_profile_not_found', [
                 'event_key' => $eventContext['eventKey'],
                 'origin' => $input['origin'] ?? null,
@@ -80,7 +80,7 @@ class CalculateCheckoutUseCase
 
     private function resolveCustomerProfile(array $eventContext, array $input): array
     {
-        $email = strtolower(trim((string) ($input['customerEmail'] ?? '')));
+        $email = $input['customerEmail'] ?? '';
 
         if ($email === '') {
             return [
@@ -132,30 +132,4 @@ class CalculateCheckoutUseCase
         ];
     }
 
-    private function normalizeInput(array $input): ?array
-    {
-        if (array_key_exists('couponCode', $input)
-            && $input['couponCode'] !== null
-            && !is_string($input['couponCode'])) {
-            return null;
-        }
-        if (array_key_exists('customerEmail', $input)
-            && $input['customerEmail'] !== null
-            && !is_string($input['customerEmail'])) {
-            return null;
-        }
-        if (array_key_exists('origin', $input) && !is_scalar($input['origin'])) {
-            return null;
-        }
-
-        $couponCode = array_key_exists('couponCode', $input)
-            ? CheckoutCouponCode::normalize(is_string($input['couponCode']) ? $input['couponCode'] : null)
-            : null;
-
-        return [
-            'couponCode' => $couponCode,
-            'customerEmail' => isset($input['customerEmail']) ? trim((string) $input['customerEmail']) : null,
-            'origin' => isset($input['origin']) ? trim((string) $input['origin']) : null,
-        ];
-    }
 }

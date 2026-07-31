@@ -111,12 +111,17 @@ final class CheckoutRequestNormalizer
             return null;
         }
 
+        $origin = array_key_exists('origin', $input)
+            ? self::normalizeOriginValue($input['origin'])
+            : 'checkout';
+        if ($origin === self::INVALID_VALUE) {
+            return null;
+        }
+
         return [
             'couponCode' => $couponCode,
             'customerEmail' => $customerEmail,
-            'origin' => array_key_exists('origin', $input)
-                ? self::normalizeOriginValue($input['origin'])
-                : 'checkout',
+            'origin' => $origin,
         ];
     }
 
@@ -138,8 +143,11 @@ final class CheckoutRequestNormalizer
             return null;
         }
 
-        $email = strtolower(trim($customer['email']));
-        if (strlen($email) > self::CUSTOMER_TEXT_MAX_LENGTHS['email']
+        $email = self::normalizeUtf8Text($customer['email']);
+        $emailLength = self::utf8Length($email);
+        if ($email === self::INVALID_VALUE
+            || $emailLength === null
+            || $emailLength > self::CUSTOMER_TEXT_MAX_LENGTHS['email']
             || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return null;
         }
@@ -170,10 +178,15 @@ final class CheckoutRequestNormalizer
             if (!is_string($customer[$field])) {
                 return null;
             }
-            $value = trim($customer[$field]);
-            if (isset(self::CUSTOMER_TEXT_MAX_LENGTHS[$field])
-                && strlen($value) > self::CUSTOMER_TEXT_MAX_LENGTHS[$field]) {
+            $value = self::normalizeUtf8Text($customer[$field]);
+            if ($value === self::INVALID_VALUE) {
                 return null;
+            }
+            if (isset(self::CUSTOMER_TEXT_MAX_LENGTHS[$field])) {
+                $length = self::utf8Length($value);
+                if ($length === null || $length > self::CUSTOMER_TEXT_MAX_LENGTHS[$field]) {
+                    return null;
+                }
             }
             $normalized[$field === 'name' ? 'firstname' : $field] = $value;
         }
@@ -199,7 +212,10 @@ final class CheckoutRequestNormalizer
             if (!is_string($payment['worldPayLowValueToken'])) {
                 return self::INVALID_VALUE;
             }
-            $normalized['worldPayLowValueToken'] = trim($payment['worldPayLowValueToken']);
+            $normalized['worldPayLowValueToken'] = self::normalizeUtf8Text($payment['worldPayLowValueToken']);
+            if ($normalized['worldPayLowValueToken'] === self::INVALID_VALUE) {
+                return self::INVALID_VALUE;
+            }
         }
 
         foreach (self::PAYMENT_DIGIT_FIELDS as $field) {
@@ -262,29 +278,46 @@ final class CheckoutRequestNormalizer
 
     private static function normalizeOriginValue($origin): string
     {
-        $value = trim((string) ($origin ?? 'checkout'));
+        $value = (string) ($origin ?? 'checkout');
+        if (preg_match('//u', $value) !== 1) {
+            return self::INVALID_VALUE;
+        }
+        $value = trim($value);
         if ($value === '') {
             return 'checkout';
         }
-        return substr($value, 0, 50);
+        return self::utf8Prefix($value, 50);
     }
 
-    private static function normalizeCustomerEmail($email)
+    private static function normalizeUtf8Text($value)
     {
-        if ($email === null) {
-            return null;
-        }
-
-        $normalized = strtolower(trim((string) $email));
-        if ($normalized === '') {
-            return '';
-        }
-
-        if (strlen($normalized) > self::CUSTOMER_TEXT_MAX_LENGTHS['email']) {
+        if (!is_string($value)) {
             return self::INVALID_VALUE;
         }
 
-        return $normalized;
+        if (preg_match('//u', $value) !== 1) {
+            return self::INVALID_VALUE;
+        }
+
+        return trim($value);
+    }
+
+    private static function utf8Length(string $value): ?int
+    {
+        $length = preg_match_all('/./us', $value, $matches);
+
+        return $length === false ? null : $length;
+    }
+
+    private static function utf8Prefix(string $value, int $maxLength)
+    {
+        $pattern = '/^.{0,' . $maxLength . '}/us';
+
+        if (preg_match($pattern, $value, $matches) !== 1) {
+            return self::INVALID_VALUE;
+        }
+
+        return $matches[0];
     }
 
     private const INVALID_VALUE = '__checkout_invalid__';

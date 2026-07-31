@@ -18,6 +18,7 @@ class CheckoutTransactionStatus
         $status = $transaction['status'] ?? '';
         $method = $transaction['payment_method'] ?? '';
         $hasMarker = !empty($transaction['provider_approved_at']);
+        $registeredId = $transaction['registered_id'] ?? null;
 
         if (!in_array($status, [self::PENDING, self::PROCESSING, self::APPROVED, self::REJECTED, self::ERROR], true)) {
             return false;
@@ -32,6 +33,9 @@ class CheckoutTransactionStatus
             && (empty($transaction['registered_id']) || ($transaction['response_code'] ?? null) !== 'approved')) {
             return false;
         }
+        if ($status !== self::APPROVED && !empty($registeredId)) {
+            return false;
+        }
         if ($method === 'coupon') {
             return ($transaction['provider'] ?? '') === 'coupon'
                 && !$hasMarker
@@ -41,6 +45,9 @@ class CheckoutTransactionStatus
                 && self::isConsistentCouponStatus($transaction);
         }
         if (($transaction['provider'] ?? '') !== 'doppler-payments-api') {
+            return false;
+        }
+        if (!self::isPositiveDecimalAmount($transaction['final_amount'] ?? null)) {
             return false;
         }
         if ($status === self::APPROVED) {
@@ -109,6 +116,16 @@ class CheckoutTransactionStatus
             }
         }
         return true;
+    }
+
+    private static function isPositiveDecimalAmount($value): bool
+    {
+        if (!is_string($value)) {
+            return false;
+        }
+
+        $amount = trim($value);
+        return preg_match('/^\d+\.\d{2}$/D', $amount) === 1 && $amount !== '0.00';
     }
 
     public static function hasNoProviderEvidence(array $transaction): bool

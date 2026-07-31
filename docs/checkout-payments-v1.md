@@ -181,7 +181,6 @@ Ejemplo para tarjeta:
     "name": "User",
     "phone": "+541100000000"
   },
-  "ticketCode": "VIP",
   "couponCode": null,
   "payment": {
     "worldPayLowValueToken": "...",
@@ -195,8 +194,11 @@ Ejemplo para tarjeta:
 La intención durable se identifica mediante:
 
 - email normalizado;
-- `ticketCode`;
-- `couponCode`.
+- `couponCode` canónico o `null`.
+
+El ticket se resuelve en backend a partir de la configuración activa del evento.
+
+`couponCode` ausente, `null` o vacío se normaliza a `null`.
 
 Si una `paymentId` existente se reutiliza con otra intención, el backend responde:
 
@@ -214,7 +216,15 @@ GET es la única operación pública que recibe exclusivamente la identidad del 
 
 ## 6. Tickets, cupones y pricing
 
-`ticketCode` identifica el acceso que se intenta comprar.
+Checkout Payments V1 vende un único ticket VIP por evento.
+
+El ticket se resuelve en backend a partir de la configuración activa del evento.
+
+El backend requiere exactamente un ticket activo para el evento:
+
+- cero tickets activos → `ticket_unavailable`;
+- un ticket activo → continuar;
+- más de un ticket activo → configuración inconsistente y fail closed.
 
 `couponCode` identifica el descuento opcional.
 
@@ -1196,6 +1206,7 @@ Antes de habilitar Checkout Payments V1 debe verificarse, como mínimo:
 - un cupón válido aplica el descuento;
 - un cupón del 100 % no llama al proveedor;
 - `couponCode` resuelve solamente por código canónico;
+- exactamente un ticket activo por evento habilita el checkout;
 - una completion de cupón exige precio final cero y cupón durable.
 
 ### Frontend y success

@@ -48,11 +48,8 @@ class CalculateCheckoutUseCase
             ], 'PAYMENTS', Logger::INFO);
         }
 
-        $isTicketDiscovery = ($result['error'] ?? null) === 'ticket_required'
-            && !empty($result['availableTickets']);
-
         return [
-            'httpStatus' => ($result['success'] || $isTicketDiscovery) ? 200 : 422,
+            'httpStatus' => $result['success'] ? 200 : 422,
             'payload' => $publicResult,
         ];
     }
@@ -132,7 +129,6 @@ class CalculateCheckoutUseCase
     private function normalizeInput(array $input): array
     {
         return [
-            'ticketCode'    => isset($input['ticketCode'])    && is_scalar($input['ticketCode'])    ? (string) $input['ticketCode']    : null,
             'couponCode'    => isset($input['couponCode'])    && is_scalar($input['couponCode'])    ? (string) $input['couponCode']    : null,
             'customerEmail' => isset($input['customerEmail']) && is_scalar($input['customerEmail']) ? (string) $input['customerEmail'] : null,
             'origin'        => isset($input['origin'])        && is_scalar($input['origin'])        ? (string) $input['origin']        : null,

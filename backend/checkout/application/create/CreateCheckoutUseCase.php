@@ -228,22 +228,21 @@ class CreateCheckoutUseCase
     private function extractIntent(array $input): ?array
     {
         if (!isset($input['customer']) || !is_array($input['customer'])
-            || !isset($input['customer']['email'])
-            || !array_key_exists('ticketCode', $input)
-            || !array_key_exists('couponCode', $input)) {
+            || !isset($input['customer']['email'])) {
             return null;
         }
         $email = strtolower(trim((string) $input['customer']['email']));
-        $ticketCode = strtoupper(trim((string) $input['ticketCode']));
-        $couponCode = $input['couponCode'] === null
-            ? null
-            : strtoupper(trim((string) $input['couponCode']));
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL) || $ticketCode === '' || $couponCode === '') {
+        $couponCode = array_key_exists('couponCode', $input)
+            ? trim((string) $input['couponCode'])
+            : '';
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return null;
+        }
+        if ($couponCode === '') {
+            $couponCode = null;
         }
         return [
             'customerEmail' => $email,
-            'ticketCode' => $ticketCode,
             'couponCode' => $couponCode,
         ];
     }
@@ -251,7 +250,6 @@ class CreateCheckoutUseCase
     private function intentMatches(array $transaction, array $intent): bool
     {
         return $transaction['customer_email'] === $intent['customerEmail']
-            && $transaction['ticket_code'] === $intent['ticketCode']
             && (($transaction['coupon_code'] ?: null) === ($intent['couponCode'] ?: null));
     }
 

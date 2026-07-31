@@ -245,17 +245,15 @@ class DopplerPaymentsApiClient implements PaymentProviderClient
 
     private function finish(ProviderPaymentRequest $request, float $startedAt, ProviderPaymentResult $result): ProviderPaymentResult
     {
-        if ($result->status !== ProviderPaymentResult::APPROVED) {
-            Logger::event('payment_provider_call_finished', [
-                'correlation_id' => $request->correlationId,
-                'checkout_transaction_id' => $request->checkoutTransactionId,
-                'payment_id' => $request->paymentId,
-                'provider' => $result->provider,
-                'status' => $result->status,
-                'response_code' => $result->responseCode,
-                'duration_ms' => (int) round((microtime(true) - $startedAt) * 1000),
-            ], 'PAYMENTS', in_array($result->status, [ProviderPaymentResult::ERROR, ProviderPaymentResult::UNKNOWN], true) ? Logger::ERROR : Logger::INFO);
-        }
+        Logger::event('payment_provider_call_finished', [
+            'correlation_id' => $request->correlationId,
+            'checkout_transaction_id' => $request->checkoutTransactionId,
+            'payment_id' => $request->paymentId,
+            'provider' => $result->provider,
+            'status' => $result->status,
+            'response_code' => $result->responseCode,
+            'duration_ms' => (int) round((microtime(true) - $startedAt) * 1000),
+        ], 'PAYMENTS', in_array($result->status, [ProviderPaymentResult::ERROR, ProviderPaymentResult::UNKNOWN], true) ? Logger::ERROR : Logger::INFO);
 
         return $result;
     }

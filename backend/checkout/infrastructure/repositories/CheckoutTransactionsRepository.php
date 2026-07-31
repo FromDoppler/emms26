@@ -102,6 +102,7 @@ class CheckoutTransactionsRepository
              SET status = ?
              WHERE payment_id = ?
                AND status = ?
+               AND registered_id IS NULL
                AND provider_approved_at IS NULL
                AND authorization_number IS NULL
                AND transaction_link_id IS NULL
@@ -120,6 +121,7 @@ class CheckoutTransactionsRepository
              SET status = ?, response_code = ?
              WHERE payment_id = ?
                AND status = ?
+               AND registered_id IS NULL
                AND provider_approved_at IS NULL
                AND authorization_number IS NULL
                AND transaction_link_id IS NULL
@@ -141,6 +143,8 @@ class CheckoutTransactionsRepository
                  response_code = ?
              WHERE payment_id = ?
                AND status = ?
+               AND payment_method = 'card'
+               AND registered_id IS NULL
                AND provider_approved_at IS NULL
                AND authorization_number IS NULL
                AND transaction_link_id IS NULL
@@ -169,6 +173,8 @@ class CheckoutTransactionsRepository
              SET status = ?, response_code = ?
              WHERE payment_id = ?
                AND status IN (?, ?)
+               AND payment_method = 'card'
+               AND registered_id IS NULL
                AND provider_approved_at IS NULL
                AND authorization_number IS NULL
                AND transaction_link_id IS NULL
@@ -196,6 +202,8 @@ class CheckoutTransactionsRepository
                  purchase_response_code = ?, response_code = ?
              WHERE payment_id = ?
                AND status = ?
+               AND payment_method = 'card'
+               AND registered_id IS NULL
                AND provider_approved_at IS NULL
                AND authorization_number IS NULL
                AND transaction_link_id IS NULL
@@ -221,7 +229,9 @@ class CheckoutTransactionsRepository
         $this->db->query(
             "UPDATE payment_transactions
              SET status = ?, registered_id = ?, response_code = ?
-             WHERE payment_id = ? AND status = ?",
+             WHERE payment_id = ?
+               AND status = ?
+               AND registered_id IS NULL",
             [
                 CheckoutTransactionStatus::APPROVED,
                 $registeredId,

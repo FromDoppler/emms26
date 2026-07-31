@@ -23,25 +23,11 @@ class CheckoutPricingService
             ];
         }
 
-        $ticketCode = trim((string) ($input['ticketCode'] ?? ''));
-
-        if ($ticketCode === '') {
-            return [
-                'success' => false,
-                'error' => 'ticket_required',
-                'availableTickets' => $this->formatTickets($availableTickets),
-            ];
+        if (count($availableTickets) > 1) {
+            throw new Exception('multiple_active_tickets_configuration_error');
         }
 
-        $ticket = $this->ticketsDatabase->findActiveTicketByCodeForEvent($event, $ticketCode);
-
-        if ($ticket === null) {
-            return [
-                'success' => false,
-                'error' => 'ticket_unavailable',
-                'availableTickets' => $this->formatTickets($availableTickets),
-            ];
-        }
+        $ticket = $availableTickets[0];
 
         $couponResolution = $this->couponService->resolve(
             $input['couponCode'] ?? null,

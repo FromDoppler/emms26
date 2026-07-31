@@ -16,6 +16,7 @@ class CheckoutFailureHandler
         Logger::event('payment_request_failed', [
             'payment_id' => $paymentId,
             'correlation_id' => $requestCorrelationId,
+            'error_code' => $this->errorCodeFor($error),
             'error_type' => get_class($error),
         ], 'PAYMENTS', Logger::ERROR);
 
@@ -34,10 +35,33 @@ class CheckoutFailureHandler
                     $httpStatus = $transaction['status'] === CheckoutTransactionStatus::PROCESSING ? 202 : 200;
                     return ['httpStatus' => $httpStatus, 'payload' => $this->responses->fromTransaction($transaction)];
                 }
-            } catch (Throwable $ignored) {
+            } catch (Throwable $reloadError) {
+                Logger::event('payment_failure_ledger_reload_failed', [
+                    'payment_id' => $paymentId,
+                    'correlation_id' => $requestCorrelationId,
+                    'error_code' => $this->errorCodeFor($error),
+                    'error_type' => get_class($error),
+                    'reload_error_code' => $this->errorCodeFor($reloadError),
+                    'reload_error_type' => get_class($reloadError),
+                ], 'PAYMENTS', Logger::ERROR);
             }
         }
 
         return ['httpStatus' => 500, 'payload' => $this->responses->internal($requestCorrelationId)];
+    }
+
+    private function errorCodeFor(Throwable $error): string
+    {
+        $message = trim((string) $error->getMessage());
+        if ($message !== '' && preg_match('/^[a-z0-9_]+$/D', $message) === 1) {
+            return $message;
+        }
+
+        $code = (int) $error->getCode();
+        if ($code !== 0) {
+            return 'exception_code_' . $code;
+        }
+
+        return 'unexpected_exception';
     }
 }

@@ -330,13 +330,6 @@ class CreateCheckoutUseCase
         return $customer;
     }
 
-    private function resolveOrigin(array $input): string
-    {
-        $checkout = isset($input['checkout']) && is_array($input['checkout']) ? $input['checkout'] : [];
-        $origin = trim((string) ($checkout['origin'] ?? $input['origin'] ?? 'checkout'));
-        return $origin === '' ? 'checkout' : substr($origin, 0, 50);
-    }
-
     private function isUuid(string $value): bool
     {
         return preg_match(

@@ -88,7 +88,8 @@ final class CheckoutRequestNormalizer
             && !is_string($input['customerEmail'])) {
             return null;
         }
-        if (array_key_exists('origin', $input) && !self::isAllowedOriginValue($input['origin'])) {
+        if (array_key_exists('origin', $input)
+            && ($input['origin'] === null || !is_scalar($input['origin']))) {
             return null;
         }
 
@@ -97,9 +98,9 @@ final class CheckoutRequestNormalizer
             'customerEmail' => isset($input['customerEmail'])
                 ? strtolower(trim((string) $input['customerEmail']))
                 : null,
-            'origin' => array_key_exists('origin', $input) && $input['origin'] !== null
+            'origin' => array_key_exists('origin', $input)
                 ? self::normalizeOriginValue($input['origin'])
-                : null,
+                : 'checkout',
         ];
     }
 
@@ -212,18 +213,29 @@ final class CheckoutRequestNormalizer
 
     private static function normalizeOrigin(array $input)
     {
-        $origin = null;
-        if (array_key_exists('checkout', $input) && is_array($input['checkout']) && array_key_exists('origin', $input['checkout'])) {
-            $origin = $input['checkout']['origin'];
-        } elseif (array_key_exists('origin', $input)) {
-            $origin = $input['origin'];
-        }
-
-        if (!self::isAllowedOriginValue($origin)) {
+        if (array_key_exists('checkout', $input) && !is_array($input['checkout'])) {
             return self::INVALID_VALUE;
         }
 
-        return self::normalizeOriginValue($origin);
+        if (array_key_exists('checkout', $input)
+            && is_array($input['checkout'])
+            && array_key_exists('origin', $input['checkout'])) {
+            if ($input['checkout']['origin'] === null || !is_scalar($input['checkout']['origin'])) {
+                return self::INVALID_VALUE;
+            }
+
+            return self::normalizeOriginValue($input['checkout']['origin']);
+        }
+
+        if (array_key_exists('origin', $input)) {
+            if ($input['origin'] === null || !is_scalar($input['origin'])) {
+                return self::INVALID_VALUE;
+            }
+
+            return self::normalizeOriginValue($input['origin']);
+        }
+
+        return 'checkout';
     }
 
     private static function normalizeOriginValue($origin): string
@@ -233,11 +245,6 @@ final class CheckoutRequestNormalizer
             return 'checkout';
         }
         return substr($value, 0, 50);
-    }
-
-    private static function isAllowedOriginValue($value): bool
-    {
-        return $value === null || is_scalar($value);
     }
 
     private const INVALID_VALUE = '__checkout_invalid__';

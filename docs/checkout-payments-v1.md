@@ -218,9 +218,12 @@ La request pública valida explícitamente:
 - `customer.name`, `customer.lastname`, `customer.phone`, `customer.company`, `customer.jobPosition`, `customer.website`, `customer.emailPlatform`, `customer.utm_*` y `customer.emms_ref` como string o `null`;
 - `customer.acceptPolicies` y `customer.acceptPromotions` como booleanos JSON reales cuando están presentes;
 - `couponCode` como string o `null`;
-- `origin`, si existe, como string o escalar aceptado;
 - `checkout`, si existe, como objeto;
+- `checkout.origin`, si existe, como escalar no nulo aceptado;
+- `origin`, si existe, como escalar no nulo aceptado;
 - `payment`, si existe, como objeto.
+
+Cuando `checkout.origin` y `origin` conviven, `checkout.origin` tiene prioridad. Un valor vacío normaliza a `checkout`.
 
 Cuando `payment` está presente:
 
@@ -620,6 +623,7 @@ Desde el primer intento de llamada remota, el cliente normaliza el resultado com
 ```text
 APPROVED
 REJECTED
+ERROR
 UNKNOWN
 ```
 
@@ -748,7 +752,7 @@ El marker:
 
 ### Escritura incierta del marker
 
-El marker es la única escritura financiera que permite un recovery interno acotado:
+El marker y los resultados terminales conocidos permiten recovery interno acotado, respetando las invariantes propias de cada transición:
 
 ```text
 primer CAS no confirmado
@@ -993,7 +997,7 @@ La request de `calculate-payment` valida y normaliza:
 
 - `couponCode` como string o `null`;
 - `customerEmail` como string o `null`;
-- `origin` como string, `null` o scalar compatible como hasta ahora.
+- `origin` como string o scalar compatible como hasta ahora; si no viene o viene vacío, se normaliza a `checkout`; si viene `null`, se rechaza con `422 validation_error`.
 
 Valores con tipos inválidos producen `422 validation_error` antes de lookup o pricing.
 

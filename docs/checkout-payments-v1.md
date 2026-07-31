@@ -1060,11 +1060,7 @@ El frontend mantiene en memoria un `activeAttempt`:
 
 ```js
 {
-  paymentId,
-  serializedBody,
-  customerEmail,
-  correlationId,
-  approvedFinished
+  (paymentId, serializedBody, customerEmail, correlationId, approvedFinished);
 }
 ```
 

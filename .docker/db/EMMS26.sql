@@ -446,6 +446,7 @@ ON DUPLICATE KEY UPDATE
 CREATE TABLE IF NOT EXISTS `payment_transactions` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `public_id` varchar(40) NOT NULL,
+  `payment_id` char(36) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   `correlation_id` varchar(64) NOT NULL,
   `idempotency_key` varchar(255) NOT NULL,
   `status` varchar(50) NOT NULL,
@@ -471,6 +472,7 @@ CREATE TABLE IF NOT EXISTS `payment_transactions` (
   `event_key` varchar(100) NOT NULL,
   `event_free_id` varchar(150) NOT NULL,
   `event_vip_id` varchar(150) NOT NULL,
+  `provider_approved_at` timestamp NULL DEFAULT NULL,
   `provider_transaction_id` varchar(255) DEFAULT NULL,
   `authorization_number` varchar(255) DEFAULT NULL,
   `transaction_link_id` varchar(255) DEFAULT NULL,
@@ -484,6 +486,7 @@ CREATE TABLE IF NOT EXISTS `payment_transactions` (
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`id`),
   UNIQUE KEY `uq_payment_transactions_public_id` (`public_id`),
+  UNIQUE KEY `uq_payment_transactions_payment_id` (`payment_id`),
   UNIQUE KEY `uq_payment_transactions_idempotency` (`idempotency_key`),
   KEY `idx_payment_transactions_customer_email` (`customer_email`),
   KEY `idx_payment_transactions_registered_id` (`registered_id`),

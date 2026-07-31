@@ -9,6 +9,16 @@ class CheckoutTransactionsRepository
         $this->db = $db;
     }
 
+    public function findByPaymentId(string $paymentId): ?array
+    {
+        $result = $this->db->query(
+            "SELECT * FROM payment_transactions WHERE payment_id = ? LIMIT 1",
+            [$paymentId]
+        )->fetchAll();
+
+        return $result[0] ?? null;
+    }
+
     public function findByIdempotencyKey(string $idempotencyKey): ?array
     {
         $result = $this->db->query(
@@ -32,12 +42,18 @@ class CheckoutTransactionsRepository
     public function createPendingTransaction(array $data): array
     {
         $data['public_id'] = $data['public_id'] ?? $this->generatePublicId();
+        $data['payment_id'] = $data['payment_id'] ?? $this->generatePaymentId();
 
         try {
             return $this->insertPendingTransaction($data);
         } catch (Exception $e) {
             if ($this->db->lastErrno() !== 1062) {
                 throw $e;
+            }
+
+            $existingTransaction = $this->findByPaymentId($data['payment_id']);
+            if ($existingTransaction !== null) {
+                return $existingTransaction;
             }
 
             $existingTransaction = $this->findByIdempotencyKey($data['idempotency_key']);
@@ -68,11 +84,26 @@ class CheckoutTransactionsRepository
         }
     }
 
+    public function createPending(array $data): array
+    {
+        return $this->createPendingTransaction($data);
+    }
+
     public function findById(int $id): ?array
     {
         $result = $this->db->query(
             "SELECT * FROM payment_transactions WHERE id = ? LIMIT 1",
             [$id]
+        )->fetchAll();
+
+        return $result[0] ?? null;
+    }
+
+    public function lockByPaymentId(string $paymentId): ?array
+    {
+        $result = $this->db->query(
+            "SELECT * FROM payment_transactions WHERE payment_id = ? LIMIT 1 FOR UPDATE",
+            [$paymentId]
         )->fetchAll();
 
         return $result[0] ?? null;
@@ -86,6 +117,34 @@ class CheckoutTransactionsRepository
              WHERE id = ?
                AND status = ?",
             [CheckoutTransactionStatus::PROCESSING, $transactionId, CheckoutTransactionStatus::PENDING]
+        );
+
+        return $this->db->affectedRows() === 1;
+    }
+
+    public function claimProcessingByPaymentId(string $paymentId): bool
+    {
+        $this->db->query(
+            "UPDATE payment_transactions
+             SET status = ?
+             WHERE payment_id = ?
+               AND status = ?
+               AND provider_approved_at IS NULL",
+            [CheckoutTransactionStatus::PROCESSING, $paymentId, CheckoutTransactionStatus::PENDING]
+        );
+
+        return $this->db->affectedRows() === 1;
+    }
+
+    public function persistApprovalMarker(string $paymentId): bool
+    {
+        $this->db->query(
+            "UPDATE payment_transactions
+             SET provider_approved_at = CURRENT_TIMESTAMP
+             WHERE payment_id = ?
+               AND status = ?
+               AND provider_approved_at IS NULL",
+            [$paymentId, CheckoutTransactionStatus::PROCESSING]
         );
 
         return $this->db->affectedRows() === 1;
@@ -180,14 +239,15 @@ class CheckoutTransactionsRepository
     private function insertPendingTransaction(array $data): array
     {
         $sql = "INSERT INTO payment_transactions (
-                    public_id, correlation_id, idempotency_key, status, provider,
+                    public_id, payment_id, correlation_id, idempotency_key, status, provider,
                     payment_method, origin, customer_email, customer_name, customer_phone, ticket_id, ticket_code, ticket_name, coupon_id,
                     coupon_code, coupon_link_code, discount_type, discount_value, amount, discount_amount,
                     final_amount, currency, event_key, event_free_id, event_vip_id, raw_request
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         $this->db->query($sql, [
             $data['public_id'],
+            $data['payment_id'],
             $data['correlation_id'],
             $data['idempotency_key'],
             CheckoutTransactionStatus::PENDING,
@@ -228,5 +288,14 @@ class CheckoutTransactionsRepository
     private function generatePublicId(): string
     {
         return 'pay_' . bin2hex(random_bytes(16));
+    }
+
+    private function generatePaymentId(): string
+    {
+        $bytes = random_bytes(16);
+        $bytes[6] = chr((ord($bytes[6]) & 0x0f) | 0x40);
+        $bytes[8] = chr((ord($bytes[8]) & 0x3f) | 0x80);
+
+        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($bytes), 4));
     }
 }

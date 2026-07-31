@@ -14,14 +14,14 @@ class GetCheckoutController
             return;
         }
 
-        $publicId = trim((string) ($_GET['payment_id'] ?? ''));
-        if ($publicId === '') {
+        $paymentId = trim((string) ($_GET['payment_id'] ?? ''));
+        if ($paymentId === '') {
             self::json(400, ['success' => false, 'error' => 'payment_id_required']);
             return;
         }
 
         try {
-            $result = CheckoutModule::createGetCheckoutService()->execute($publicId);
+            $result = CheckoutModule::createGetCheckoutService()->execute($paymentId);
             self::json($result['httpStatus'], $result['payload']);
         } catch (Throwable $e) {
             $correlationId = 'corr_' . bin2hex(random_bytes(16));

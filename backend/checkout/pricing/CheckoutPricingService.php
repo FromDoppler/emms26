@@ -59,17 +59,18 @@ class CheckoutPricingService
         }
 
         $coupon = $couponResolution['coupon'];
-        $amount = (float) $ticket['price'];
-        $discountAmount = 0.0;
+        $amountCents = $this->decimalToCents((string) $ticket['price']);
+        $discountCents = 0;
         $discount = null;
 
         if ($coupon) {
             if ($coupon['discount_type'] === 'percentage') {
-                $discountAmount = round($amount * (((float) $coupon['discount_value']) / 100), 2);
+                $percentBasisPoints = $this->decimalToCents((string) $coupon['discount_value']);
+                $discountCents = intdiv(($amountCents * $percentBasisPoints) + 5000, 10000);
                 $discount = [
                     'couponCode' => $coupon['code'],
-                    'percent' => (float) $coupon['discount_value'],
-                    'amount' => $discountAmount,
+                    'percent' => $this->centsToDecimal($percentBasisPoints),
+                    'amount' => $this->centsToDecimal($discountCents),
                 ];
             } else {
                 return [
@@ -81,7 +82,7 @@ class CheckoutPricingService
             }
         }
 
-        $finalAmount = max(0.0, round($amount - $discountAmount, 2));
+        $finalCents = max(0, $amountCents - $discountCents);
 
         return [
             'success' => true,
@@ -89,11 +90,11 @@ class CheckoutPricingService
             'availableTickets' => $this->formatTickets($availableTickets),
             'coupon' => $coupon,
             'discount' => $discount,
-            'amount' => $amount,
-            'discountAmount' => $discountAmount,
-            'finalAmount' => $finalAmount,
+            'amount' => $this->centsToDecimal($amountCents),
+            'discountAmount' => $this->centsToDecimal($discountCents),
+            'finalAmount' => $this->centsToDecimal($finalCents),
             'currency' => $ticket['currency'],
-            'requiresPayment' => $finalAmount > 0,
+            'requiresPayment' => $finalCents > 0,
         ];
     }
 
@@ -115,8 +116,29 @@ class CheckoutPricingService
             'id' => (int) $ticket['id'],
             'code' => $ticket['ticket_code'],
             'name' => $ticket['name'],
-            'price' => (float) $ticket['price'],
+            'price' => $this->centsToDecimal($this->decimalToCents((string) $ticket['price'])),
             'currency' => $ticket['currency'],
         ];
+    }
+
+    private function decimalToCents(string $value): int
+    {
+        $normalized = trim($value);
+        if (!preg_match('/^-?\d+(?:\.\d{1,2})?$/D', $normalized)) {
+            throw new InvalidArgumentException('invalid_decimal_amount');
+        }
+        $negative = strpos($normalized, '-') === 0;
+        $normalized = ltrim($normalized, '-');
+        [$whole, $fraction] = array_pad(explode('.', $normalized, 2), 2, '');
+        $cents = ((int) $whole * 100) + (int) str_pad($fraction, 2, '0');
+        return $negative ? -$cents : $cents;
+    }
+
+    private function centsToDecimal(int $cents): string
+    {
+        $sign = $cents < 0 ? '-' : '';
+        $absolute = abs($cents);
+
+        return $sign . intdiv($absolute, 100) . '.' . str_pad((string) ($absolute % 100), 2, '0', STR_PAD_LEFT);
     }
 }

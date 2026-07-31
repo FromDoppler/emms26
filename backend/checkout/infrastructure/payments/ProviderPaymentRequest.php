@@ -2,9 +2,8 @@
 
 class ProviderPaymentRequest
 {
-    public $publicId;
+    public $paymentId;
     public $correlationId;
-    public $idempotencyKey;
     public $checkoutTransactionId;
     public $customerId;
     public $finalAmount;
@@ -18,9 +17,8 @@ class ProviderPaymentRequest
 
     public function __construct(array $data)
     {
-        $this->publicId = $data['publicId'] ?? null;
+        $this->paymentId = $data['paymentId'] ?? null;
         $this->correlationId = $data['correlationId'] ?? null;
-        $this->idempotencyKey = $data['idempotencyKey'] ?? null;
         $this->checkoutTransactionId = $data['checkoutTransactionId'] ?? null;
         $this->customerId = $data['customerId'] ?? null;
         $this->finalAmount = $data['finalAmount'] ?? null;

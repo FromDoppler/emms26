@@ -98,7 +98,7 @@ class PostCheckoutUserEventsFactory
             'encode_email' => bin2hex(json_encode(['userEmail' => $customer['email']], JSON_UNESCAPED_SLASHES)),
             'privacy' => $customer['privacy'],
             'promotions' => $customer['promotions'],
-            'ip' => GeoIp::getIp(),
+            'ip' => $customer['ip'] ?? '',
             'country_ip' => $customer['country'],
             'source_utm' => $customer['source_utm'],
             'medium_utm' => $customer['medium_utm'],
@@ -117,15 +117,15 @@ class PostCheckoutUserEventsFactory
                 : ($pricing['requiresPayment'] ? 'Tarjeta de Crédito' : 'Cupón 100%'),
             'final_price' => $variant === self::VARIANT_FREE
                 ? '0.00'
-                : number_format((float) $transaction['final_amount'], 2, '.', ''),
+                : $this->decimal($transaction['final_amount']),
         ];
 
         if ($variant === self::VARIANT_VIP) {
             $snapshot['ticketType'] = $this->resolveTicketType($eventContext);
             $snapshot['payment'] = [
-                'price' => number_format((float) $transaction['amount'], 2, '.', ''),
-                'discount' => number_format((float) $transaction['discount_amount'], 2, '.', ''),
-                'final_price' => number_format((float) $transaction['final_amount'], 2, '.', ''),
+                'price' => $this->decimal($transaction['amount']),
+                'discount' => $this->decimal($transaction['discount_amount']),
+                'final_price' => $this->decimal($transaction['final_amount']),
                 'customer_name' => $customer['firstname'],
                 'customer_email' => $customer['email'],
                 'customer_country' => $customer['country'],
@@ -187,5 +187,14 @@ class PostCheckoutUserEventsFactory
         }
 
         return (string) ID_SPREADSHEET_DT_VIP;
+    }
+
+    private function decimal($value): string
+    {
+        $decimal = trim((string) $value);
+        if (preg_match('/^\d+\.\d{2}$/D', $decimal) !== 1) {
+            throw new InvalidArgumentException('invalid_checkout_decimal');
+        }
+        return $decimal;
     }
 }

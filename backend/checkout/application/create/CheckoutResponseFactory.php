@@ -2,47 +2,57 @@
 
 class CheckoutResponseFactory
 {
-    public function buildCreatePaymentResponse(array $transaction, bool $isTechnicalError = false): array
+    public function fromTransaction(array $transaction, ?string $error = null): array
     {
+        $status = $transaction['status'];
         $payload = [
-            'success' => $transaction['status'] === CheckoutTransactionStatus::APPROVED,
-            'status' => $transaction['status'],
+            'success' => $status === CheckoutTransactionStatus::APPROVED,
+            'status' => $status,
             'payment' => [
-                'publicId' => $transaction['public_id'],
-                'status' => $transaction['status'],
-                'finalAmount' => (float) $transaction['final_amount'],
+                'paymentId' => $transaction['payment_id'],
+                'status' => $status,
+                'finalAmount' => (string) $transaction['final_amount'],
                 'currency' => $transaction['currency'],
+                'ticketName' => $transaction['ticket_name'],
+                'paymentMethod' => $transaction['payment_method'],
+                'createdAt' => $transaction['created_at'],
             ],
             'correlationId' => $transaction['correlation_id'],
         ];
 
-        if ($isTechnicalError || $transaction['status'] === CheckoutTransactionStatus::ERROR) {
-            $payload['error'] = 'payment_error';
+        $error = $error ?: $this->errorFor($transaction);
+        if ($error !== null) {
+            $payload['error'] = $error;
         }
-
         return $payload;
     }
 
-    public function buildInternalErrorPayload(string $correlationId): array
+    public function processing(array $transaction, ?string $error = null): array
     {
-        return [
-            'success' => false,
-            'error' => 'internal_error',
-            'correlationId' => $correlationId,
-        ];
+        return $this->fromTransaction($transaction, $error);
     }
 
-    public function buildProcessingRetryPayload(array $transaction): array
+    public function internal(string $correlationId): array
     {
-        return [
-            'success' => false,
-            'status' => $transaction['status'],
-            'payment' => [
-                'publicId' => $transaction['public_id'],
-                'status' => $transaction['status'],
-            ],
-            'correlationId' => $transaction['correlation_id'],
-            'retryable' => $transaction['status'] === CheckoutTransactionStatus::PROCESSING,
-        ];
+        return ['success' => false, 'error' => 'internal_error', 'correlationId' => $correlationId];
+    }
+
+    public function validation(string $correlationId, string $error = 'validation_error', ?array $transaction = null): array
+    {
+        if ($transaction !== null) {
+            return $this->fromTransaction($transaction, $error);
+        }
+        return ['success' => false, 'error' => $error, 'correlationId' => $correlationId];
+    }
+
+    private function errorFor(array $transaction): ?string
+    {
+        if ($transaction['status'] === CheckoutTransactionStatus::ERROR) {
+            return 'payment_error';
+        }
+        if ($transaction['status'] === CheckoutTransactionStatus::REJECTED) {
+            return $transaction['response_code'] ?: 'provider_rejected';
+        }
+        return null;
     }
 }

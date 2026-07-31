@@ -22,32 +22,23 @@ class CheckoutModule
         $pricingService = self::createPricingService($db);
         $providerClient = new DopplerPaymentsApiClient(new SuperUserJwtService());
         $eligibilityService = new CheckoutEligibilityService(new RegisteredProfileRepository($db));
-        $jobCreator = new UserEventJobCreator(new UserEventJobsRepository($db));
-        $handlerRegistry = new UserEventJobHandlerRegistry([
-            new EmailSendJobHandler(),
-            new SpreadsheetSaveJobHandler(),
-            new DopplerListAddJobHandler(),
-        ]);
-        $inlineRunner = new InlineUserEventJobRunner(new UserEventJobsRepository(self::newDb()), $handlerRegistry);
         $responseFactory = new CheckoutResponseFactory();
-        $idempotencyResolver = new CheckoutIdempotencyResolver($transactions, $responseFactory);
-        $transitionHandler = new CheckoutTransactionTransitionHandler($transactions, $responseFactory);
+        $completion = self::createCompletionService($db, $transactions);
         $paymentProcessor = new CheckoutPaymentProcessor(
-            $db,
-            $pricingService,
+            $transactions,
             $providerClient,
-            new PostCheckoutService(
-                $transactions,
-                new RegisteredProfileRepository($db),
-                new VipAccessService($db),
-                $jobCreator,
-                $inlineRunner,
-                new PostCheckoutUserEventsFactory()
-            ),
-            $transitionHandler,
+            $completion,
+            function (): array {
+                $freshDb = CheckoutModule::newDb();
+                $freshTransactions = new CheckoutTransactionsRepository($freshDb);
+                return [
+                    'transactions' => $freshTransactions,
+                    'completion' => CheckoutModule::createCompletionService($freshDb, $freshTransactions),
+                ];
+            },
             $responseFactory
         );
-        $failureHandler = new CheckoutFailureHandler($db, function (): DB {
+        $failureHandler = new CheckoutFailureHandler(function (): DB {
             return CheckoutModule::newDb();
         }, $responseFactory);
         $eventContextResolver = self::createEventContextResolver();
@@ -57,16 +48,17 @@ class CheckoutModule
             $transactions,
             $eligibilityService,
             $eventContextResolver,
-            $idempotencyResolver,
             $paymentProcessor,
-            $failureHandler
+            $failureHandler,
+            $responseFactory
         );
     }
 
     public static function createGetCheckoutService(): GetCheckoutUseCase
     {
         return new GetCheckoutUseCase(
-            new CheckoutTransactionsRepository(self::newDb())
+            new CheckoutTransactionsRepository(self::newDb()),
+            new CheckoutResponseFactory()
         );
     }
 
@@ -82,6 +74,28 @@ class CheckoutModule
         $tickets = new CheckoutTicketsRepository($db);
 
         return new CheckoutPricingService($tickets, $couponService);
+    }
+
+    public static function createCompletionService(DB $db, CheckoutTransactionsRepository $transactions): PostCheckoutService
+    {
+        return new PostCheckoutService(
+            $db,
+            $transactions,
+            new RegisteredProfileRepository($db),
+            new VipAccessService($db),
+            new UserEventJobCreator(new UserEventJobsRepository($db)),
+            function (): InlineUserEventJobRunner {
+                return new InlineUserEventJobRunner(
+                    new UserEventJobsRepository(CheckoutModule::newDb()),
+                    new UserEventJobHandlerRegistry([
+                        new EmailSendJobHandler(),
+                        new SpreadsheetSaveJobHandler(),
+                        new DopplerListAddJobHandler(),
+                    ])
+                );
+            },
+            new PostCheckoutUserEventsFactory()
+        );
     }
 
     private static function newDb(): DB

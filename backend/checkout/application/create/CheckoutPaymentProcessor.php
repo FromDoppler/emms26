@@ -2,203 +2,207 @@
 
 class CheckoutPaymentProcessor
 {
-    private $db;
-    private $pricingService;
+    private $transactions;
     private $providerClient;
     private $postCheckoutService;
-    private $transitionHandler;
-    private $responseFactory;
+    private $freshCompletionFactory;
+    private $responses;
 
     public function __construct(
-        DB $db,
-        CheckoutPricingService $pricingService,
+        CheckoutTransactionsRepository $transactions,
         PaymentProviderClient $providerClient,
         PostCheckoutService $postCheckoutService,
-        CheckoutTransactionTransitionHandler $transitionHandler,
-        CheckoutResponseFactory $responseFactory
+        callable $freshCompletionFactory,
+        CheckoutResponseFactory $responses
     ) {
-        $this->db = $db;
-        $this->pricingService = $pricingService;
+        $this->transactions = $transactions;
         $this->providerClient = $providerClient;
         $this->postCheckoutService = $postCheckoutService;
-        $this->transitionHandler = $transitionHandler;
-        $this->responseFactory = $responseFactory;
+        $this->freshCompletionFactory = $freshCompletionFactory;
+        $this->responses = $responses;
     }
 
-    public function process(array $context, array $transaction, CheckoutExecutionRuntime $runtime): array
+    public function process(array $context, array $transaction): array
     {
-        if ($context['pricing']['requiresPayment']) {
-            return $this->processCardPayment($context, $transaction, $runtime);
+        if ($transaction['payment_method'] === 'coupon') {
+            return $this->complete($this->postCheckoutService, $context, $transaction['payment_id']);
         }
 
-        return $this->processCouponPayment($context, $transaction, $runtime);
-    }
-
-    private function processCouponPayment(array $context, array $transaction, CheckoutExecutionRuntime $runtime): array
-    {
-        return $this->fulfillApprovedTransaction($context, $transaction, [
-            'provider' => 'coupon',
-            'provider_transaction_id' => null,
-            'authorization_number' => null,
-            'transaction_link_id' => null,
-            'authorization_response_code' => null,
-            'purchase_response_code' => null,
-            'response_code' => 'coupon_approved',
-            'response_message' => 'Approved by 100% coupon.',
-            'raw_response' => [],
-        ], $runtime);
-    }
-
-    private function processCardPayment(array $context, array $transaction, CheckoutExecutionRuntime $runtime): array
-    {
-        if (!empty($context['pricing']['coupon']) && empty($context['pricing']['couponAlreadyResolvedFromLedger'])) {
-            $couponError = $this->pricingService->validateResolvedCoupon(
-                $context['pricing']['coupon'],
-                $context['eventContext'],
-                (int) $context['pricing']['ticket']['id']
-            );
-
-            if ($couponError !== null) {
-                return $this->transitionHandler->handleRejectedTransactionTransition((int) $transaction['id'], $runtime->idempotencyKey(), [
-                    'provider' => 'doppler-payments-api',
-                    'provider_transaction_id' => null,
-                    'authorization_number' => null,
-                    'transaction_link_id' => null,
-                    'authorization_response_code' => null,
-                    'purchase_response_code' => null,
-                    'response_code' => $couponError,
-                    'response_message' => $this->couponErrorMessage($couponError),
-                    'raw_response' => [],
-                ], $couponError, 422, 'coupon_validation');
-            }
-        }
-
-        $paymentRequest = new ProviderPaymentRequest([
-            'publicId' => $transaction['public_id'],
+        $request = new ProviderPaymentRequest([
+            'paymentId' => $transaction['payment_id'],
             'correlationId' => $transaction['correlation_id'],
-            'idempotencyKey' => $transaction['idempotency_key'],
             'checkoutTransactionId' => (int) $transaction['id'],
-            // Doppler expects an integer CustomerId; we reuse the local transaction id
-            // as a technical reference, not as a business/customer identifier.
             'customerId' => (int) $transaction['id'],
-            'finalAmount' => $context['pricing']['finalAmount'],
-            'currency' => $context['pricing']['currency'],
-            'customerEmail' => $context['customer']['email'],
-            'customerName' => $context['customer']['firstname'],
+            'finalAmount' => $transaction['final_amount'],
+            'currency' => $transaction['currency'],
+            'customerEmail' => $transaction['customer_email'],
+            'customerName' => $transaction['customer_name'],
             'worldPayLowValueToken' => trim((string) ($context['input']['payment']['worldPayLowValueToken'] ?? '')),
             'ccExpMonth' => $context['input']['payment']['ccExpMonth'] ?? null,
             'ccExpYear' => $context['input']['payment']['ccExpYear'] ?? null,
-            'ccType' => $context['input']['payment']['ccType'] ?? 1,
+            'ccType' => $context['input']['payment']['ccType'] ?? null,
         ]);
 
-        // Pricing validation already checked that the resolved coupon is still active and in scope.
-        $result = $this->providerClient->purchase($paymentRequest);
-
-        if ($result->status === ProviderPaymentResult::APPROVED) {
-            $runtime->markProviderApproved($result);
-            return $this->fulfillApprovedTransaction($context, $transaction, [
-                'provider' => $result->provider,
-                'provider_transaction_id' => $result->providerTransactionId,
-                'authorization_number' => $result->authorizationNumber,
-                'transaction_link_id' => $result->transactionLinkId,
-                'authorization_response_code' => $result->authorizationResponseCode,
-                'purchase_response_code' => $result->purchaseResponseCode,
-                'response_code' => $result->responseCode,
-                'response_message' => $result->responseMessage,
-                'raw_response' => CheckoutPayloadSanitizer::sanitize($result->rawResponse),
-            ], $runtime);
+        $result = $this->providerClient->purchase($request);
+        if ($result->status === ProviderPaymentResult::UNKNOWN) {
+            return $this->processing($transaction);
+        }
+        if ($result->status === ProviderPaymentResult::ERROR) {
+            $this->transactions->markErrorBeforeProvider($transaction['payment_id'], 'payment_error');
+            return $this->reloadResponse($this->transactions, $transaction['payment_id'], 200);
         }
 
+        $evidence = $this->evidence($result);
         if ($result->status === ProviderPaymentResult::REJECTED) {
-            return $this->transitionHandler->handleRejectedTransactionTransition((int) $transaction['id'], $runtime->idempotencyKey(), [
-                'provider' => $result->provider,
-                'provider_transaction_id' => $result->providerTransactionId,
-                'authorization_number' => $result->authorizationNumber,
-                'transaction_link_id' => $result->transactionLinkId,
-                'authorization_response_code' => $result->authorizationResponseCode,
-                'purchase_response_code' => $result->purchaseResponseCode,
-                'response_code' => $result->responseCode,
-                'response_message' => $result->responseMessage,
-                'raw_response' => CheckoutPayloadSanitizer::sanitize($result->rawResponse),
-            ], 'provider_rejected', 200, 'provider_rejected');
+            $this->transactions->markProviderRejected(
+                $transaction['payment_id'],
+                $evidence,
+                $this->rejectionResponseCode($result)
+            );
+            return $this->reloadResponse($this->transactions, $transaction['payment_id'], 200);
+        }
+        if ($result->status !== ProviderPaymentResult::APPROVED) {
+            return $this->processing($transaction);
         }
 
-        return $this->transitionHandler->handleErrorTransactionTransition((int) $transaction['id'], $runtime->idempotencyKey(), [
+        return $this->persistMarkerAndComplete($context, $transaction, $evidence);
+    }
+
+    public function completeExisting(array $context, array $transaction): array
+    {
+        return $this->complete($this->postCheckoutService, $context, $transaction['payment_id']);
+    }
+
+    private function persistMarkerAndComplete(array $context, array $transaction, array $evidence): array
+    {
+        try {
+            $this->transactions->persistApprovalMarker($transaction['payment_id'], $evidence);
+            $reloaded = $this->transactions->findByPaymentId($transaction['payment_id']);
+        } catch (Throwable $e) {
+            return $this->recoverMarkerOnce($context, $transaction['payment_id'], $evidence);
+        }
+
+        $classified = $this->classifyMarkerState(
+            $this->postCheckoutService,
+            $context,
+            $reloaded,
+            $transaction['payment_id']
+        );
+        return $classified ?: $this->processing($reloaded ?: $transaction);
+    }
+
+    private function recoverMarkerOnce(array $context, string $paymentId, array $evidence): array
+    {
+        $factory = $this->freshCompletionFactory;
+        $fresh = $factory();
+        $transaction = $fresh['transactions']->findByPaymentId($paymentId);
+        $classified = $this->classifyMarkerState($fresh['completion'], $context, $transaction, $paymentId);
+        if ($classified !== null) {
+            return $classified;
+        }
+
+        try {
+            $fresh['transactions']->persistApprovalMarker($paymentId, $evidence);
+        } catch (Throwable $e) {
+            $factory = $this->freshCompletionFactory;
+            $last = $factory();
+            $transaction = $last['transactions']->findByPaymentId($paymentId);
+            $classified = $this->classifyMarkerState($last['completion'], $context, $transaction, $paymentId);
+            return $classified ?: $this->processing($transaction);
+        }
+
+        $transaction = $fresh['transactions']->findByPaymentId($paymentId);
+        $classified = $this->classifyMarkerState($fresh['completion'], $context, $transaction, $paymentId);
+        return $classified ?: $this->processing($transaction);
+    }
+
+    private function complete(PostCheckoutService $service, array $context, string $paymentId): array
+    {
+        $transaction = $service->completeApprovedPayment($context, $paymentId);
+        if (!CheckoutTransactionStatus::isConsistent($transaction)
+            || $transaction['status'] !== CheckoutTransactionStatus::APPROVED) {
+            return ['httpStatus' => 500, 'payload' => $this->responses->internal(
+                $transaction['correlation_id'] ?? 'corr_unknown'
+            )];
+        }
+        return ['httpStatus' => 200, 'payload' => $this->responses->fromTransaction($transaction)];
+    }
+
+    private function reloadResponse(CheckoutTransactionsRepository $repository, string $paymentId, int $httpStatus): array
+    {
+        $transaction = $repository->findByPaymentId($paymentId);
+        if ($transaction === null || !CheckoutTransactionStatus::isConsistent($transaction)) {
+            return ['httpStatus' => 500, 'payload' => $this->responses->internal(
+                $transaction['correlation_id'] ?? 'corr_unknown'
+            )];
+        }
+        if ($transaction['status'] === CheckoutTransactionStatus::PROCESSING) {
+            $httpStatus = 202;
+        }
+        return ['httpStatus' => $httpStatus, 'payload' => $this->responses->fromTransaction($transaction)];
+    }
+
+    private function processing(?array $transaction, ?string $error = null): array
+    {
+        if ($transaction === null || $transaction['status'] !== CheckoutTransactionStatus::PROCESSING) {
+            return ['httpStatus' => 500, 'payload' => $this->responses->internal(
+                $transaction['correlation_id'] ?? 'corr_unknown'
+            )];
+        }
+        return ['httpStatus' => 202, 'payload' => $this->responses->processing($transaction, $error)];
+    }
+
+    private function evidence(ProviderPaymentResult $result): array
+    {
+        return [
             'provider' => $result->provider,
-            'provider_transaction_id' => $result->providerTransactionId,
             'authorization_number' => $result->authorizationNumber,
             'transaction_link_id' => $result->transactionLinkId,
             'authorization_response_code' => $result->authorizationResponseCode,
             'purchase_response_code' => $result->purchaseResponseCode,
-            'response_code' => $result->responseCode,
-            'response_message' => $result->responseMessage,
-            'raw_response' => CheckoutPayloadSanitizer::sanitize($result->rawResponse),
-        ], 'provider_error');
+        ];
     }
 
-    private function fulfillApprovedTransaction(
+    private function rejectionResponseCode(ProviderPaymentResult $result): string
+    {
+        $code = $result->purchaseResponseCode
+            ?: ($result->authorizationResponseCode ?: $result->responseCode);
+
+        return CheckoutProviderRejectionCatalog::categoryFor($code) ?? 'provider_rejected';
+    }
+
+    private function classifyMarkerState(
+        PostCheckoutService $completion,
         array $context,
-        array $transaction,
-        array $approvalData,
-        CheckoutExecutionRuntime $runtime
-    ): array {
-        $this->db->beginTransaction();
-        $runtime->markDbTransactionOpen();
-
-        $fulfilledTransaction = $this->postCheckoutService->fulfillApprovedCheckout(
-            $context,
-            $transaction,
-            $approvalData,
-            $runtime
-        );
-
-        $this->db->commit();
-        $runtime->markDbTransactionClosed();
-        $runtime->markLocalCommitCompleted();
-
-        $this->deferAfterApprovedCheckoutCommitted($fulfilledTransaction);
-
-        return [
-            'httpStatus' => 200,
-            'payload' => $this->buildCreatePaymentResponse($fulfilledTransaction),
-        ];
+        ?array $transaction,
+        string $paymentId
+    ): ?array {
+        if ($transaction === null || !CheckoutTransactionStatus::isConsistent($transaction)) {
+            return ['httpStatus' => 500, 'payload' => $this->responses->internal(
+                $transaction['correlation_id'] ?? 'corr_unknown'
+            )];
+        }
+        if (CheckoutTransactionStatus::isTerminal($transaction['status'])) {
+            return ['httpStatus' => 200, 'payload' => $this->responses->fromTransaction($transaction)];
+        }
+        if ($this->hasValidApprovalMarker($transaction)) {
+            Logger::event('payment_provider_approval_persisted', [
+                'payment_id' => $paymentId,
+                'correlation_id' => $transaction['correlation_id'],
+            ], 'PAYMENTS', Logger::INFO);
+            return $this->complete($completion, $context, $paymentId);
+        }
+        if ($transaction['status'] === CheckoutTransactionStatus::PROCESSING
+            && empty($transaction['provider_approved_at'])
+            && CheckoutTransactionStatus::hasNoProviderEvidence($transaction)) {
+            return null;
+        }
+        return ['httpStatus' => 500, 'payload' => $this->responses->internal($transaction['correlation_id'])];
     }
 
-    private function couponErrorMessage(string $couponError): string
+    private function hasValidApprovalMarker(array $transaction): bool
     {
-        $messages = [
-            'coupon_invalid' => 'Coupon is invalid.',
-            'coupon_inactive' => 'Coupon is inactive.',
-            'coupon_expired' => 'Coupon expired.',
-            'coupon_out_of_scope' => 'Coupon is out of scope.',
-            'coupon_discount_type_unsupported' => 'Coupon discount type is unsupported.',
-        ];
-
-        return $messages[$couponError] ?? 'Coupon is no longer eligible.';
-    }
-
-    private function buildCreatePaymentResponse(array $transaction, bool $isTechnicalError = false): array
-    {
-        return $this->responseFactory->buildCreatePaymentResponse($transaction, $isTechnicalError);
-    }
-
-    private function deferAfterApprovedCheckoutCommitted(array $fulfilledTransaction): void
-    {
-        // Post-checkout inline effects are best effort and must not delay the
-        // approved payment response. The durable work already happened before:
-        // local commit, VIP access and job persistence.
-        $postCheckoutService = $this->postCheckoutService;
-
-        register_shutdown_function(static function () use ($postCheckoutService, $fulfilledTransaction): void {
-            try {
-                $postCheckoutService->afterApprovedCheckoutCommitted($fulfilledTransaction);
-            } catch (Throwable $e) {
-                Logger::event('post_checkout_after_commit_deferred_failed', [
-                    'checkout_transaction_id' => $fulfilledTransaction['id'] ?? null,
-                    'checkout_public_id' => $fulfilledTransaction['public_id'] ?? null,
-                    'error' => $e->getMessage(),
-                ], 'PAYMENTS', Logger::ERROR);
-            }
-        });
+        return $transaction['status'] === CheckoutTransactionStatus::PROCESSING
+            && !empty($transaction['provider_approved_at']);
     }
 }

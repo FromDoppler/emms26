@@ -143,11 +143,10 @@ final class CheckoutRequestNormalizer
             return null;
         }
 
-        $email = self::normalizeUtf8Text($customer['email']);
-        $emailLength = self::utf8Length($email);
-        if ($email === self::INVALID_VALUE
-            || $emailLength === null
-            || $emailLength > self::CUSTOMER_TEXT_MAX_LENGTHS['email']
+        $email = self::normalizeCustomerEmail($customer['email']);
+        if ($email === null
+            || $email === ''
+            || $email === self::INVALID_VALUE
             || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return null;
         }
@@ -318,6 +317,31 @@ final class CheckoutRequestNormalizer
         }
 
         return $matches[0];
+    }
+
+    private static function normalizeCustomerEmail($email)
+    {
+        if ($email === null) {
+            return null;
+        }
+
+        $normalized = self::normalizeUtf8Text($email);
+        if ($normalized === self::INVALID_VALUE) {
+            return self::INVALID_VALUE;
+        }
+
+        $normalized = strtolower($normalized);
+
+        if ($normalized === '') {
+            return '';
+        }
+
+        $length = self::utf8Length($normalized);
+        if ($length === null || $length > self::CUSTOMER_TEXT_MAX_LENGTHS['email']) {
+            return self::INVALID_VALUE;
+        }
+
+        return $normalized;
     }
 
     private const INVALID_VALUE = '__checkout_invalid__';

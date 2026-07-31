@@ -18,6 +18,17 @@ final class CheckoutRequestNormalizer
         'emms_ref',
     ];
 
+    private const CUSTOMER_TEXT_MAX_LENGTHS = [
+        'email' => 250,
+        'name' => 150,
+        'lastname' => 150,
+        'phone' => 300,
+        'company' => 300,
+        'jobPosition' => 150,
+        'website' => 150,
+        'emailPlatform' => 150,
+    ];
+
     private const PAYMENT_DIGIT_FIELDS = [
         'ccExpMonth',
         'ccExpYear',
@@ -93,11 +104,16 @@ final class CheckoutRequestNormalizer
             return null;
         }
 
+        $customerEmail = array_key_exists('customerEmail', $input)
+            ? self::normalizeCustomerEmail($input['customerEmail'])
+            : null;
+        if ($customerEmail === self::INVALID_VALUE) {
+            return null;
+        }
+
         return [
             'couponCode' => $couponCode,
-            'customerEmail' => isset($input['customerEmail'])
-                ? strtolower(trim((string) $input['customerEmail']))
-                : null,
+            'customerEmail' => $customerEmail,
             'origin' => array_key_exists('origin', $input)
                 ? self::normalizeOriginValue($input['origin'])
                 : 'checkout',
@@ -123,7 +139,8 @@ final class CheckoutRequestNormalizer
         }
 
         $email = strtolower(trim($customer['email']));
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if (strlen($email) > self::CUSTOMER_TEXT_MAX_LENGTHS['email']
+            || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return null;
         }
 
@@ -153,7 +170,12 @@ final class CheckoutRequestNormalizer
             if (!is_string($customer[$field])) {
                 return null;
             }
-            $normalized[$field === 'name' ? 'firstname' : $field] = trim($customer[$field]);
+            $value = trim($customer[$field]);
+            if (isset(self::CUSTOMER_TEXT_MAX_LENGTHS[$field])
+                && strlen($value) > self::CUSTOMER_TEXT_MAX_LENGTHS[$field]) {
+                return null;
+            }
+            $normalized[$field === 'name' ? 'firstname' : $field] = $value;
         }
 
         foreach (['acceptPolicies', 'acceptPromotions'] as $field) {
@@ -245,6 +267,20 @@ final class CheckoutRequestNormalizer
             return 'checkout';
         }
         return substr($value, 0, 50);
+    }
+
+    private static function normalizeCustomerEmail($email)
+    {
+        if ($email === null) {
+            return null;
+        }
+
+        $normalized = strtolower(trim((string) $email));
+        if ($normalized === '' || strlen($normalized) > self::CUSTOMER_TEXT_MAX_LENGTHS['email']) {
+            return self::INVALID_VALUE;
+        }
+
+        return $normalized;
     }
 
     private const INVALID_VALUE = '__checkout_invalid__';

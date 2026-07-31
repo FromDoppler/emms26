@@ -214,8 +214,15 @@ La request pública valida explícitamente:
 
 - `paymentId` como UUID v4 string;
 - `customer` como objeto;
-- `customer.email` como string email válido;
-- `customer.name`, `customer.lastname`, `customer.phone`, `customer.company`, `customer.jobPosition`, `customer.website`, `customer.emailPlatform`, `customer.utm_*` y `customer.emms_ref` como string o `null`;
+- `customer.email` como string email válido y de hasta 250 caracteres;
+- `customer.name` de hasta 150 caracteres;
+- `customer.lastname` de hasta 150 caracteres;
+- `customer.phone` de hasta 300 caracteres;
+- `customer.company` de hasta 300 caracteres;
+- `customer.jobPosition` de hasta 150 caracteres;
+- `customer.website` de hasta 150 caracteres;
+- `customer.emailPlatform` de hasta 150 caracteres;
+- `customer.utm_*` y `customer.emms_ref` como string o `null`;
 - `customer.acceptPolicies` y `customer.acceptPromotions` como booleanos JSON reales cuando están presentes;
 - `couponCode` como string o `null`;
 - `checkout`, si existe, como objeto;
@@ -230,7 +237,7 @@ Cuando `payment` está presente:
 - `worldPayLowValueToken` como string;
 - `ccExpMonth` como integer o digit-string;
 - `ccExpYear` como integer o digit-string;
-- `ccType` como integer o digit-string;
+- `ccType` como integer o digit-string; valores admitidos: `1` Visa, `2` Mastercard, `3` Amex;
 - cualquier tipo incorrecto produce `422 validation_error` antes de lookup, pricing o INSERT.
 
 Si una `paymentId` existente se reutiliza con otra intención, el backend responde:
@@ -996,8 +1003,9 @@ No crea un intento financiero.
 La request de `calculate-payment` valida y normaliza:
 
 - `couponCode` como string o `null`;
-- `customerEmail` como string o `null`;
+- `customerEmail` como string o `null` y de hasta 250 caracteres;
 - `origin` como string o scalar compatible como hasta ahora; si no viene o viene vacío, se normaliza a `checkout`; si viene `null`, se rechaza con `422 validation_error`.
+- `ccType` sólo admite `1`, `2` o `3`.
 
 Valores con tipos inválidos producen `422 validation_error` antes de lookup o pricing.
 
@@ -1268,6 +1276,7 @@ Antes de habilitar Checkout Payments V1 debe verificarse, como mínimo:
 - cualquier falla durante Purchase después de Authorization `000` termina en `UNKNOWN`;
 - Purchase `000` sin número de autorización no se considera aprobada;
 - no existen retries automáticos de cURL.
+- `ccType` fuera de `1`, `2` o `3` falla antes del intento financiero.
 
 ### Marker y completion
 

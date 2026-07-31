@@ -305,7 +305,11 @@ class CreateCheckoutUseCase
         $year = $payment['ccExpYear'];
         $type = $payment['ccType'];
 
-        if ((int) $month < 1 || (int) $month > 12 || (int) $type <= 0) {
+        if (!in_array((int) $type, [1, 2, 3], true)) {
+            return false;
+        }
+
+        if ((int) $month < 1 || (int) $month > 12) {
             return false;
         }
 

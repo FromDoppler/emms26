@@ -89,7 +89,9 @@ class DopplerPaymentsApiClient implements PaymentProviderClient
             );
         }
 
-        if ($this->isProviderErrorResponse($authorizationResponse)) {
+        $authorizationStatus = (int) ($authorizationResponse['status'] ?? 0);
+
+        if ($authorizationStatus !== 200) {
             return $this->buildResultFromProviderErrorResponse(
                 $request,
                 $startedAt,
@@ -218,7 +220,9 @@ class DopplerPaymentsApiClient implements PaymentProviderClient
             );
         }
 
-        if ($this->isProviderErrorResponse($purchaseResponse)) {
+        $purchaseStatus = (int) ($purchaseResponse['status'] ?? 0);
+
+        if ($purchaseStatus !== 200 && $purchaseStatus !== 400) {
             return $this->buildResultFromProviderErrorResponse(
                 $request,
                 $startedAt,
@@ -273,7 +277,10 @@ class DopplerPaymentsApiClient implements PaymentProviderClient
             : (CheckoutProviderRejectionCatalog::isBusinessRejection($purchaseCode)
                 ? ProviderPaymentResult::REJECTED
                 : ProviderPaymentResult::UNKNOWN);
-        $authorizationNumber = $purchaseData['authorizationNumber'] ?? null;
+        $authorizationNumber = null;
+        if ($status === ProviderPaymentResult::APPROVED) {
+            $authorizationNumber = $purchaseData['authorizationNumber'] ?? null;
+        }
         if ($status === ProviderPaymentResult::APPROVED
             && (!is_string($authorizationNumber) || trim($authorizationNumber) === '')) {
             return $this->finish($request, $startedAt, new ProviderPaymentResult([
@@ -337,12 +344,6 @@ class DopplerPaymentsApiClient implements PaymentProviderClient
 
         $code = trim((string) $value);
         return $code === '' ? null : $code;
-    }
-
-    private function isProviderErrorResponse(array $response): bool
-    {
-        $statusCode = (int) ($response['status'] ?? 0);
-        return $statusCode < 200 || $statusCode >= 300;
     }
 
     private function buildResultFromProviderErrorResponse(

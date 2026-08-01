@@ -14,7 +14,6 @@ class DB
     {
         $this->connection = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
         if ($this->connection->connect_error) {
-            echo "dbhost $dbhost";
             $this->error('Failed to connect to MySQL - ' . $this->connection->connect_error);
         }
         $this->connection->set_charset($charset);
@@ -27,40 +26,65 @@ class DB
 
         if (!$this->query_closed) {
             $this->query->close();
+            $this->query_closed = TRUE;
         }
-        if ($this->query = $this->connection->prepare($query)) {
-            if (func_num_args() > 1) {
-                $x = func_get_args();
-                $args = array_slice($x, 1);
-                $types = '';
-                $args_ref = array();
-                foreach ($args as $k => &$arg) {
-                    if (is_array($args[$k])) {
-                        foreach ($args[$k] as $j => &$a) {
-                            $types .= $this->_gettype($args[$k][$j]);
-                            $args_ref[] = &$a;
+        $this->query = null;
+
+        try {
+            if ($this->query = $this->connection->prepare($query)) {
+                $this->query_closed = FALSE;
+
+                if (func_num_args() > 1) {
+                    $x = func_get_args();
+                    $args = array_slice($x, 1);
+                    $types = '';
+                    $args_ref = array();
+                    foreach ($args as $k => &$arg) {
+                        if (is_array($args[$k])) {
+                            foreach ($args[$k] as $j => &$a) {
+                                $types .= $this->_gettype($args[$k][$j]);
+                                $args_ref[] = &$a;
+                            }
+                        } else {
+                            $types .= $this->_gettype($args[$k]);
+                            $args_ref[] = &$arg;
                         }
-                    } else {
-                        $types .= $this->_gettype($args[$k]);
-                        $args_ref[] = &$arg;
                     }
+                    array_unshift($args_ref, $types);
+                    call_user_func_array(array($this->query, 'bind_param'), $args_ref);
                 }
-                array_unshift($args_ref, $types);
-                call_user_func_array(array($this->query, 'bind_param'), $args_ref);
+
+                $executed = $this->query->execute();
+                if (!$executed || $this->query->errno) {
+                    $this->lastErrno = (int) $this->query->errno;
+                    $this->lastError = (string) $this->query->error;
+                    $this->error('Unable to process MySQL query (check your params) - ' . $this->query->error);
+                }
+
+                $this->query_count++;
+            } else {
+                $this->lastErrno = (int) $this->connection->errno;
+                $this->lastError = (string) $this->connection->error;
+                $this->error('Unable to prepare MySQL statement (check your syntax) - ' . $this->connection->error);
             }
-            $this->query->execute();
-            if ($this->query->errno) {
-                $this->lastErrno = (int) $this->query->errno;
-                $this->lastError = (string) $this->query->error;
-                $this->error('Unable to process MySQL query (check your params) - ' . $this->query->error);
+        } catch (mysqli_sql_exception $error) {
+            $this->lastErrno = (int) $error->getCode();
+            $this->lastError = trim((string) $error->getMessage());
+
+            if ($this->lastErrno === 0) {
+                $this->lastErrno = $this->query instanceof mysqli_stmt
+                    ? (int) $this->query->errno
+                    : (int) $this->connection->errno;
             }
-            $this->query_closed = FALSE;
-            $this->query_count++;
-        } else {
-            $this->lastErrno = (int) $this->connection->errno;
-            $this->lastError = (string) $this->connection->error;
-            $this->error('Unable to prepare MySQL statement (check your syntax) - ' . $this->connection->error);
+            if ($this->lastError === '') {
+                $this->lastError = $this->query instanceof mysqli_stmt
+                    ? (string) $this->query->error
+                    : (string) $this->connection->error;
+            }
+
+            throw $error;
         }
+
         return $this;
     }
 

@@ -66,12 +66,31 @@ class EmailService
         }
     }
 
-     public static function resolveDynamicSubject(string $userType, string $eventType = DIGITALTRENDS): string
+    public static function resolveSubjectForPhase(string $userType, string $eventType, string $phase): string
+    {
+        $subjects = self::subjects();
+
+        if (!isset($subjects[$userType][$eventType][$phase])) {
+            throw new InvalidArgumentException('invalid_email_subject_context');
+        }
+
+        return $subjects[$userType][$eventType][$phase];
+    }
+
+    public static function resolveDynamicSubject(string $userType, string $eventType = DIGITALTRENDS): string
     {
         $phaseData = processPhaseToShow($eventType);
-        $phaseToShow = $phaseData['phaseToShow'] ?? 'pre';
+        $phaseToShow = $phaseData['phaseToShow'] ?? null;
+        if (!is_string($phaseToShow) || $phaseToShow === '') {
+            $phaseToShow = 'pre';
+        }
 
-        $subjects = [
+        return self::resolveSubjectForPhase($userType, $eventType, $phaseToShow);
+    }
+
+    private static function subjects(): array
+    {
+        return [
             'free' => [
                 ECOMMERCE => [
                     'pre' => SUBJECT_FREE_PRE_ECOMMERCE,
@@ -97,10 +116,6 @@ class EmailService
                 ]
             ]
         ];
-
-        $selected = $subjects[$userType][$eventType][$phaseToShow];
-
-        return $selected;
     }
 
 }

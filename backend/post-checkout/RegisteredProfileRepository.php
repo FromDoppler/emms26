@@ -17,6 +17,16 @@ class RegisteredProfileRepository
 
     public function findByEmailForEvent(string $email, string $freeColumn, string $vipColumn): ?array
     {
+        return $this->findByEmail($email, $freeColumn, $vipColumn, false);
+    }
+
+    public function findByEmailForEventForUpdate(string $email, string $freeColumn, string $vipColumn): ?array
+    {
+        return $this->findByEmail($email, $freeColumn, $vipColumn, true);
+    }
+
+    private function findByEmail(string $email, string $freeColumn, string $vipColumn, bool $forUpdate): ?array
+    {
         $this->assertAllowedColumn($freeColumn);
         $this->assertAllowedColumn($vipColumn);
 
@@ -28,7 +38,7 @@ class RegisteredProfileRepository
                 FROM registered
                 WHERE email = ?
                 ORDER BY id ASC
-                LIMIT 1";
+                LIMIT 1" . ($forUpdate ? " FOR UPDATE" : "");
 
         $result = $this->db->query($sql, [strtolower(trim($email))])->fetchAll();
         return $result[0] ?? null;

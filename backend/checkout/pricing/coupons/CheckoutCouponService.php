@@ -11,9 +11,9 @@ class CheckoutCouponService
 
     public function resolve(?string $couponCode, ?int $ticketId, array $event): array
     {
-        $couponCode = trim((string) ($couponCode ?? ''));
+        $couponCode = CheckoutCouponCode::normalize($couponCode);
 
-        if ($couponCode === '') {
+        if ($couponCode === null) {
             return ['coupon' => null];
         }
 
@@ -23,6 +23,7 @@ class CheckoutCouponService
             return ['error' => 'coupon_invalid'];
         }
         $coupon = $couponByCode;
+        $coupon['code'] = $couponCode;
 
         $validationError = $this->validateCoupon($coupon, $ticketId, $event);
         if ($validationError !== null) {

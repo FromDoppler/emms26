@@ -18,7 +18,13 @@ class CalculateCheckoutUseCase
 
     public function execute(array $input): array
     {
-        $input = $this->normalizeInput($input);
+        $input = CheckoutRequestNormalizer::normalizeCalculate($input);
+        if ($input === null) {
+            return [
+                'httpStatus' => 422,
+                'payload' => ['success' => false, 'error' => 'validation_error'],
+            ];
+        }
         $eventContext = $this->eventContextResolver->resolve();
         $result = $this->pricingService->calculate($eventContext, $input);
         $customerProfile = $this->resolveCustomerProfile($eventContext, $input);
@@ -41,18 +47,15 @@ class CalculateCheckoutUseCase
                     'registered_id' => $customerProfile['registeredId'],
                 ], 'PAYMENTS', Logger::INFO);
             }
-        } elseif (!empty($input['customerEmail'])) {
+        } elseif (($input['customerEmail'] ?? '') !== '') {
             Logger::event('checkout_profile_not_found', [
                 'event_key' => $eventContext['eventKey'],
                 'origin' => $input['origin'] ?? null,
             ], 'PAYMENTS', Logger::INFO);
         }
 
-        $isTicketDiscovery = ($result['error'] ?? null) === 'ticket_required'
-            && !empty($result['availableTickets']);
-
         return [
-            'httpStatus' => ($result['success'] || $isTicketDiscovery) ? 200 : 422,
+            'httpStatus' => $result['success'] ? 200 : 422,
             'payload' => $publicResult,
         ];
     }
@@ -77,7 +80,7 @@ class CalculateCheckoutUseCase
 
     private function resolveCustomerProfile(array $eventContext, array $input): array
     {
-        $email = strtolower(trim((string) ($input['customerEmail'] ?? '')));
+        $email = $input['customerEmail'] ?? '';
 
         if ($email === '') {
             return [
@@ -129,13 +132,4 @@ class CalculateCheckoutUseCase
         ];
     }
 
-    private function normalizeInput(array $input): array
-    {
-        return [
-            'ticketCode'    => isset($input['ticketCode'])    && is_scalar($input['ticketCode'])    ? (string) $input['ticketCode']    : null,
-            'couponCode'    => isset($input['couponCode'])    && is_scalar($input['couponCode'])    ? (string) $input['couponCode']    : null,
-            'customerEmail' => isset($input['customerEmail']) && is_scalar($input['customerEmail']) ? (string) $input['customerEmail'] : null,
-            'origin'        => isset($input['origin'])        && is_scalar($input['origin'])        ? (string) $input['origin']        : null,
-        ];
-    }
 }

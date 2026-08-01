@@ -147,7 +147,17 @@ class Logger
 
     public static function event($event, array $context = [], $service = 'APP', $level = self::INFO)
     {
-        self::writeJson($level, $event, $context, $service, $event);
+        set_error_handler(static function ($severity, $message, $file, $line): void {
+            throw new ErrorException($message, 0, $severity, $file, $line);
+        });
+        try {
+            self::writeJson($level, $event, $context, $service, $event);
+            return true;
+        } catch (Throwable $e) {
+            return false;
+        } finally {
+            restore_error_handler();
+        }
     }
 
     public static function newRequest()

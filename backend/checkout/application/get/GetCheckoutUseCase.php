@@ -3,55 +3,37 @@
 class GetCheckoutUseCase
 {
     private $transactions;
+    private $responses;
 
-    public function __construct(CheckoutTransactionsRepository $transactions)
+    public function __construct(CheckoutTransactionsRepository $transactions, CheckoutResponseFactory $responses)
     {
         $this->transactions = $transactions;
+        $this->responses = $responses;
     }
 
-    public function execute(string $publicId): array
+    public function execute(string $paymentId): array
     {
-        $transaction = $this->transactions->findByPublicId($publicId);
-        if (!$transaction) {
+        $paymentId = strtolower(trim($paymentId));
+        if (!self::isUuid($paymentId)) {
+            return ['httpStatus' => 422, 'payload' => ['success' => false, 'error' => 'validation_error']];
+        }
+
+        $transaction = $this->transactions->findByPaymentId($paymentId);
+        if ($transaction === null) {
+            return ['httpStatus' => 404, 'payload' => ['success' => false, 'error' => 'payment_not_found']];
+        }
+        if (!CheckoutTransactionStatus::isConsistent($transaction)) {
             return [
-                'httpStatus' => 404,
-                'payload' => [
-                    'success' => false,
-                    'error' => 'payment_not_found',
-                ],
+                'httpStatus' => 500,
+                'payload' => $this->responses->internal($transaction['correlation_id']),
             ];
         }
 
-        $payment = [
-            'publicId' => $transaction['public_id'],
-            'status' => $transaction['status'],
-            'ticketName' => $transaction['ticket_name'],
-            'customerName' => $transaction['customer_name'],
-            'finalAmount' => (float) $transaction['final_amount'],
-            'amount' => (float) $transaction['amount'],
-            'discountAmount' => (float) $transaction['discount_amount'],
-            'currency' => $transaction['currency'],
-            'paymentMethod' => $transaction['payment_method'],
-            'createdAt' => $transaction['created_at'],
-        ];
+        return ['httpStatus' => 200, 'payload' => $this->responses->fromTransaction($transaction)];
+    }
 
-        if ($transaction['status'] === CheckoutTransactionStatus::APPROVED) {
-            $payment['customerEmail'] = $transaction['customer_email'];
-        }
-
-        $payload = [
-            'success' => $transaction['status'] === CheckoutTransactionStatus::APPROVED,
-            'payment' => $payment,
-            'correlationId' => $transaction['correlation_id'],
-        ];
-
-        if ($transaction['status'] === CheckoutTransactionStatus::ERROR) {
-            $payload['error'] = 'payment_error';
-        }
-
-        return [
-            'httpStatus' => 200,
-            'payload' => $payload,
-        ];
+    private static function isUuid(string $value): bool
+    {
+        return preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/D', strtolower($value)) === 1;
     }
 }

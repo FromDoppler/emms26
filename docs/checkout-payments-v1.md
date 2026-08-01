@@ -515,6 +515,7 @@ processing sin marker
 ```text
 rejected
 → sin marker
+→ authorization_number vacío
 → rechazo contractual consistente
    o response_code = already_vip sin evidencia del proveedor
 ```
@@ -522,6 +523,7 @@ rejected
 ```text
 error
 → sin marker
+→ authorization_number vacío
 → sin evidencia del proveedor
 → response_code = payment_error
 ```
@@ -535,6 +537,21 @@ final_amount = 0.00
 coupon_id no vacío
 sin marker
 sin evidencia de tarjeta
+```
+
+### Invariantes de importes
+
+```text
+amount > 0
+0 <= discount_amount <= amount
+final_amount = amount - discount_amount
+```
+
+Para cupón:
+
+```text
+discount_amount = amount
+final_amount = 0.00
 ```
 
 ---
@@ -599,6 +616,7 @@ Antes del INSERT se validan:
 - cupón;
 - moneda;
 - instrumento, cuando corresponda.
+- `customer_ip`, cuando se persiste, como IPv4 o IPv6 válida; en otro caso `null`.
 
 Después:
 
@@ -627,6 +645,9 @@ Las requests perdedoras deben recargar el ledger y responder según el estado du
 
 No se mantiene una transacción de base de datos abierta durante la llamada remota.
 
+Cuando el claim gana, el processor recibe la fila ya marcada como `processing`
+sin una segunda recarga intermedia.
+
 Una falla posterior al claim y anterior a la llamada puede dejar el intento en `processing`. V1 acepta ese comportamiento conservador y no incorpora lease, TTL ni reclaim automático.
 
 ---
@@ -646,7 +667,7 @@ UNKNOWN
 
 ### Authorization
 
-Authorization se interpreta mediante una respuesta HTTP 200 con:
+Authorization sólo se interpreta mediante una respuesta HTTP 200 con:
 
 ```text
 responseCode
@@ -662,7 +683,7 @@ Cualquier otro resultado es `UNKNOWN`.
 
 ### Purchase
 
-Purchase se interpreta mediante:
+Purchase sólo se interpreta mediante:
 
 - HTTP 200 con `responseCode`; o
 - HTTP 400 con un `PaymentError` estructurado.
@@ -676,6 +697,7 @@ authorizationNumber no vacío
 ```
 
 Si falta cualquiera de esos elementos, el resultado es `UNKNOWN`.
+`authorizationNumber` sólo puede existir para una aprobación completa.
 
 ### Respuestas ambiguas
 
@@ -855,6 +877,9 @@ El ledger conserva:
 `event_key` identifica una familia estable dentro del catálogo de eventos configurado por EMMS.
 
 Los IDs y la fase concreta provienen del payment durable.
+La fase durable debe ser exactamente `pre`, `during` o `post`; cualquier valor
+inválido falla antes del ledger y del proveedor. Completion y replay usan
+exclusivamente la fase durable persistida.
 
 El significado de una familia, sus columnas de registro y su routing no deben modificarse mientras existan payments no terminales o payments con marker pendientes de completion.
 

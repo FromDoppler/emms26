@@ -179,6 +179,7 @@ class CreateCheckoutUseCase
             return ['httpStatus' => 500, 'payload' => $this->responses->internal($transaction['correlation_id'])];
         }
         $transaction = $this->transactions->findByPaymentId($transaction['payment_id']);
+        $transaction['status'] = CheckoutTransactionStatus::PROCESSING;
         return $this->processor->process($context, $transaction);
     }
 
@@ -292,8 +293,19 @@ class CreateCheckoutUseCase
             'type' => $event['eventFreeId'],
             'form_id' => $event['eventPhase'],
             'register' => date('Y-m-d H:i:s'),
-            'ip' => GeoIp::getIp(),
+            'ip' => $this->normalizeCustomerIp(),
         ];
+    }
+
+    private function normalizeCustomerIp(): ?string
+    {
+        $ip = trim((string) GeoIp::getIp());
+
+        if ($ip === '') {
+            return null;
+        }
+
+        return filter_var($ip, FILTER_VALIDATE_IP) !== false ? $ip : null;
     }
 
     private function validPayment(array $payment): bool

@@ -110,7 +110,11 @@ class PostCheckoutUserEventsFactory
             'type' => $eventContext['eventFreeId'],
             'form_id' => $eventContext['eventPhase'],
             'list' => $this->resolveDopplerListId($variant, $eventContext),
-            'subject' => EmailService::resolveDynamicSubject($variant, $eventContext['eventFreeId']),
+            'subject' => EmailService::resolveSubjectForPhase(
+                $variant,
+                $eventContext['eventFreeId'],
+                $eventContext['eventPhase']
+            ),
             'formOrigin' => $input['checkout']['origin'] ?? 'checkout',
             'payment_status' => $variant === self::VARIANT_FREE
                 ? 'Registro FREE'

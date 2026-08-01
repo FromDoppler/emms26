@@ -20,6 +20,9 @@ class CheckoutTransactionStatus
         $hasMarker = !empty($transaction['provider_approved_at']);
         $registeredId = $transaction['registered_id'] ?? null;
 
+        if (!self::hasConsistentAmounts($transaction)) {
+            return false;
+        }
         if (!in_array($status, [self::PENDING, self::PROCESSING, self::APPROVED, self::REJECTED, self::ERROR], true)) {
             return false;
         }
@@ -68,6 +71,37 @@ class CheckoutTransactionStatus
         }
 
         return self::hasNoProviderEvidence($transaction);
+    }
+
+    private static function decimalToCents($value): ?int
+    {
+        if (!is_string($value) || preg_match('/^\d+\.\d{2}$/D', $value) !== 1) {
+            return null;
+        }
+
+        [$whole, $fraction] = explode('.', $value, 2);
+        return ((int) $whole * 100) + (int) $fraction;
+    }
+
+    private static function hasConsistentAmounts(array $transaction): bool
+    {
+        $amount = self::decimalToCents($transaction['amount'] ?? null);
+        $discount = self::decimalToCents($transaction['discount_amount'] ?? null);
+        $final = self::decimalToCents($transaction['final_amount'] ?? null);
+
+        if ($amount === null || $discount === null || $final === null) {
+            return false;
+        }
+
+        if ($amount <= 0) {
+            return false;
+        }
+
+        if ($discount < 0 || $discount > $amount) {
+            return false;
+        }
+
+        return $final === $amount - $discount;
     }
 
     private static function isConsistentCouponStatus(array $transaction): bool

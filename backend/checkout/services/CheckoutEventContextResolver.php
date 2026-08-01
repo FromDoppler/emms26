@@ -46,7 +46,7 @@ class CheckoutEventContextResolver
         }
 
         $phaseResponse = processPhaseToShow($currentEvent['freeId']);
-        $phase = $phaseResponse['phaseToShow'] ?? 'pre';
+        $phase = $this->validatePhase($phaseResponse['phaseToShow'] ?? null);
 
         return [
             'eventKey' => $this->resolveEventKey($currentEvent['freeId']),
@@ -73,7 +73,16 @@ class CheckoutEventContextResolver
             'eventKey' => $key,
             'eventFreeId' => $payment['event_free_id'],
             'eventVipId' => $payment['event_vip_id'],
-            'eventPhase' => $payment['event_phase'],
+            'eventPhase' => $this->validatePhase($payment['event_phase'] ?? null),
         ]);
+    }
+
+    private function validatePhase($phase): string
+    {
+        if (!is_string($phase) || !in_array($phase, ['pre', 'during', 'post'], true)) {
+            throw new Exception('invalid_checkout_event_phase_configuration');
+        }
+
+        return $phase;
     }
 }

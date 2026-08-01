@@ -222,13 +222,21 @@ La request pública valida explícitamente:
 - `customer.jobPosition` de hasta 150 caracteres;
 - `customer.website` de hasta 150 caracteres;
 - `customer.emailPlatform` de hasta 150 caracteres;
-- `customer.utm_*` y `customer.emms_ref` como string o `null`;
+- `customer.utm_source`, `customer.utm_medium`, `customer.utm_campaign`,
+  `customer.utm_content`, `customer.utm_term` y `customer.emms_ref` como
+  string o `null`; sus valores normalizados admiten hasta 2048 bytes por
+  campo;
 - `customer.acceptPolicies` y `customer.acceptPromotions` como booleanos JSON reales cuando están presentes;
 - `couponCode` como string o `null`;
 - `checkout`, si existe, como objeto;
 - `checkout.origin`, si existe, como escalar no nulo aceptado;
 - `origin`, si existe, como escalar no nulo aceptado;
 - `payment`, si existe, como objeto.
+
+El límite de `2048` bytes se aplica después de validar UTF-8 y normalizar el
+valor mediante `trim()`. Los valores mayores se rechazan con
+`422 validation_error` antes de crear el ledger y antes de invocar al
+proveedor.
 
 Cuando `checkout.origin` y `origin` conviven, `checkout.origin` tiene prioridad. Un valor vacío normaliza a `checkout`.
 

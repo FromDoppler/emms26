@@ -29,6 +29,15 @@ final class CheckoutRequestNormalizer
         'emailPlatform' => 150,
     ];
 
+    private const CUSTOMER_TEXT_MAX_BYTES = [
+        'utm_source' => 2048,
+        'utm_medium' => 2048,
+        'utm_campaign' => 2048,
+        'utm_content' => 2048,
+        'utm_term' => 2048,
+        'emms_ref' => 2048,
+    ];
+
     private const PAYMENT_DIGIT_FIELDS = [
         'ccExpMonth',
         'ccExpYear',
@@ -186,6 +195,10 @@ final class CheckoutRequestNormalizer
                 if ($length === null || $length > self::CUSTOMER_TEXT_MAX_LENGTHS[$field]) {
                     return null;
                 }
+            }
+            if (isset(self::CUSTOMER_TEXT_MAX_BYTES[$field])
+                && strlen($value) > self::CUSTOMER_TEXT_MAX_BYTES[$field]) {
+                return null;
             }
             $normalized[$field === 'name' ? 'firstname' : $field] = $value;
         }

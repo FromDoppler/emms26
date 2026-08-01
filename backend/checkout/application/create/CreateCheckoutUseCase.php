@@ -94,7 +94,7 @@ class CreateCheckoutUseCase
 
         $eligibilityError = $this->eligibility->validateAlreadyVip($context['eventContext'], $context['customer']);
         if ($eligibilityError !== null) {
-            return $this->rejectAlreadyVip($transaction);
+            return $this->rejectAlreadyVip($context, $transaction);
         }
 
         return $this->claimAndProcess($context, $transaction);
@@ -171,7 +171,7 @@ class CreateCheckoutUseCase
                 return ['httpStatus' => 500, 'payload' => $this->responses->internal($transaction['correlation_id'])];
             }
             if ($reloaded['status'] === CheckoutTransactionStatus::PROCESSING) {
-                return ['httpStatus' => 202, 'payload' => $this->responses->processing($reloaded)];
+                return $this->resolveReloadedProcessing($context, $reloaded);
             }
             if (CheckoutTransactionStatus::isTerminal($reloaded['status'])) {
                 return ['httpStatus' => 200, 'payload' => $this->responses->fromTransaction($reloaded)];
@@ -182,7 +182,17 @@ class CreateCheckoutUseCase
         return $this->processor->process($context, $transaction);
     }
 
-    private function rejectAlreadyVip(array $transaction): array
+    private function resolveReloadedProcessing(array $context, array $transaction): array
+    {
+        if ($transaction['payment_method'] === 'card'
+            && empty($transaction['provider_approved_at'])) {
+            return ['httpStatus' => 202, 'payload' => $this->responses->processing($transaction)];
+        }
+
+        return $this->processor->completeExisting($context, $transaction);
+    }
+
+    private function rejectAlreadyVip(array $context, array $transaction): array
     {
         $this->transactions->rejectPendingAsAlreadyVip($transaction['payment_id']);
         $reloaded = $this->transactions->findByPaymentId($transaction['payment_id']);
@@ -194,7 +204,7 @@ class CreateCheckoutUseCase
             return ['httpStatus' => 200, 'payload' => $this->responses->fromTransaction($reloaded)];
         }
         if ($reloaded['status'] === CheckoutTransactionStatus::PROCESSING) {
-            return ['httpStatus' => 202, 'payload' => $this->responses->processing($reloaded)];
+            return $this->resolveReloadedProcessing($context, $reloaded);
         }
         if (CheckoutTransactionStatus::isTerminal($reloaded['status'])) {
             return ['httpStatus' => 200, 'payload' => $this->responses->fromTransaction($reloaded)];

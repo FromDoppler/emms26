@@ -37,6 +37,11 @@ class CheckoutResponseFactory
         return ['success' => false, 'error' => 'internal_error', 'correlationId' => $correlationId];
     }
 
+    public function intentConflict(): array
+    {
+        return ['success' => false, 'error' => 'payment_intent_conflict', 'correlationId' => null];
+    }
+
     public function validation(string $correlationId, string $error = 'validation_error', ?array $transaction = null): array
     {
         if ($transaction !== null) {

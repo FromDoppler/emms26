@@ -44,7 +44,12 @@ class CreateCheckoutUseCase
             }
             return $this->handleNew($paymentId, $input, $requestCorrelationId);
         } catch (Throwable $e) {
-            return $this->failureHandler->handle($e, $paymentId, $requestCorrelationId);
+            $requestIntent = $this->extractIntent($input);
+            if ($requestIntent === null) {
+                $requestIntent = ['customerEmail' => '', 'couponCode' => null];
+            }
+
+            return $this->failureHandler->handle($e, $paymentId, $requestCorrelationId, $requestIntent);
         }
     }
 
@@ -61,7 +66,7 @@ class CreateCheckoutUseCase
         if (!$this->intentMatches($transaction, $intent)) {
             return [
                 'httpStatus' => 409,
-                'payload' => ['success' => false, 'error' => 'payment_intent_conflict', 'correlationId' => null],
+                'payload' => $this->responses->intentConflict(),
             ];
         }
 
@@ -152,7 +157,7 @@ class CreateCheckoutUseCase
         if (!$this->intentMatches($transaction, $intent)) {
             return [
                 'httpStatus' => 409,
-                'payload' => ['success' => false, 'error' => 'payment_intent_conflict', 'correlationId' => null],
+                'payload' => $this->responses->intentConflict(),
             ];
         }
         return $this->handleExisting($transaction, $input, $correlationId);

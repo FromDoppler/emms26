@@ -11,7 +11,7 @@ class CheckoutFailureHandler
         $this->responses = $responses;
     }
 
-    public function handle(Throwable $error, ?string $paymentId, string $requestCorrelationId): array
+    public function handle(Throwable $error, ?string $paymentId, string $requestCorrelationId, array $requestIntent): array
     {
         Logger::event('payment_request_failed', [
             'payment_id' => $paymentId,
@@ -26,6 +26,9 @@ class CheckoutFailureHandler
                 $repository = new CheckoutTransactionsRepository($factory());
                 $transaction = $repository->findByPaymentId($paymentId);
                 if ($transaction !== null && CheckoutTransactionStatus::isConsistent($transaction)) {
+                    if (!$this->intentMatches($transaction, $requestIntent)) {
+                        return ['httpStatus' => 409, 'payload' => $this->responses->intentConflict()];
+                    }
                     if (!CheckoutTransactionStatus::isTerminal($transaction['status'])
                         && $transaction['status'] !== CheckoutTransactionStatus::PROCESSING) {
                         return ['httpStatus' => 500, 'payload' => $this->responses->internal(
@@ -48,6 +51,16 @@ class CheckoutFailureHandler
         }
 
         return ['httpStatus' => 500, 'payload' => $this->responses->internal($requestCorrelationId)];
+    }
+
+    private function intentMatches(array $transaction, array $requestIntent): bool
+    {
+        $transactionCoupon = CheckoutCouponCode::normalize(
+            isset($transaction['coupon_code']) ? (string) $transaction['coupon_code'] : null
+        );
+
+        return (string) ($transaction['customer_email'] ?? '') === $requestIntent['customerEmail']
+            && $transactionCoupon === $requestIntent['couponCode'];
     }
 
     private function errorCodeFor(Throwable $error): string

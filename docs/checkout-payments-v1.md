@@ -646,7 +646,7 @@ Las requests perdedoras deben recargar el ledger y responder según el estado du
 No se mantiene una transacción de base de datos abierta durante la llamada remota.
 
 Cuando el claim gana, el processor recibe la fila ya marcada como `processing`
-sin una segunda recarga intermedia.
+sin una segunda recarga.
 
 Una falla posterior al claim y anterior a la llamada puede dejar el intento en `processing`. V1 acepta ese comportamiento conservador y no incorpora lease, TTL ni reclaim automático.
 
@@ -880,6 +880,15 @@ Los IDs y la fase concreta provienen del payment durable.
 La fase durable debe ser exactamente `pre`, `during` o `post`; cualquier valor
 inválido falla antes del ledger y del proveedor. Completion y replay usan
 exclusivamente la fase durable persistida.
+
+`CheckoutTransactionStatus::isConsistent()` también valida `event_phase`; una
+fila durable con una fase distinta de `pre`, `during` o `post` se considera
+inconsistente y no puede publicarse mediante `get-payment`.
+
+Los jobs de email generados por checkout persisten esa fase durable en
+`form_id`. La resolución del subject y de la plantilla usa ese mismo snapshot,
+de modo que una ejecución posterior no vuelve a depender de la fase global
+activa del sistema.
 
 El significado de una familia, sus columnas de registro y su routing no deben modificarse mientras existan payments no terminales o payments con marker pendientes de completion.
 

@@ -20,6 +20,9 @@ class CheckoutTransactionStatus
         $hasMarker = !empty($transaction['provider_approved_at']);
         $registeredId = $transaction['registered_id'] ?? null;
 
+        if (!in_array($transaction['event_phase'] ?? null, ['pre', 'during', 'post'], true)) {
+            return false;
+        }
         if (!self::hasConsistentAmounts($transaction)) {
             return false;
         }

@@ -222,7 +222,7 @@ class DopplerPaymentsApiClient implements PaymentProviderClient
 
         $purchaseStatus = (int) ($purchaseResponse['status'] ?? 0);
 
-        if ($purchaseStatus !== 200 && $purchaseStatus !== 400) {
+        if ($purchaseStatus !== 200) {
             return $this->buildResultFromProviderErrorResponse(
                 $request,
                 $startedAt,

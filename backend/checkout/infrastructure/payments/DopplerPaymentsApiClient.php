@@ -124,11 +124,16 @@ class DopplerPaymentsApiClient implements PaymentProviderClient
             ]));
         }
         $authorizationCode = $this->normalizeResponseCode($authorizationData['responseCode'] ?? null);
+        $rawTransactionLinkId = $authorizationData['transactionLinkID'] ?? null;
+        $transactionLinkId = is_string($rawTransactionLinkId) && trim($rawTransactionLinkId) !== ''
+            ? trim($rawTransactionLinkId)
+            : null;
 
         if ($authorizationCode === null) {
             return $this->finish($request, $startedAt, new ProviderPaymentResult([
                 'status' => ProviderPaymentResult::UNKNOWN,
                 'provider' => 'doppler-payments-api',
+                'transactionLinkId' => $transactionLinkId,
                 'responseCode' => 'provider_invalid_response',
                 'responseMessage' => 'Authorization response did not include ResponseCode.',
                 'rawResponse' => [],
@@ -142,6 +147,7 @@ class DopplerPaymentsApiClient implements PaymentProviderClient
             return $this->finish($request, $startedAt, new ProviderPaymentResult([
                 'status' => $status,
                 'provider' => 'doppler-payments-api',
+                'transactionLinkId' => $transactionLinkId,
                 'authorizationResponseCode' => $authorizationCode,
                 'responseCode' => $authorizationCode ?: (string) $authorizationResponse['status'],
                 'responseMessage' => $status === ProviderPaymentResult::REJECTED
@@ -152,19 +158,19 @@ class DopplerPaymentsApiClient implements PaymentProviderClient
         }
 
         $tokenizedPan = $authorizationData['tokenizedPan'] ?? null;
-        $transactionLinkId = $authorizationData['transactionLinkID'] ?? null;
 
         if (!is_string($tokenizedPan) || trim($tokenizedPan) === '') {
             return $this->finish($request, $startedAt, new ProviderPaymentResult([
                 'status' => ProviderPaymentResult::UNKNOWN,
                 'provider' => 'doppler-payments-api',
+                'transactionLinkId' => $transactionLinkId,
                 'authorizationResponseCode' => $authorizationCode,
                 'responseCode' => 'missing_tokenized_pan',
                 'responseMessage' => 'Authorization did not return TokenizedPan.',
                 'rawResponse' => [],
             ]));
         }
-        if ($transactionLinkId !== null && !is_string($transactionLinkId)) {
+        if ($rawTransactionLinkId !== null && !is_string($rawTransactionLinkId)) {
             return $this->finish($request, $startedAt, new ProviderPaymentResult([
                 'status' => ProviderPaymentResult::UNKNOWN,
                 'provider' => 'doppler-payments-api',
@@ -175,9 +181,6 @@ class DopplerPaymentsApiClient implements PaymentProviderClient
             ]));
         }
         $tokenizedPan = trim($tokenizedPan);
-        $transactionLinkId = is_string($transactionLinkId) && trim($transactionLinkId) !== ''
-            ? trim($transactionLinkId)
-            : null;
 
         $purchasePayload = [
             'paymentToken' => $tokenizedPan,
@@ -320,6 +323,9 @@ class DopplerPaymentsApiClient implements PaymentProviderClient
             'provider' => $result->provider,
             'status' => $result->status,
             'response_code' => $result->responseCode,
+            'authorization_response_code' => $result->authorizationResponseCode,
+            'purchase_response_code' => $result->purchaseResponseCode,
+            'transaction_link_id' => $result->transactionLinkId,
             'duration_ms' => (int) round((microtime(true) - $startedAt) * 1000),
         ], 'PAYMENTS', in_array($result->status, [ProviderPaymentResult::ERROR, ProviderPaymentResult::UNKNOWN], true) ? Logger::ERROR : Logger::INFO);
 
@@ -379,7 +385,10 @@ class DopplerPaymentsApiClient implements PaymentProviderClient
             ]));
         }
 
-        if ($providerStep !== 'purchase' || $statusCode !== 400) {
+        if (
+            !in_array($providerStep, ['authorization', 'purchase'], true)
+            || $statusCode !== 400
+        ) {
             return $this->finish($request, $startedAt, new ProviderPaymentResult([
                 'status' => ProviderPaymentResult::UNKNOWN,
                 'provider' => 'doppler-payments-api',

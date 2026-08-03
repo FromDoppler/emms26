@@ -667,17 +667,28 @@ UNKNOWN
 
 ### Authorization
 
-Authorization sólo se interpreta mediante una respuesta HTTP 200 con:
+Authorization se interpreta normalmente mediante HTTP 200 con `responseCode`.
 
-```text
-responseCode
-tokenizedPan
-transactionLinkID
-```
+Para `responseCode = 000`, la respuesta además debe incluir `tokenizedPan` no
+vacío. `transactionLinkID` es opcional; cuando está presente debe ser un string
+y se conserva para correlacionar Authorization con Purchase.
+
+En outcomes con `responseCode` distinto de `000`, un `transactionLinkID` string
+se conserva para observabilidad. Un valor opcional inválido se omite sin cambiar
+la clasificación financiera del código.
+
+EMMS también acepta defensivamente un HTTP 400 con un `PaymentError`
+estructurado si el proveedor lo devuelve. Esta tolerancia no implica que ese
+camino sea producido actualmente por Authorization en Doppler Payments API.
+
+La implementación actual del proveedor entrega normalmente los rechazos
+financieros de Authorization mediante HTTP 200 con `responseCode`.
 
 Una respuesta HTTP `401` o `403` se clasifica como `ERROR`.
 
-Un `responseCode` distinto de `000` sólo se considera `REJECTED` cuando está incluido en el catálogo contractual.
+Un `responseCode` distinto de `000`, o el `errorCode` de un `PaymentError`
+HTTP 400, sólo se considera `REJECTED` cuando está incluido en el catálogo
+contractual.
 
 Cualquier otro resultado es `UNKNOWN`.
 
@@ -890,6 +901,33 @@ Los jobs de email generados por checkout persisten esa fase durable en
 de modo que una ejecución posterior no vuelve a depender de la fase global
 activa del sistema.
 
+Para `checkout_free_approved` y `checkout_vip_approved`, el handler de email
+exige que `form_id` sea exactamente `pre`, `during` o `post`.
+
+Para `checkout_free_approved`, `ticketType` debe estar ausente, ser `null` o
+estar vacío. Un valor no vacío se rechaza antes del envío para impedir que
+`EmailTemplateManager` seleccione una plantilla VIP por precedencia.
+
+Para `checkout_vip_approved`, `ticketType` debe coincidir con `type` y fase:
+
+- `type = ECOMMERCE`, `form_id = pre` → `ecommerceVipPre`;
+- `type = ECOMMERCE`, `form_id = during` → `ecommerceVipDuring`;
+- `type = ECOMMERCE`, `form_id = post` → `ecommerceVipPost`;
+- `type = DIGITALTRENDS`, `form_id = pre` → `digitalTrendsVipPre`;
+- `type = DIGITALTRENDS`, `form_id = during` → `digitalTrendsVipDuring`;
+- `type = DIGITALTRENDS`, `form_id = post` → `digitalTrendsVipPost`.
+
+Un job de checkout sin una fase durable válida, con un `ticketType` inesperado
+para FREE o con un `ticketType` inconsistente para VIP falla antes de enviar el
+email.
+
+El subject ya se persiste como parte del snapshot producido por checkout y no
+se recalcula en el handler. Así, la validación no vuelve a depender del mapping
+de subjects vigente al momento de ejecutar un job diferido.
+
+El fallback a la fase global de `EmailTemplateManager` queda reservado para
+payloads de compatibilidad ajenos a esos eventos de checkout.
+
 El significado de una familia, sus columnas de registro y su routing no deben modificarse mientras existan payments no terminales o payments con marker pendientes de completion.
 
 Los cambios de evento se realizan con el checkout deshabilitado y sin operaciones activas.
@@ -952,6 +990,12 @@ La investigación puede utilizar:
 - ledger;
 - logs de EMMS;
 - logs de Doppler Payments API.
+
+El evento estructurado `payment_provider_call_finished` conserva, cuando están
+disponibles, `authorization_response_code`, `purchase_response_code` y
+`transaction_link_id`. Estos campos permiten distinguir un código financiero
+no catalogado de un error técnico genérico sin persistir evidencia parcial en
+el ledger ni convertir el resultado en terminal.
 
 La investigación es read-only y no autoriza reconstruir o terminalizar el outcome mediante heurísticas.
 
@@ -1310,6 +1354,19 @@ Antes de habilitar Checkout Payments V1 debe verificarse, como mínimo:
 
 - Authorization `401` o `403` terminan en `ERROR`;
 - Authorization aprobada permite Purchase;
+- Authorization HTTP 200 con código de rechazo catalogado y
+  `transactionLinkID` string termina en `rejected` y conserva el transaction
+  link en observabilidad;
+- Authorization HTTP 200 con código no catalogado y `transactionLinkID` string
+  termina en `UNKNOWN` y conserva el transaction link en observabilidad;
+- Authorization HTTP 200 con rechazo catalogado y `transactionLinkID` no string
+  conserva `rejected` y omite el transaction link inválido;
+- Authorization HTTP 200 con `responseCode = 000` y `transactionLinkID` no
+  string termina en `UNKNOWN`;
+- Authorization HTTP 400 con `PaymentError` catalogado se acepta
+  defensivamente como `rejected`;
+- Authorization HTTP 400 con `PaymentError` no catalogado se acepta
+  defensivamente como `UNKNOWN`;
 - rechazo incluido en el catálogo termina en `rejected`;
 - código no incluido termina en `UNKNOWN`;
 - DNS o conexión fallida antes de Authorization terminan en `ERROR`;
@@ -1340,6 +1397,17 @@ Antes de habilitar Checkout Payments V1 debe verificarse, como mínimo:
 - exactamente un ticket activo por evento habilita el checkout;
 - el ticket activo tiene precio base estrictamente positivo;
 - una completion de cupón exige precio final cero y cupón durable.
+
+### Efectos post-checkout
+
+- `checkout_free_approved` sin `form_id` válido falla antes del envío;
+- `checkout_free_approved` con `ticketType` no vacío falla antes del envío;
+- `checkout_vip_approved` sin `form_id` válido falla antes del envío;
+- `checkout_vip_approved` con `ticketType` contradictorio respecto de `type` y
+  fase falla antes del envío;
+- un job VIP con `type`, `form_id` y `ticketType` coherentes se envía
+  normalmente;
+- un email ajeno a checkout sin `form_id` conserva el fallback a la fase global.
 
 ### Frontend y success
 

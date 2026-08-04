@@ -40,7 +40,10 @@ class EmailTemplateManager
   public static function getTemplateForUser($user)
   {
     $type = $user['type'];
-    $phase = processPhaseToShow($type)["phaseToShow"] ?? 'unknown';
+    $phase = $user['form_id'] ?? null;
+    if ($phase === null) {
+      $phase = processPhaseToShow($type)["phaseToShow"] ?? 'unknown';
+    }
     $ticketType = $user['ticketType'] ?? 'undefined';
 
     $templateMappings = [

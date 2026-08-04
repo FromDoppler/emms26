@@ -192,6 +192,45 @@ class CheckoutTransactionsRepository
         return $this->db->affectedRows() === 1;
     }
 
+    public function markPurchaseNotStartedError(string $paymentId, array $evidence, string $code): bool
+    {
+        $transactionLinkId = $evidence['transaction_link_id'] ?? null;
+        if (($evidence['provider'] ?? null) !== 'doppler-payments-api'
+            || ($evidence['authorization_response_code'] ?? null) !== '000'
+            || ($evidence['purchase_response_code'] ?? null) !== null
+            || ($evidence['authorization_number'] ?? null) !== null
+            || ($transactionLinkId !== null && (!is_string($transactionLinkId) || trim($transactionLinkId) === ''))
+            || $code !== 'payment_error') {
+            throw new InvalidArgumentException('invalid_purchase_not_started_evidence');
+        }
+
+        $this->db->query(
+            "UPDATE payment_transactions
+             SET status = ?, provider = ?, transaction_link_id = ?,
+                 authorization_response_code = ?, response_code = ?
+             WHERE payment_id = ?
+               AND status = ?
+               AND payment_method = 'card'
+               AND registered_id IS NULL
+               AND provider_approved_at IS NULL
+               AND authorization_number IS NULL
+               AND transaction_link_id IS NULL
+               AND authorization_response_code IS NULL
+               AND purchase_response_code IS NULL
+               AND response_code IS NULL",
+            [
+                CheckoutTransactionStatus::ERROR,
+                $evidence['provider'],
+                $transactionLinkId,
+                $evidence['authorization_response_code'],
+                $code,
+                $paymentId,
+                CheckoutTransactionStatus::PROCESSING,
+            ]
+        );
+        return $this->db->affectedRows() === 1;
+    }
+
     public function persistApprovalMarker(string $paymentId, array $evidence): bool
     {
         $this->db->query(

@@ -465,15 +465,19 @@ Un rechazo del proveedor debe:
 
 ### `error`
 
-Representa una falla técnica demostrablemente anterior al intento remoto.
+Representa una falla técnica terminal sin ambigüedad de Purchase.
 
 Debe:
 
 - no tener marker;
-- no tener evidencia del proveedor;
-- utilizar `response_code = payment_error`.
+- no tener número de autorización de Purchase;
+- utilizar `response_code = payment_error`;
+- no tener evidencia del proveedor, o conservar únicamente
+  `authorization_response_code = 000` y `transaction_link_id` opcional.
 
-Una falla posterior al inicio de una llamada remota no se transforma en `error`; se conserva como `processing`.
+Una falla técnica cuyo resultado financiero no pueda determinarse durante o
+después del inicio de una llamada remota no se transforma en `error`; se
+conserva como `processing`.
 
 ---
 
@@ -522,10 +526,17 @@ rejected
 
 ```text
 error
+→ provider = doppler-payments-api
 → sin marker
 → authorization_number vacío
-→ sin evidencia del proveedor
 → response_code = payment_error
+→ una de estas formas de evidencia financiera:
+  - authorization_response_code = NULL
+    purchase_response_code = NULL
+    transaction_link_id = NULL
+  - authorization_response_code = 000
+    purchase_response_code = NULL
+    transaction_link_id = NULL o string no vacío
 ```
 
 ### Invariantes de cupón
@@ -646,7 +657,7 @@ Las requests perdedoras deben recargar el ledger y responder según el estado du
 No se mantiene una transacción de base de datos abierta durante la llamada remota.
 
 Cuando el claim gana, el processor recibe la fila ya marcada como `processing`
-sin una segunda recarga intermedia.
+sin una segunda recarga.
 
 Una falla posterior al claim y anterior a la llamada puede dejar el intento en `processing`. V1 acepta ese comportamiento conservador y no incorpora lease, TTL ni reclaim automático.
 
@@ -667,26 +678,42 @@ UNKNOWN
 
 ### Authorization
 
-Authorization sólo se interpreta mediante una respuesta HTTP 200 con:
+Authorization se interpreta normalmente mediante HTTP 200 con `responseCode`.
 
-```text
-responseCode
-tokenizedPan
-transactionLinkID
-```
+Para `responseCode = 000`, la respuesta además debe incluir `tokenizedPan` no
+vacío. `transactionLinkID` es opcional; cuando está presente debe ser un string
+y se conserva para correlacionar Authorization con Purchase.
+
+En outcomes con `responseCode` distinto de `000`, un `transactionLinkID` string
+se conserva para observabilidad. Un valor opcional inválido se omite sin cambiar
+la clasificación financiera del código.
+
+EMMS también acepta defensivamente un HTTP 400 con un `PaymentError`
+estructurado si el proveedor lo devuelve. Esta tolerancia no implica que ese
+camino sea producido actualmente por Authorization en Doppler Payments API.
+
+La implementación actual del proveedor entrega normalmente los rechazos
+financieros de Authorization mediante HTTP 200 con `responseCode`.
 
 Una respuesta HTTP `401` o `403` se clasifica como `ERROR`.
 
-Un `responseCode` distinto de `000` sólo se considera `REJECTED` cuando está incluido en el catálogo contractual.
+Un `responseCode` distinto de `000`, o el `errorCode` de un `PaymentError`
+HTTP 400, sólo se considera `REJECTED` cuando está incluido en el catálogo
+contractual.
 
 Cualquier otro resultado es `UNKNOWN`.
 
 ### Purchase
 
-Purchase sólo se interpreta mediante:
+Purchase se interpreta mediante:
 
-- HTTP 200 con `responseCode`; o
-- HTTP 400 con un `PaymentError` estructurado.
+- HTTP 200 con `responseCode`;
+- HTTP 400 con un `PaymentError` estructurado; o
+- HTTP 401/403 rechazado por la capa de autenticación antes de ejecutar el
+  handler financiero.
+
+Un HTTP `401/403` de Purchase se clasifica como `ERROR` y conserva la evidencia
+durable de Authorization. La misma `paymentId` no vuelve a ejecutar Purchase.
 
 Una aprobación exige:
 
@@ -705,9 +732,10 @@ Se consideran `UNKNOWN`, entre otros casos:
 
 - timeout;
 - error de conexión después de iniciar cURL;
-- cualquier falla durante Purchase después de `Authorization 000`;
+- falla técnica cuyo resultado financiero no pueda determinarse durante o
+  después del inicio del handler financiero de Purchase;
 - redirect;
-- HTTP no contractual;
+- HTTP no contractual distinto de `401/403`;
 - JSON inválido;
 - respuesta sin campos obligatorios;
 - código no incluido en el catálogo;
@@ -725,8 +753,11 @@ La frontera del transporte distingue entre fallas que demuestran que Authorizati
 
 - DNS, URL malformada o conexión imposible antes de Authorization → `ERROR`;
 - `Authorization 401/403` → `ERROR`;
+- `Purchase 401/403` después de `Authorization 000` → `ERROR`, conservando la
+  evidencia de Authorization;
 - timeout, send/receive incierto, `5xx`, redirect o JSON inválido → `UNKNOWN`;
-- cualquier falla durante Purchase después de `Authorization 000` → `UNKNOWN`.
+- cualquier falla técnica cuyo resultado financiero no pueda determinarse
+  durante o después del inicio del handler financiero de Purchase → `UNKNOWN`.
 
 ---
 
@@ -881,6 +912,54 @@ La fase durable debe ser exactamente `pre`, `during` o `post`; cualquier valor
 inválido falla antes del ledger y del proveedor. Completion y replay usan
 exclusivamente la fase durable persistida.
 
+`CheckoutTransactionStatus::isConsistent()` también valida `event_phase`; una
+fila durable con una fase distinta de `pre`, `during` o `post` se considera
+inconsistente y no puede publicarse mediante `get-payment`.
+
+Los jobs de email generados por checkout persisten esa fase durable en
+`form_id`. La resolución del subject y de la plantilla usa ese mismo snapshot,
+de modo que una ejecución posterior no vuelve a depender de la fase global
+activa del sistema.
+
+Para `checkout_free_approved` y `checkout_vip_approved`, el handler de email
+exige que `form_id` sea exactamente `pre`, `during` o `post`.
+
+Para `checkout_free_approved`, `ticketType` debe estar ausente, ser `null` o
+estar vacío. Un valor no vacío se rechaza antes del envío para impedir que
+`EmailTemplateManager` seleccione una plantilla VIP por precedencia.
+
+Para `checkout_vip_approved`, `ticketType` debe coincidir con `type` y fase:
+
+- `type = ECOMMERCE`, `form_id = pre` → `ecommerceVipPre`;
+- `type = ECOMMERCE`, `form_id = during` → `ecommerceVipDuring`;
+- `type = ECOMMERCE`, `form_id = post` → `ecommerceVipPost`;
+- `type = DIGITALTRENDS`, `form_id = pre` → `digitalTrendsVipPre`;
+- `type = DIGITALTRENDS`, `form_id = during` → `digitalTrendsVipDuring`;
+- `type = DIGITALTRENDS`, `form_id = post` → `digitalTrendsVipPost`.
+
+Un job de checkout sin una fase durable válida, con un `ticketType` inesperado
+para FREE o con un `ticketType` inconsistente para VIP falla antes de enviar el
+email.
+
+El subject ya se persiste como parte del snapshot producido por checkout y no
+se recalcula en el handler. Así, la validación no vuelve a depender del mapping
+de subjects vigente al momento de ejecutar un job diferido.
+
+El fallback a la fase global de `EmailTemplateManager` queda reservado para
+payloads de compatibilidad ajenos a esos eventos de checkout.
+
+V1 no garantiza la ejecución de jobs de checkout a través de cambios en los
+identificadores o mappings del catálogo de eventos.
+
+Antes de modificar esos valores deben inspeccionarse y resolverse las filas de
+`user_event_jobs` que cumplan ambas condiciones:
+
+- `aggregate_type = 'checkout_transaction'`;
+- `status IN ('pending', 'processing')`.
+
+La definición del procedimiento de inspección, procesamiento o descarte forma
+parte del cutover operativo de DS-6265.
+
 El significado de una familia, sus columnas de registro y su routing no deben modificarse mientras existan payments no terminales o payments con marker pendientes de completion.
 
 Los cambios de evento se realizan con el checkout deshabilitado y sin operaciones activas.
@@ -943,6 +1022,12 @@ La investigación puede utilizar:
 - ledger;
 - logs de EMMS;
 - logs de Doppler Payments API.
+
+El evento estructurado `payment_provider_call_finished` conserva, cuando están
+disponibles, `authorization_response_code`, `purchase_response_code` y
+`transaction_link_id`. Estos campos permiten distinguir un código financiero
+no catalogado de un error técnico genérico sin persistir evidencia parcial en
+el ledger ni convertir el resultado en terminal.
 
 La investigación es read-only y no autoriza reconstruir o terminalizar el outcome mediante heurísticas.
 
@@ -1301,11 +1386,26 @@ Antes de habilitar Checkout Payments V1 debe verificarse, como mínimo:
 
 - Authorization `401` o `403` terminan en `ERROR`;
 - Authorization aprobada permite Purchase;
+- Authorization HTTP 200 con código de rechazo catalogado y
+  `transactionLinkID` string termina en `rejected` y conserva el transaction
+  link en observabilidad;
+- Authorization HTTP 200 con código no catalogado y `transactionLinkID` string
+  termina en `UNKNOWN` y conserva el transaction link en observabilidad;
+- Authorization HTTP 200 con rechazo catalogado y `transactionLinkID` no string
+  conserva `rejected` y omite el transaction link inválido;
+- Authorization HTTP 200 con `responseCode = 000` y `transactionLinkID` no
+  string termina en `UNKNOWN`;
+- Authorization HTTP 400 con `PaymentError` catalogado se acepta
+  defensivamente como `rejected`;
+- Authorization HTTP 400 con `PaymentError` no catalogado se acepta
+  defensivamente como `UNKNOWN`;
 - rechazo incluido en el catálogo termina en `rejected`;
 - código no incluido termina en `UNKNOWN`;
 - DNS o conexión fallida antes de Authorization terminan en `ERROR`;
 - timeout, redirect, `5xx` y JSON inválido terminan en `UNKNOWN`;
-- cualquier falla durante Purchase después de Authorization `000` termina en `UNKNOWN`;
+- después de Authorization `000`, cualquier otro resultado técnico o no
+  catalogado durante la preparación, envío o procesamiento de Purchase termina
+  en `UNKNOWN`;
 - Purchase `000` sin número de autorización no se considera aprobada;
 - no existen retries automáticos de cURL.
 - `ccType` fuera de `1`, `2` o `3` falla antes del intento financiero.
@@ -1316,7 +1416,12 @@ Antes de habilitar Checkout Payments V1 debe verificarse, como mínimo:
 - el marker es write-once;
 - el recovery del marker realiza como máximo un segundo CAS;
 - `REJECTED` conocido hace un segundo CAS acotado si la persistencia inicial falla;
-- `ERROR` demostrado antes de cualquier operación financiera remota hace un segundo CAS acotado si la persistencia inicial falla;
+- un `REJECTED` conocido o un `ERROR` sin ambigüedad financiera habilitan como
+  máximo un segundo CAS si la persistencia inicial falla y una lectura fresca
+  confirma que el ledger continúa `processing`, sin marker ni evidencia del
+  proveedor. Esto incluye fallos locales o de transporte demostrados antes de
+  Authorization y respuestas HTTP `401/403` de Authorization o Purchase
+  rechazadas antes del handler;
 - el recovery nunca vuelve al proveedor;
 - VIP, payment y jobs participan del mismo commit;
 - una falla de commit no deja `approved`;
@@ -1331,6 +1436,17 @@ Antes de habilitar Checkout Payments V1 debe verificarse, como mínimo:
 - exactamente un ticket activo por evento habilita el checkout;
 - el ticket activo tiene precio base estrictamente positivo;
 - una completion de cupón exige precio final cero y cupón durable.
+
+### Efectos post-checkout
+
+- `checkout_free_approved` sin `form_id` válido falla antes del envío;
+- `checkout_free_approved` con `ticketType` no vacío falla antes del envío;
+- `checkout_vip_approved` sin `form_id` válido falla antes del envío;
+- `checkout_vip_approved` con `ticketType` contradictorio respecto de `type` y
+  fase falla antes del envío;
+- un job VIP con `type`, `form_id` y `ticketType` coherentes se envía
+  normalmente;
+- un email ajeno a checkout sin `form_id` conserva el fallback a la fase global.
 
 ### Frontend y success
 

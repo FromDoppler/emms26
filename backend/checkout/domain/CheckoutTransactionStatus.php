@@ -20,6 +20,9 @@ class CheckoutTransactionStatus
         $hasMarker = !empty($transaction['provider_approved_at']);
         $registeredId = $transaction['registered_id'] ?? null;
 
+        if (!in_array($transaction['event_phase'] ?? null, ['pre', 'during', 'post'], true)) {
+            return false;
+        }
         if (!self::hasConsistentAmounts($transaction)) {
             return false;
         }
@@ -58,8 +61,9 @@ class CheckoutTransactionStatus
         }
         if ($status === self::ERROR) {
             return !$hasMarker
-                && self::hasNoCardProviderEvidence($transaction)
-                && ($transaction['response_code'] ?? null) === 'payment_error';
+                && ($transaction['response_code'] ?? null) === 'payment_error'
+                && (self::hasNoCardProviderEvidence($transaction)
+                    || self::isConsistentPurchaseNotStartedError($transaction));
         }
         if ($status === self::REJECTED) {
             return !$hasMarker && self::isConsistentCardRejection($transaction);
@@ -135,6 +139,17 @@ class CheckoutTransactionStatus
 
         return ($purchaseCode === null && $authorizationCode !== null && $authorizationCode !== '000')
             || ($authorizationCode === '000' && $purchaseCode !== null && $purchaseCode !== '000');
+    }
+
+    private static function isConsistentPurchaseNotStartedError(array $transaction): bool
+    {
+        $transactionLinkId = $transaction['transaction_link_id'] ?? null;
+
+        return trim((string) ($transaction['authorization_number'] ?? '')) === ''
+            && ($transaction['authorization_response_code'] ?? null) === '000'
+            && ($transaction['purchase_response_code'] ?? null) === null
+            && ($transactionLinkId === null
+                || (is_string($transactionLinkId) && trim($transactionLinkId) !== ''));
     }
 
     private static function hasNoCardProviderEvidence(array $transaction): bool

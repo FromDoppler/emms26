@@ -178,7 +178,6 @@ class CreateCheckoutUseCase
             }
             return ['httpStatus' => 500, 'payload' => $this->responses->internal($transaction['correlation_id'])];
         }
-        $transaction = $this->transactions->findByPaymentId($transaction['payment_id']);
         $transaction['status'] = CheckoutTransactionStatus::PROCESSING;
         return $this->processor->process($context, $transaction);
     }

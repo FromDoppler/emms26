@@ -526,10 +526,17 @@ rejected
 
 ```text
 error
+→ provider = doppler-payments-api
 → sin marker
 → authorization_number vacío
-→ sin evidencia del proveedor
 → response_code = payment_error
+→ una de estas formas de evidencia financiera:
+  - authorization_response_code = NULL
+    purchase_response_code = NULL
+    transaction_link_id = NULL
+  - authorization_response_code = 000
+    purchase_response_code = NULL
+    transaction_link_id = NULL o string no vacío
 ```
 
 ### Invariantes de cupón
@@ -940,6 +947,18 @@ de subjects vigente al momento de ejecutar un job diferido.
 
 El fallback a la fase global de `EmailTemplateManager` queda reservado para
 payloads de compatibilidad ajenos a esos eventos de checkout.
+
+V1 no garantiza la ejecución de jobs de checkout a través de cambios en los
+identificadores o mappings del catálogo de eventos.
+
+Antes de modificar esos valores deben inspeccionarse y resolverse las filas de
+`user_event_jobs` que cumplan ambas condiciones:
+
+- `aggregate_type = 'checkout_transaction'`;
+- `status IN ('pending', 'processing')`.
+
+La definición del procedimiento de inspección, procesamiento o descarte forma
+parte del cutover operativo de DS-6265.
 
 El significado de una familia, sus columnas de registro y su routing no deben modificarse mientras existan payments no terminales o payments con marker pendientes de completion.
 
@@ -1384,7 +1403,9 @@ Antes de habilitar Checkout Payments V1 debe verificarse, como mínimo:
 - código no incluido termina en `UNKNOWN`;
 - DNS o conexión fallida antes de Authorization terminan en `ERROR`;
 - timeout, redirect, `5xx` y JSON inválido terminan en `UNKNOWN`;
-- cualquier falla durante Purchase después de Authorization `000` termina en `UNKNOWN`;
+- después de Authorization `000`, cualquier otro resultado técnico o no
+  catalogado durante la preparación, envío o procesamiento de Purchase termina
+  en `UNKNOWN`;
 - Purchase `000` sin número de autorización no se considera aprobada;
 - no existen retries automáticos de cURL.
 - `ccType` fuera de `1`, `2` o `3` falla antes del intento financiero.
@@ -1395,7 +1416,12 @@ Antes de habilitar Checkout Payments V1 debe verificarse, como mínimo:
 - el marker es write-once;
 - el recovery del marker realiza como máximo un segundo CAS;
 - `REJECTED` conocido hace un segundo CAS acotado si la persistencia inicial falla;
-- `ERROR` demostrado antes de cualquier operación financiera remota hace un segundo CAS acotado si la persistencia inicial falla;
+- un `REJECTED` conocido o un `ERROR` sin ambigüedad financiera habilitan como
+  máximo un segundo CAS si la persistencia inicial falla y una lectura fresca
+  confirma que el ledger continúa `processing`, sin marker ni evidencia del
+  proveedor. Esto incluye fallos locales o de transporte demostrados antes de
+  Authorization y respuestas HTTP `401/403` de Authorization o Purchase
+  rechazadas antes del handler;
 - el recovery nunca vuelve al proveedor;
 - VIP, payment y jobs participan del mismo commit;
 - una falla de commit no deja `approved`;

@@ -47,7 +47,23 @@ class CheckoutPaymentProcessor
         if ($result->status === ProviderPaymentResult::UNKNOWN) {
             return $this->processing($transaction);
         }
+        $evidence = $this->evidence($result);
         if ($result->status === ProviderPaymentResult::ERROR) {
+            if ($this->isPurchaseRejectedBeforeHandler($result)) {
+                return $this->persistKnownTerminalOutcome(
+                    $context,
+                    $transaction,
+                    'error',
+                    function (CheckoutTransactionsRepository $repository) use ($transaction, $evidence): bool {
+                        return $repository->markPurchaseNotStartedError(
+                            $transaction['payment_id'],
+                            $evidence,
+                            'payment_error'
+                        );
+                    }
+                );
+            }
+
             return $this->persistKnownTerminalOutcome(
                 $context,
                 $transaction,
@@ -58,7 +74,6 @@ class CheckoutPaymentProcessor
             );
         }
 
-        $evidence = $this->evidence($result);
         if ($result->status === ProviderPaymentResult::REJECTED) {
             return $this->persistKnownTerminalOutcome(
                 $context,
@@ -523,6 +538,15 @@ class CheckoutPaymentProcessor
 
         return CheckoutTransactionStatus::isConsistent($transaction)
             && $transaction['status'] === $expectedStatus;
+    }
+
+    private function isPurchaseRejectedBeforeHandler(ProviderPaymentResult $result): bool
+    {
+        return $result->provider === 'doppler-payments-api'
+            && $result->responseCode === 'provider_purchase_unauthorized'
+            && $result->authorizationResponseCode === '000'
+            && $result->purchaseResponseCode === null
+            && $result->authorizationNumber === null;
     }
 
     private function evidence(ProviderPaymentResult $result): array

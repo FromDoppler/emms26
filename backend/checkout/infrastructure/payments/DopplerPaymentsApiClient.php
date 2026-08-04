@@ -362,14 +362,18 @@ class DopplerPaymentsApiClient implements PaymentProviderClient
     ): ProviderPaymentResult {
         $statusCode = (int) ($providerResponse['status'] ?? 0);
         $body = (string) ($providerResponse['body'] ?? '');
-        if ($providerStep === 'authorization' && in_array($statusCode, [401, 403], true)) {
+        if (in_array($providerStep, ['authorization', 'purchase'], true)
+            && in_array($statusCode, [401, 403], true)) {
+            $isPurchase = $providerStep === 'purchase';
             return $this->finish($request, $startedAt, new ProviderPaymentResult([
                 'status' => ProviderPaymentResult::ERROR,
                 'provider' => 'doppler-payments-api',
                 'transactionLinkId' => $transactionLinkId,
                 'authorizationResponseCode' => $authorizationCode,
-                'responseCode' => 'provider_unauthorized',
-                'responseMessage' => 'Authorization was rejected before the handler ran.',
+                'responseCode' => $isPurchase ? 'provider_purchase_unauthorized' : 'provider_unauthorized',
+                'responseMessage' => $isPurchase
+                    ? 'Purchase was rejected before the handler ran.'
+                    : 'Authorization was rejected before the handler ran.',
                 'rawResponse' => [],
             ]));
         }

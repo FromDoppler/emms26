@@ -465,15 +465,19 @@ Un rechazo del proveedor debe:
 
 ### `error`
 
-Representa una falla técnica demostrablemente anterior al intento remoto.
+Representa una falla técnica terminal sin ambigüedad de Purchase.
 
 Debe:
 
 - no tener marker;
-- no tener evidencia del proveedor;
-- utilizar `response_code = payment_error`.
+- no tener número de autorización de Purchase;
+- utilizar `response_code = payment_error`;
+- no tener evidencia del proveedor, o conservar únicamente
+  `authorization_response_code = 000` y `transaction_link_id` opcional.
 
-Una falla posterior al inicio de una llamada remota no se transforma en `error`; se conserva como `processing`.
+Una falla técnica cuyo resultado financiero no pueda determinarse durante o
+después del inicio de una llamada remota no se transforma en `error`; se
+conserva como `processing`.
 
 ---
 
@@ -694,10 +698,15 @@ Cualquier otro resultado es `UNKNOWN`.
 
 ### Purchase
 
-Purchase sólo se interpreta mediante:
+Purchase se interpreta mediante:
 
-- HTTP 200 con `responseCode`; o
-- HTTP 400 con un `PaymentError` estructurado.
+- HTTP 200 con `responseCode`;
+- HTTP 400 con un `PaymentError` estructurado; o
+- HTTP 401/403 rechazado por la capa de autenticación antes de ejecutar el
+  handler financiero.
+
+Un HTTP `401/403` de Purchase se clasifica como `ERROR` y conserva la evidencia
+durable de Authorization. La misma `paymentId` no vuelve a ejecutar Purchase.
 
 Una aprobación exige:
 
@@ -716,9 +725,10 @@ Se consideran `UNKNOWN`, entre otros casos:
 
 - timeout;
 - error de conexión después de iniciar cURL;
-- cualquier falla durante Purchase después de `Authorization 000`;
+- falla técnica cuyo resultado financiero no pueda determinarse durante o
+  después del inicio del handler financiero de Purchase;
 - redirect;
-- HTTP no contractual;
+- HTTP no contractual distinto de `401/403`;
 - JSON inválido;
 - respuesta sin campos obligatorios;
 - código no incluido en el catálogo;
@@ -736,8 +746,11 @@ La frontera del transporte distingue entre fallas que demuestran que Authorizati
 
 - DNS, URL malformada o conexión imposible antes de Authorization → `ERROR`;
 - `Authorization 401/403` → `ERROR`;
+- `Purchase 401/403` después de `Authorization 000` → `ERROR`, conservando la
+  evidencia de Authorization;
 - timeout, send/receive incierto, `5xx`, redirect o JSON inválido → `UNKNOWN`;
-- cualquier falla durante Purchase después de `Authorization 000` → `UNKNOWN`.
+- cualquier falla técnica cuyo resultado financiero no pueda determinarse
+  durante o después del inicio del handler financiero de Purchase → `UNKNOWN`.
 
 ---
 

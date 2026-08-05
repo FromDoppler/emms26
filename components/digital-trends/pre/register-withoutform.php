@@ -1,6 +1,6 @@
 <section class="hero-registration--registered hero-registration--withoutform">
     <div class="emms__container--md">
-        <h1 class="emms__fade-in"><em>ONLINE Y GRATUITO - 29 y 30 de Septiembre y 1 de Octubre
+        <h1 class="emms__fade-in"><em>ONLINE Y GRATUITO - Del 29 de Septiembre al 1 de Octubre
             </em>¡Llega el EMMS Digital Trends 2026!</h1>
         <p class="emms__fade-in">Súmate al evento exclusivo pensado para que conozcas todas las tendencias del Marketing Digital de la mano de referentes internacionales. ¡Regístrate ahora y vive la experiencia EMMS!</p>
         <div class="text-with-icon-container">

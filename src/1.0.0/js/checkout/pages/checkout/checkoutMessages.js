@@ -12,6 +12,16 @@ const CHECKOUT_ERROR_MESSAGES = {
   pricing_failed: "No pudimos calcular el precio. Intentá nuevamente.",
 };
 
+const PAYMENT_ERROR_MESSAGES = {
+  card_declined: "¡Ouch! Transacción no aprobada. Comunicate con el emisor de tu tarjeta.",
+  card_insufficient_funds: "¡Ouch! Tarjeta con fondos insuficientes. Prueba con otra tarjeta.",
+  card_invalid_expiration_date: "¡Ouch! Tarjeta invalida. Inténtalo nuevamente o prueba con otra tarjeta.",
+  card_invalid_number: "¡Ouch! Tarjeta invalida. Inténtalo nuevamente o prueba con otra tarjeta.",
+  card_invalid_security_code: "¡Ouch! Tarjeta invalida. Inténtalo nuevamente o prueba con otra tarjeta.",
+  card_suspected_fraud: "¡Ouch! Transacción no aprobada. Comunicate con el emisor de tu tarjeta.",
+  already_vip: "Ya tenés acceso VIP para este evento.",
+};
+
 function formatCouponCodeForMessage(couponCode) {
   return String(couponCode || "")
     .trim()
@@ -51,4 +61,8 @@ export function resolveCouponErrorMessage(error, couponCode = "") {
 
 export function resolveCheckoutErrorMessage(error) {
   return CHECKOUT_ERROR_MESSAGES[String(error || "")] || "No pudimos actualizar el checkout. Intentá nuevamente.";
+}
+
+export function resolvePaymentErrorMessage(error) {
+  return PAYMENT_ERROR_MESSAGES[String(error || "")] || "No pudimos procesar la operación. Elegí otro medio de pago o intentá nuevamente más tarde.";
 }

@@ -59,6 +59,11 @@
   visibility: hidden;
 }
 
+.emms__checkout__payment-frame[data-payment-locked="true"] .emms__checkout__payframe,
+.emms__checkout__payment-frame[data-payment-locked="true"] iframe {
+  pointer-events: none;
+}
+
 .emms__checkout__payframe {
   width: 100%;
   min-height: var(--checkout-payframe-height);

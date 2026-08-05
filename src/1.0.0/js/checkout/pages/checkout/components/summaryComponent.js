@@ -156,6 +156,7 @@ function renderPricingSummary(view, pricing) {
 function renderCouponControls(state, view) {
   const isVip = isVipMode(state);
   const hasAppliedCoupon = Boolean(state.appliedCoupon);
+  const isPaymentLocked = Boolean(state.paymentInFlight || state.activePaymentId);
 
   view.couponSection.dataset.couponMode = state.couponMode;
   view.couponToggleButton.hidden = isVip || hasAppliedCoupon;
@@ -168,8 +169,8 @@ function renderCouponControls(state, view) {
   }
   view.couponToggleButton.setAttribute("aria-expanded", state.couponMode === "editing" ? "true" : "false");
 
-  view.applyCouponButton.disabled = false;
-  view.couponInput.disabled = false;
+  view.applyCouponButton.disabled = isVip || hasAppliedCoupon || isPaymentLocked;
+  view.couponInput.disabled = isVip || hasAppliedCoupon || isPaymentLocked;
 
   if (state.urlCouponCode && !view.couponInput.value && !hasAppliedCoupon) {
     view.couponInput.value = state.urlCouponCode;
@@ -178,10 +179,13 @@ function renderCouponControls(state, view) {
   view.couponAppliedCode.textContent = state.appliedCoupon || "-";
   view.couponAppliedSource.hidden = !state.urlCouponCode || state.appliedCoupon !== state.urlCouponCode;
   view.removeCouponButton.hidden = !hasAppliedCoupon;
+  view.couponToggleButton.disabled = isPaymentLocked;
+  view.removeCouponButton.disabled = isPaymentLocked;
 }
 
 export function renderSummaryView(state, view) {
   const isVip = isVipMode(state);
+  const isPaymentLocked = Boolean(state.paymentInFlight || state.activePaymentId);
 
   view.summaryPanel.dataset.summaryMode = isVip ? "vip" : "checkout";
   view.summaryVipNotice.hidden = !isVip;
@@ -215,6 +219,13 @@ export function renderSummaryView(state, view) {
       view.summaryTotal.textContent = "USD 0.00";
     }
   }
+
+  if (isPaymentLocked) {
+    view.ticketSelect.disabled = true;
+  }
+  view.stepEditButtons.forEach((button) => {
+    button.disabled = isPaymentLocked;
+  });
 }
 
 export function createSummaryComponent(context) {

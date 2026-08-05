@@ -23,26 +23,23 @@ export function getCouponCode(state, snapshot = {}, options = {}) {
 
 export function buildCalculatePayload(state, snapshot = {}, options = {}) {
   const couponCode = getCouponCode(state, snapshot, options);
-  const ticketCode = state.selectedTicketCode || snapshot.selectedTicketCode || "";
   const customerEmail = state.customerData.email || snapshot.email || "";
 
   return {
     origin: state.origin,
     ...(couponCode ? { couponCode } : {}),
-    ...(ticketCode ? { ticketCode } : {}),
     ...(customerEmail ? { customerEmail } : {}),
   };
 }
 
-export function buildCreatePaymentPayload(state, snapshot = {}, paymentPayload = {}, customerPayload = null) {
+export function buildCreatePaymentPayload(state, snapshot = {}, paymentPayload = {}, customerPayload = null, paymentId = "") {
   return {
+    paymentId,
     checkout: {
-      idempotencyKey: state.idempotencyKey,
       origin: state.origin,
     },
     customer: customerPayload || getCustomerPayload(state, snapshot),
-    ticketCode: (state.pricing && state.pricing.ticket && state.pricing.ticket.code) || state.selectedTicketCode || null,
-    couponCode: state.resolvedCouponCode,
+    couponCode: state.resolvedCouponCode || null,
     payment: paymentPayload,
   };
 }

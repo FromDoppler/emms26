@@ -62,11 +62,12 @@ export function createCheckoutFlow({ store, view }) {
     render();
 
     const paymentId = String(state.activePaymentId || "").trim();
-    const message = isPaymentInFlight && !paymentId
-      ? "Estamos procesando tu pago. Esperá a que termine antes de modificar los datos."
-      : paymentId
-      ? `Ya existe un intento de pago abierto. Usá el botón de reintento para consultar la referencia ${paymentId}.`
-      : "Ya existe un intento de pago abierto. Usá el botón de reintento para continuar.";
+    const message =
+      isPaymentInFlight && !paymentId
+        ? "Estamos procesando tu pago. Esperá a que termine antes de modificar los datos."
+        : paymentId
+          ? `Ya existe un intento de pago abierto. Usá el botón de reintento para consultar la referencia ${paymentId}.`
+          : "Ya existe un intento de pago abierto. Usá el botón de reintento para continuar.";
 
     setStatusMessage(view.checkoutStatus, message, Boolean(paymentId));
     return true;

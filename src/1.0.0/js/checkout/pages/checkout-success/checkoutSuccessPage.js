@@ -26,9 +26,7 @@ function isPlainObject(value) {
 }
 
 function normalizeContractText(value) {
-  return typeof value === "string"
-    ? value.trim().toLowerCase()
-    : null;
+  return typeof value === "string" ? value.trim().toLowerCase() : null;
 }
 
 function normalizePaymentStatus(payload = {}) {

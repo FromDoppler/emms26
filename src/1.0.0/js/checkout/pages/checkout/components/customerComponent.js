@@ -69,10 +69,11 @@ export function renderCustomerView(state, view) {
   const isEditableMode = isEditableCustomerMode(state);
   const isSummaryMode = mode === "recognized_complete" || mode === "recognized_incomplete" || mode === "vip";
   const consentsVisible = isEditableMode && shouldAskConsents(state.customerProfile);
+  const isPaymentLocked = Boolean(state.paymentInFlight || state.activePaymentId);
 
   view.customerCard.dataset.customerMode = mode;
   view.emailStep.hidden = !isEmailMode;
-  view.emailInput.readOnly = !isEmailMode;
+  view.emailInput.readOnly = !isEmailMode || isPaymentLocked;
 
   view.customerFields.hidden = !isEditableMode;
   view.profileSummary.hidden = !isSummaryMode;
@@ -87,8 +88,12 @@ export function renderCustomerView(state, view) {
     setRenderedPhoneNumber(state, view, nextPhoneValue);
   }
 
-  view.nameInput.readOnly = mode === "recognized_incomplete" && Boolean(state.customerData.name);
-  view.phoneInput.readOnly = mode === "recognized_incomplete" && Boolean(state.customerData.phone);
+  view.nameInput.readOnly = (mode === "recognized_incomplete" && Boolean(state.customerData.name)) || isPaymentLocked;
+  view.phoneInput.readOnly = (mode === "recognized_incomplete" && Boolean(state.customerData.phone)) || isPaymentLocked;
+  view.policiesCheckbox.disabled = Boolean(isPaymentLocked);
+  view.promotionsCheckbox.disabled = Boolean(isPaymentLocked);
+  view.resolveCustomerButton.disabled = Boolean(isPaymentLocked);
+  view.customerNextStepButton.disabled = Boolean(isPaymentLocked);
 
   setSummaryVariant(view, mode);
   setElementText(view.customerSummaryTitle, mode === "vip" ? "Ya tenés acceso VIP" : "Encontramos tu registro");
@@ -110,6 +115,11 @@ export function renderCustomerView(state, view) {
     setFieldInvalidState(view.policiesCheckbox, false);
     setStatusMessage(view.customerPoliciesStatus, "");
   }
+
+  if (isPaymentLocked) {
+    setStatusMessage(view.customerPoliciesStatus, "");
+    setFieldInvalidState(view.policiesCheckbox, false);
+  }
 }
 
 export function clearCustomerValidation(view) {
@@ -127,6 +137,11 @@ export function createCustomerComponent(context) {
 
   function syncEditableCustomerFields() {
     const state = store.getState();
+
+    if (state.paymentInFlight || state.activePaymentId) {
+      return;
+    }
+
     const snapshot = readCheckoutSnapshot(view, state);
     if (state.customerMode !== "anonymous_editing" && state.customerMode !== "recognized_incomplete") {
       return;

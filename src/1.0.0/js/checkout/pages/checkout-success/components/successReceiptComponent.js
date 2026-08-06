@@ -72,15 +72,10 @@ function getPaymentAmountLabel(receipt) {
   return receipt.finalAmount === null ? "Monto no informado" : `${receipt.currency} ${receipt.finalAmount.toFixed(2)}`;
 }
 
-export function getPaymentCustomerEmail(payment) {
-  return payment.customerEmail || "";
-}
-
 export function renderSuccessReceipt(payment) {
   const receipt = normalizePaymentReceipt(payment);
 
   setElementTextById("ticketName", payment.ticketName || "VIP");
-  setElementTextById("customerName", payment.customerName || "");
   setElementTextById("paymentMethod", getPaymentMethodLabel(receipt));
   setElementTextById("date", formatPaymentDate(payment.createdAt));
   setElementTextById("amount", getPaymentAmountLabel(receipt));

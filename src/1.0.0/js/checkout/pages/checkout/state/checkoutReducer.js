@@ -244,6 +244,12 @@ export function checkoutReducer(state, action = {}) {
         currentCustomerPayload: action.customerPayload === undefined ? state.currentCustomerPayload : action.customerPayload,
       };
 
+    case "PAYMENT_ATTEMPT_CHANGED":
+      return {
+        ...state,
+        activePaymentId: action.paymentId || null,
+      };
+
     case "PAYMENT_OUTCOME_CHANGED":
       return {
         ...state,

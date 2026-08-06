@@ -121,6 +121,10 @@ Worldpay / Comerica
 `paymentId` es la única identidad pública y durable de un intento de checkout.
 
 Debe ser una UUID v4 criptográficamente segura.
+Checkout Payments V1 emite esa UUID en su representación canónica en
+minúsculas y la propaga así en las URLs y requests del propio checkout.
+V1 no garantiza referencias modificadas manualmente ni representaciones
+alternativas de la misma identidad.
 
 Ejemplo:
 
@@ -1155,6 +1159,11 @@ Valores con tipos inválidos producen `422 validation_error` antes de lookup o p
 - no modifica el payment;
 - utiliza `Cache-Control: no-store`.
 
+El cliente de checkout asume navegadores con `AbortController` disponible para
+mantener acotados los requests HTTP de `calculate`, creación, recovery y
+success, incluyendo la lectura completa del body. En este corte no se
+introduce un fallback alternativo de transporte.
+
 Respuestas:
 
 | Resultado           | HTTP |
@@ -1218,7 +1227,6 @@ El frontend mantiene en memoria un `activeAttempt`:
   paymentId,
   serializedBody,
   customerEmail,
-  correlationId,
   approvedFinished,
 }
 ```
@@ -1241,10 +1249,27 @@ Ante:
 - error de red;
 - HTTP 5xx;
 - HTTP 202;
+- body no confiable;
 
 el frontend consulta `get-payment` de forma acotada.
 
 No ejecuta un segundo POST automático.
+Durante ese recovery, un `404` se considera una lectura ambigua: conserva
+`activeAttempt` y sigue el polling acotado.
+Sólo una respuesta `422` proveniente de `create-payment`, correctamente
+parseada, sin proyección `payment`, con `success=false` y con un error
+perteneciente a la allowlist cerrada pre-ledger puede liberar `activeAttempt`.
+Toda respuesta no reconocida se considera ambigua, conserva el intento y no
+habilita un segundo POST automático.
+Durante recovery, una lectura `200` con `payment.paymentId` ausente, vacío o
+no textual es ambigua; una `200` con `payment.paymentId` textual, no vacío y
+diferente del esperado se considera `identity_mismatch`.
+Una vez detectado `identity_mismatch`, el frontend termina inmediatamente el
+ciclo de recovery de esa ejecución, conserva `activeAttempt` y no realiza
+consultas GET adicionales.
+El frontend utiliza `paymentId` como referencia pública del intento.
+`correlationId` es metadata de diagnóstico del backend y no participa en las
+decisiones financieras del frontend.
 
 ### Retry manual
 
@@ -1278,6 +1303,28 @@ payment_id
 ```
 
 y consulta `get-payment`.
+
+Si `get-payment` responde `404`, la página muestra que el payment no existe y
+no lo trata como una operación en curso.
+Si `get-payment` responde `422 validation_error` sin proyección `payment`, la
+página considera que la referencia es inválida y termina la consulta con error.
+Durante el polling de success, timeout, error de red, redirect, body ilegible y
+proyecciones que no cumplen la forma financiera mínima se consideran lecturas
+ambiguas y permiten continuar el polling acotado.
+La forma financiera mínima de V1 exige, con tipos exactos, `success`, `status`,
+`payment.paymentId` y `payment.status`; además, ambos estados deben coincidir,
+la identidad debe ser la esperada y `success` debe corresponder al estado
+`approved`. Los campos `finalAmount`, `currency`, `ticketName`,
+`paymentMethod` y `createdAt` son metadata de presentación del comprobante y no
+participan en la decisión financiera de V1. Su ausencia no convierte en no
+aprobada una fila durable que cumple la forma financiera mínima.
+Una lectura `200` con `payment.paymentId` ausente, vacío o no textual es
+ambigua; una lectura `200` con `payment.paymentId` textual, no vacío y
+diferente del esperado es `identity_mismatch` y falla de forma cerrada
+inmediatamente.
+La proyección válida debe incluir `payment.status` explícito y coherente con
+`status`; si falta o contradice al envelope, la lectura no se considera
+contractual.
 
 La página:
 

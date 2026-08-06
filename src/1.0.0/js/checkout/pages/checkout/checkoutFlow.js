@@ -17,7 +17,6 @@ import { buildCalculatePayload } from "./checkoutPayloads.js";
 import { readCheckoutSnapshot } from "./checkoutSnapshot.js";
 import { isCouponError, resolveCheckoutErrorMessage, resolveCouponErrorMessage } from "./checkoutMessages.js";
 import { validateCheckoutForSubmit } from "./checkoutRules.js";
-import { rotateIdempotencyKey } from "./state/checkoutState.js";
 
 function getValidationTargets(view) {
   return {
@@ -51,6 +50,29 @@ export function createCheckoutFlow({ store, view }) {
     pageComponents.payment.render(state, snapshot);
   };
 
+  function blockIntentChangeWhilePaymentLocked() {
+    const state = store.getState();
+    const hasActiveAttempt = Boolean(state.activePaymentId || submit?.hasActiveAttempt?.());
+    const isPaymentInFlight = Boolean(state.paymentInFlight);
+
+    if (!hasActiveAttempt && !isPaymentInFlight) {
+      return false;
+    }
+
+    render();
+
+    const paymentId = String(state.activePaymentId || "").trim();
+    const message =
+      isPaymentInFlight && !paymentId
+        ? "Estamos procesando tu pago. Esperá a que termine antes de modificar los datos."
+        : paymentId
+          ? `Ya existe un intento de pago abierto. Usá el botón de reintento para consultar la referencia ${paymentId}.`
+          : "Ya existe un intento de pago abierto. Usá el botón de reintento para continuar.";
+
+    setStatusMessage(view.checkoutStatus, message, Boolean(paymentId));
+    return true;
+  }
+
   function initializeCheckoutState() {
     const identity = getCustomerIdentity();
     const email = normalizeEmail(identity.email);
@@ -66,12 +88,9 @@ export function createCheckoutFlow({ store, view }) {
     if (couponCode) {
       view.couponInput.value = couponCode;
     }
-
-    rotateIdempotencyKey(store);
   }
 
   function rotatePurchaseIntent() {
-    rotateIdempotencyKey(store);
     eprotect.teardown();
   }
 
@@ -123,6 +142,10 @@ export function createCheckoutFlow({ store, view }) {
   }
 
   async function calculatePricing(options = {}) {
+    if (blockIntentChangeWhilePaymentLocked()) {
+      return false;
+    }
+
     setCouponStatusMessage(view.couponStatus, "");
     setStatusMessage(view.checkoutStatus, "");
 
@@ -168,6 +191,10 @@ export function createCheckoutFlow({ store, view }) {
   }
 
   function resolveCustomerEmail() {
+    if (blockIntentChangeWhilePaymentLocked()) {
+      return;
+    }
+
     const accepted = pageComponents.customer.resolveCustomerEmail();
     if (!accepted) {
       return;
@@ -178,36 +205,56 @@ export function createCheckoutFlow({ store, view }) {
   }
 
   function handleEmailInput() {
+    if (blockIntentChangeWhilePaymentLocked()) {
+      return;
+    }
+
     pageComponents.summary.clearCouponFeedback();
     pageComponents.customer.handleEmailInput();
   }
 
   function handleProfileInput(element) {
+    if (blockIntentChangeWhilePaymentLocked()) {
+      return;
+    }
+
     pageComponents.summary.clearCouponFeedback();
     pageComponents.customer.handleProfileInput(element);
     render();
   }
 
   function handleConsentChange(element) {
+    if (blockIntentChangeWhilePaymentLocked()) {
+      return;
+    }
+
     pageComponents.summary.clearCouponFeedback();
     pageComponents.customer.handleConsentChange(element);
     render();
   }
 
   function handlePhoneInputChanged() {
+    if (blockIntentChangeWhilePaymentLocked()) {
+      return;
+    }
+
     pageComponents.summary.clearCouponFeedback();
     render();
   }
 
   async function advanceFromCustomerStep() {
+    if (blockIntentChangeWhilePaymentLocked()) {
+      return;
+    }
+
     pageComponents.customer.syncEditableCustomerFields();
     const snapshot = readSnapshot();
     clearValidationFeedback(view);
 
-    const errors = pageComponents.customer.validateCustomerStep(snapshot);
-    if (errors.length > 0) {
-      showValidationErrors(errors);
-      focusFirstInvalidField(errors);
+    const validationErrors = pageComponents.customer.validateCustomerStep(snapshot);
+    if (validationErrors.length > 0) {
+      showValidationErrors(validationErrors);
+      focusFirstInvalidField(validationErrors);
       return;
     }
 
@@ -229,6 +276,10 @@ export function createCheckoutFlow({ store, view }) {
   }
 
   function handleEditStep(step) {
+    if (blockIntentChangeWhilePaymentLocked()) {
+      return;
+    }
+
     pageComponents.summary.clearCouponFeedback();
 
     if (step === STEPS.IDENTIFICATION) {
@@ -244,22 +295,38 @@ export function createCheckoutFlow({ store, view }) {
   }
 
   function handleTicketChange() {
+    if (blockIntentChangeWhilePaymentLocked()) {
+      return;
+    }
+
     pageComponents.summary.handleTicketChange();
     rotatePurchaseIntent();
     calculatePricing();
   }
 
   function toggleCouponEditor() {
+    if (blockIntentChangeWhilePaymentLocked()) {
+      return;
+    }
+
     pageComponents.summary.toggleCouponEditor();
     render();
   }
 
   function handleCouponInput() {
+    if (blockIntentChangeWhilePaymentLocked()) {
+      return;
+    }
+
     pageComponents.summary.handleCouponInput();
     render();
   }
 
   function applyCoupon() {
+    if (blockIntentChangeWhilePaymentLocked()) {
+      return;
+    }
+
     const couponCode = pageComponents.summary.readCouponDraft();
     if (!couponCode) {
       setCouponStatusMessage(view.couponStatus, "Ingresá un código para aplicarlo.", "warning");
@@ -273,6 +340,10 @@ export function createCheckoutFlow({ store, view }) {
   }
 
   function removeCoupon() {
+    if (blockIntentChangeWhilePaymentLocked()) {
+      return;
+    }
+
     pageComponents.summary.removeCoupon();
     removeCouponCodeParamFromUrl();
     rotatePurchaseIntent();
@@ -284,6 +355,12 @@ export function createCheckoutFlow({ store, view }) {
   }
 
   async function handleSubmit() {
+    if (submit.hasActiveAttempt?.()) {
+      await submit.submit();
+      render();
+      return;
+    }
+
     pageComponents.customer.syncEditableCustomerFields();
     pageComponents.summary.clearCouponDraft();
     const snapshot = readSnapshot();

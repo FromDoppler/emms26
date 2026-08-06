@@ -22,10 +22,6 @@
                     <dd id="ticketName"></dd>
                 </div>
                 <div>
-                    <dt>Titular</dt>
-                    <dd id="customerName"></dd>
-                </div>
-                <div>
                     <dt>Medio de pago</dt>
                     <dd id="paymentMethod"></dd>
                 </div>

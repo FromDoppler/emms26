@@ -32,16 +32,13 @@ function dispatchPricingFailed(store, ticketLoadError = "No se pudieron cargar l
 }
 
 export function createPricingService({ store, buildPayload }) {
-  async function calculate({ allowTicketRetry = true, couponCode = null } = {}) {
+  async function calculate({ couponCode = null } = {}) {
     const requestedId = store.getState().pricingRequestId + 1;
     store.dispatch({ type: "PRICING_REQUESTED" });
 
     try {
       const state = store.getState();
       const requestPayload = buildPayload(state, { couponCode });
-      const requestedTicketCode = requestPayload.ticketCode || state.selectedTicketCode || null;
-      const hasCustomerEmail = Boolean(String(requestPayload.customerEmail || "").trim());
-      const hasCouponCode = Boolean(String(requestPayload.couponCode || "").trim());
       const { response, payload: rawPayload } = await calculatePayment(requestPayload);
 
       if (store.getState().pricingRequestId !== requestedId) {
@@ -80,11 +77,6 @@ export function createPricingService({ store, buildPayload }) {
           availableTickets,
           selectedTicketCode,
         });
-
-        if (allowTicketRetry && singleTicketCode && singleTicketCode !== requestedTicketCode && (hasCustomerEmail || hasCouponCode)) {
-          const retryResult = await calculate({ allowTicketRetry: false, couponCode });
-          return customerProfile !== undefined && retryResult.customerProfile === undefined ? { ...retryResult, customerProfile } : retryResult;
-        }
 
         return {
           ok: false,

@@ -384,8 +384,6 @@ export function createEprotectService({ store, payframeElement }) {
       ok: true,
       payment: {
         worldPayLowValueToken: response.paypageRegistrationId,
-        firstSixDigitsCCNumber: response.firstSix || null,
-        lastFourDigitsCCNumber: response.lastFour || null,
         ccExpMonth: response.expMonth || null,
         ccExpYear: response.expYear || null,
         ccType,

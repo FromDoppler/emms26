@@ -27,7 +27,6 @@ export function createCheckoutState(root) {
     pricingLoadAttempted: false,
     pricingStale: false,
     appliedCoupon: null,
-    idempotencyKey: null,
     eprotectClient: null,
     eprotectReady: false,
     eprotectVisible: false,
@@ -35,6 +34,7 @@ export function createCheckoutState(root) {
     paymentStatusMessage: "",
     paymentStatusIsError: false,
     paymentInFlight: false,
+    activePaymentId: null,
     customerProfile: null,
     customerProfileEmail: null,
     resolvedCouponCode: null,
@@ -55,25 +55,23 @@ export function createCheckoutState(root) {
   };
 }
 
-export function refreshIdempotencyKey(state) {
-  if (window.crypto && typeof window.crypto.randomUUID === "function") {
-    state.idempotencyKey = window.crypto.randomUUID();
-    return;
+export function createPaymentId() {
+  const cryptoApi = window.crypto;
+
+  if (!cryptoApi) {
+    return null;
   }
 
-  state.idempotencyKey = generateUuidV4();
-}
+  if (typeof cryptoApi.randomUUID === "function") {
+    return cryptoApi.randomUUID();
+  }
 
-function generateUuidV4() {
+  if (typeof cryptoApi.getRandomValues !== "function") {
+    return null;
+  }
+
   const bytes = new Uint8Array(16);
-
-  if (window.crypto && typeof window.crypto.getRandomValues === "function") {
-    window.crypto.getRandomValues(bytes);
-  } else {
-    for (let i = 0; i < bytes.length; i += 1) {
-      bytes[i] = Math.floor(Math.random() * 256);
-    }
-  }
+  cryptoApi.getRandomValues(bytes);
 
   bytes[6] = (bytes[6] & 0x0f) | 0x40;
   bytes[8] = (bytes[8] & 0x3f) | 0x80;
@@ -81,12 +79,4 @@ function generateUuidV4() {
   const hex = Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0"));
 
   return [hex.slice(0, 4).join(""), hex.slice(4, 6).join(""), hex.slice(6, 8).join(""), hex.slice(8, 10).join(""), hex.slice(10, 16).join("")].join("-");
-}
-
-export function rotateIdempotencyKey(store) {
-  store.setState((state) => {
-    const nextState = { ...state };
-    refreshIdempotencyKey(nextState);
-    return nextState;
-  }, "IDEMPOTENCY_KEY_REFRESHED");
 }

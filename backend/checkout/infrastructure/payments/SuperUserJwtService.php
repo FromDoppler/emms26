@@ -39,11 +39,38 @@ class SuperUserJwtService
 
     private function loadPrivateKey(): string
     {
+        $privateKeyFile = trim((string) DOPPLER_PAYMENTS_API_PRIVATE_KEY_FILE);
+        if ($privateKeyFile !== '') {
+            return $this->loadPrivateKeyFromFile($privateKeyFile);
+        }
+
         if (DOPPLER_PAYMENTS_API_PRIVATE_KEY !== '') {
             return $this->normalizePrivateKey(DOPPLER_PAYMENTS_API_PRIVATE_KEY);
         }
 
         throw new Exception('Missing Doppler payments private key configuration.');
+    }
+
+    private function loadPrivateKeyFromFile(string $privateKeyFile): string
+    {
+        if (!is_file($privateKeyFile)) {
+            throw new Exception('Doppler payments private key file does not exist.');
+        }
+
+        if (!is_readable($privateKeyFile)) {
+            throw new Exception('Doppler payments private key file is not readable.');
+        }
+
+        $privateKey = file_get_contents($privateKeyFile);
+        if ($privateKey === false) {
+            throw new Exception('Could not read Doppler payments private key file.');
+        }
+
+        if (trim($privateKey) === '') {
+            throw new Exception('Doppler payments private key file is empty.');
+        }
+
+        return $privateKey;
     }
 
     private function normalizePrivateKey(string $privateKey): string

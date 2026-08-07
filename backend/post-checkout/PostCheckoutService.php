@@ -124,7 +124,7 @@ class PostCheckoutService
                 $runner = $runnerFactory();
                 $runner->runForAggregate('checkout_transaction', (int) $transaction['id'], [
                     'correlation_id' => $transaction['correlation_id'],
-                    'aggregate_payment_id' => $transaction['payment_id'],
+                    'payment_id' => $transaction['payment_id'],
                 ]);
             } catch (Throwable $e) {
                 Logger::event('inline_outbox_failed_after_payment_approved', [

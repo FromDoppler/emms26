@@ -22,9 +22,9 @@ class InlineUserEventJobRunner
         } catch (Throwable $e) {
             Logger::event('inline_outbox_read_failed', [
                 'correlation_id' => $context['correlation_id'] ?? null,
+                'payment_id' => $context['payment_id'] ?? null,
                 'aggregate_type' => $aggregateType,
                 'aggregate_id' => $aggregateId,
-                'aggregate_payment_id' => $context['aggregate_payment_id'] ?? null,
                 'error' => substr($e->getMessage(), 0, 1000),
             ], 'USER_EVENT', Logger::ERROR);
 
@@ -46,13 +46,13 @@ class InlineUserEventJobRunner
         $skipped = 0;
         $uncertain = 0;
         $correlationId = $context['correlation_id'] ?? null;
-        $aggregatePaymentId = $context['aggregate_payment_id'] ?? null;
+        $paymentId = $context['payment_id'] ?? null;
 
         Logger::event('inline_outbox_started', [
             'correlation_id' => $correlationId,
+            'payment_id' => $paymentId,
             'aggregate_type' => $aggregateType,
             'aggregate_id' => $aggregateId,
-            'aggregate_payment_id' => $aggregatePaymentId,
             'job_count' => count($jobs),
         ], 'USER_EVENT', Logger::INFO);
 
@@ -65,9 +65,9 @@ class InlineUserEventJobRunner
 
                 Logger::event('inline_outbox_job_claim_failed', [
                     'correlation_id' => $correlationId,
+                    'payment_id' => $paymentId,
                     'aggregate_type' => $aggregateType,
                     'aggregate_id' => $aggregateId,
-                    'aggregate_payment_id' => $aggregatePaymentId,
                     'job_id' => (int) $job['id'],
                     'job_type' => $job['job_type'],
                     'error' => $this->truncateError($e->getMessage()),
@@ -81,9 +81,9 @@ class InlineUserEventJobRunner
 
                 Logger::event('inline_outbox_job_claim_skipped', [
                     'correlation_id' => $correlationId,
+                    'payment_id' => $paymentId,
                     'aggregate_type' => $aggregateType,
                     'aggregate_id' => $aggregateId,
-                    'aggregate_payment_id' => $aggregatePaymentId,
                     'job_id' => (int) $job['id'],
                     'job_type' => $job['job_type'],
                 ], 'USER_EVENT', Logger::WARNING);
@@ -93,9 +93,9 @@ class InlineUserEventJobRunner
 
             Logger::event('inline_outbox_job_started', [
                 'correlation_id' => $correlationId,
+                'payment_id' => $paymentId,
                 'aggregate_type' => $aggregateType,
                 'aggregate_id' => $aggregateId,
-                'aggregate_payment_id' => $aggregatePaymentId,
                 'job_id' => (int) $job['id'],
                 'job_type' => $job['job_type'],
             ], 'USER_EVENT', Logger::INFO);
@@ -121,9 +121,9 @@ class InlineUserEventJobRunner
 
                     Logger::event('inline_outbox_job_mark_failed_persist_error', [
                         'correlation_id' => $correlationId,
+                        'payment_id' => $paymentId,
                         'aggregate_type' => $aggregateType,
                         'aggregate_id' => $aggregateId,
-                        'aggregate_payment_id' => $aggregatePaymentId,
                         'job_id' => (int) $job['id'],
                         'job_type' => $job['job_type'],
                         'error' => $failedPersistError,
@@ -135,16 +135,16 @@ class InlineUserEventJobRunner
                     $this->tryAnnotateUncertain(
                         (int) $job['id'],
                         'mark_failed_not_persisted_after_handler_failed',
-                        $correlationId, $aggregateType, $aggregateId, $aggregatePaymentId, $job['job_type'],
+                        $correlationId, $paymentId, $aggregateType, $aggregateId, $job['job_type'],
                         $failedPersistError
                     );
                 }
 
                 Logger::event('inline_outbox_job_failed', [
                     'correlation_id' => $correlationId,
+                    'payment_id' => $paymentId,
                     'aggregate_type' => $aggregateType,
                     'aggregate_id' => $aggregateId,
-                    'aggregate_payment_id' => $aggregatePaymentId,
                     'job_id' => (int) $job['id'],
                     'job_type' => $job['job_type'],
                     'error' => $this->truncateError($e->getMessage()),
@@ -161,9 +161,9 @@ class InlineUserEventJobRunner
 
                     Logger::event('inline_outbox_job_done', [
                         'correlation_id' => $correlationId,
+                        'payment_id' => $paymentId,
                         'aggregate_type' => $aggregateType,
                         'aggregate_id' => $aggregateId,
-                        'aggregate_payment_id' => $aggregatePaymentId,
                         'job_id' => (int) $decodedJob['id'],
                         'job_type' => $decodedJob['job_type'],
                     ], 'USER_EVENT', Logger::INFO);
@@ -175,14 +175,14 @@ class InlineUserEventJobRunner
                 $this->tryAnnotateUncertain(
                     (int) $decodedJob['id'],
                     'mark_done_returned_false_after_handler_completed',
-                    $correlationId, $aggregateType, $aggregateId, $aggregatePaymentId, $decodedJob['job_type']
+                    $correlationId, $paymentId, $aggregateType, $aggregateId, $decodedJob['job_type']
                 );
 
                 Logger::event('inline_outbox_job_state_persist_uncertain', [
                     'correlation_id' => $correlationId,
+                    'payment_id' => $paymentId,
                     'aggregate_type' => $aggregateType,
                     'aggregate_id' => $aggregateId,
-                    'aggregate_payment_id' => $aggregatePaymentId,
                     'job_id' => (int) $decodedJob['id'],
                     'job_type' => $decodedJob['job_type'],
                     'reason' => 'mark_done_returned_false_after_handler_completed',
@@ -193,15 +193,15 @@ class InlineUserEventJobRunner
                 $this->tryAnnotateUncertain(
                     (int) $decodedJob['id'],
                     'mark_done_failed_after_handler_completed',
-                    $correlationId, $aggregateType, $aggregateId, $aggregatePaymentId, $decodedJob['job_type'],
+                    $correlationId, $paymentId, $aggregateType, $aggregateId, $decodedJob['job_type'],
                     $this->truncateError($e->getMessage())
                 );
 
                 Logger::event('inline_outbox_job_state_persist_uncertain', [
                     'correlation_id' => $correlationId,
+                    'payment_id' => $paymentId,
                     'aggregate_type' => $aggregateType,
                     'aggregate_id' => $aggregateId,
-                    'aggregate_payment_id' => $aggregatePaymentId,
                     'job_id' => (int) $decodedJob['id'],
                     'job_type' => $decodedJob['job_type'],
                     'reason' => 'mark_done_failed_after_handler_completed',
@@ -222,9 +222,9 @@ class InlineUserEventJobRunner
 
         Logger::event('inline_outbox_finished', [
             'correlation_id' => $correlationId,
+            'payment_id' => $paymentId,
             'aggregate_type' => $aggregateType,
             'aggregate_id' => $aggregateId,
-            'aggregate_payment_id' => $aggregatePaymentId,
             'status' => $result['status'],
             'processed' => $result['processed'],
             'failed' => $result['failed'],
@@ -240,9 +240,9 @@ class InlineUserEventJobRunner
         int $jobId,
         string $reason,
         ?string $correlationId,
+        ?string $paymentId,
         string $aggregateType,
         int $aggregateId,
-        ?string $aggregatePaymentId,
         string $jobType,
         ?string $errorDetail = null
     ): void {
@@ -251,9 +251,9 @@ class InlineUserEventJobRunner
             if (!$persisted) {
                 Logger::event('inline_outbox_job_annotate_uncertain_not_persisted', [
                     'correlation_id' => $correlationId,
+                    'payment_id' => $paymentId,
                     'aggregate_type' => $aggregateType,
                     'aggregate_id' => $aggregateId,
-                    'aggregate_payment_id' => $aggregatePaymentId,
                     'job_id' => $jobId,
                     'job_type' => $jobType,
                     'reason' => $reason,
@@ -262,9 +262,9 @@ class InlineUserEventJobRunner
         } catch (Throwable $e) {
             Logger::event('inline_outbox_job_annotate_uncertain_persist_error', [
                 'correlation_id' => $correlationId,
+                'payment_id' => $paymentId,
                 'aggregate_type' => $aggregateType,
                 'aggregate_id' => $aggregateId,
-                'aggregate_payment_id' => $aggregatePaymentId,
                 'job_id' => $jobId,
                 'job_type' => $jobType,
                 'reason' => $reason,

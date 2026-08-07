@@ -77,36 +77,102 @@ class Logger
         return true;
     }
 
+    private static function writeFallback(array $payload, string $targetFile, Throwable $error): void
+    {
+        $diagnosticContext = [];
+        $sourceContext = (isset($payload['context']) && is_array($payload['context'])) ? $payload['context'] : [];
+        foreach (['payment_id', 'correlation_id', 'aggregate_type', 'aggregate_id', 'job_id', 'job_type'] as $key) {
+            if (array_key_exists($key, $sourceContext)) {
+                $diagnosticContext[$key] = $sourceContext[$key];
+            }
+        }
+
+        $fallback = [
+            'timestamp' => date('c'),
+            'service' => 'LOGGER',
+            'level' => self::ERROR,
+            'message' => 'Could not write structured log entry',
+            'event' => 'logger_file_write_failed',
+            'request_id' => self::getRequestId(),
+            'target_file' => $targetFile,
+            'logger_error' => substr($error->getMessage(), 0, 1000),
+            'original_service' => $payload['service'] ?? null,
+            'original_level' => $payload['level'] ?? null,
+            'original_event' => $payload['event'] ?? null,
+            'context' => $diagnosticContext,
+        ];
+
+        $line = self::encodeJson($fallback, self::ERROR);
+
+        try {
+            if (error_log($line)) {
+                return;
+            }
+        } catch (Throwable $ignored) {
+        }
+
+        if (defined('STDERR') && is_resource(STDERR)) {
+            @fwrite(STDERR, $line . PHP_EOL);
+        }
+    }
+
     private static function writeJson($level, $message, $context = [], $service = 'APP', $event = null)
     {
         $level = self::normalizeLevel($level);
+        $payload = [];
+        $logFile = '(unresolved log file)';
 
         if (!self::shouldLog($level)) {
-            return;
+            return true;
         }
 
-        if (!is_array($context)) {
-            $context = ['value' => $context];
+        try {
+            if (!is_array($context)) {
+                $context = ['value' => $context];
+            }
+
+            $payload = [
+                'timestamp' => date('c'),
+                'service' => $service,
+                'level' => $level,
+                'message' => $message,
+                'request_id' => self::getRequestId(),
+            ];
+
+            if ($event !== null) {
+                $payload['event'] = $event;
+            }
+
+            if (!empty($context)) {
+                $payload['context'] = $context;
+            }
+
+            set_error_handler(static function ($severity, $message, $file, $line): void {
+                throw new ErrorException($message, 0, $severity, $file, $line);
+            });
+            try {
+                $logFile = self::getLogFile($level);
+                $line = self::encodeJson($payload, $level) . PHP_EOL;
+                $bytesWritten = file_put_contents($logFile, $line, FILE_APPEND | LOCK_EX);
+            } finally {
+                restore_error_handler();
+            }
+
+            if ($bytesWritten === false || $bytesWritten !== strlen($line)) {
+                throw new RuntimeException(
+                    'Incomplete log write to ' . $logFile . ': expected ' . strlen($line) . ' bytes, wrote '
+                    . ($bytesWritten === false ? 'none' : $bytesWritten)
+                );
+            }
+
+            return true;
+        } catch (Throwable $error) {
+            try {
+                self::writeFallback($payload, $logFile, $error);
+            } catch (Throwable $ignored) {
+            }
+            return false;
         }
-
-        $payload = [
-            'timestamp' => date('c'),
-            'service' => $service,
-            'level' => $level,
-            'message' => $message,
-            'request_id' => self::getRequestId(),
-        ];
-
-        if ($event !== null) {
-            $payload['event'] = $event;
-        }
-
-        if (!empty($context)) {
-            $payload['context'] = $context;
-        }
-
-        $logFile = self::getLogFile($level);
-        file_put_contents($logFile, self::encodeJson($payload, $level) . PHP_EOL, FILE_APPEND | LOCK_EX);
     }
 
     public static function log($level, $message, $context = [], $service = 'APP')
@@ -147,17 +213,7 @@ class Logger
 
     public static function event($event, array $context = [], $service = 'APP', $level = self::INFO)
     {
-        set_error_handler(static function ($severity, $message, $file, $line): void {
-            throw new ErrorException($message, 0, $severity, $file, $line);
-        });
-        try {
-            self::writeJson($level, $event, $context, $service, $event);
-            return true;
-        } catch (Throwable $e) {
-            return false;
-        } finally {
-            restore_error_handler();
-        }
+        return self::writeJson($level, $event, $context, $service, $event);
     }
 
     public static function newRequest()

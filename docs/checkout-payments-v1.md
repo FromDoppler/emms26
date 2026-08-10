@@ -126,6 +126,9 @@ minúsculas y la propaga así en las URLs y requests del propio checkout.
 V1 no garantiza referencias modificadas manualmente ni representaciones
 alternativas de la misma identidad.
 
+`payment_id` es la referencia canónica de observabilidad en logs y contexto
+interno del backend. No cambia el contrato HTTP público de `paymentId`.
+
 Ejemplo:
 
 ```text
@@ -1068,6 +1071,9 @@ Por lo tanto, un payment `approved` garantiza que los jobs fueron persistidos.
 Después del commit, el sistema registra un `shutdown function` que intenta ejecutar los jobs pendientes mediante una conexión nueva.
 
 La ejecución es best effort.
+Los eventos post-checkout y el runner registran `payment_id` junto con
+`correlation_id`, `aggregate_type`, `aggregate_id`, `job_id` y `job_type` para
+trazabilidad operacional.
 
 Una falla del runner:
 
@@ -1361,7 +1367,10 @@ Checkout Payments V1 aplica las siguientes reglas:
 - mantener mensajes públicos desacoplados de mensajes remotos;
 - utilizar `correlationId` y `paymentId` para trazabilidad.
 
-`Logger::event()` es best effort: una falla de observabilidad no debe alterar el resultado financiero ni romper el flujo principal.
+`Logger::event()` es best effort: una falla de observabilidad no debe alterar
+el resultado financiero ni romper el flujo principal. Si falla la escritura en
+archivo, el sink de logging usa un fallback alternativo para no perder eventos
+críticos silenciosamente.
 
 ---
 

@@ -323,6 +323,7 @@ class DopplerPaymentsApiClient implements PaymentProviderClient
             'provider' => $result->provider,
             'status' => $result->status,
             'response_code' => $result->responseCode,
+            'authorization_number' => $result->authorizationNumber,
             'authorization_response_code' => $result->authorizationResponseCode,
             'purchase_response_code' => $result->purchaseResponseCode,
             'transaction_link_id' => $result->transactionLinkId,

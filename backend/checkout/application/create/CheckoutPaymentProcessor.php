@@ -586,6 +586,11 @@ class CheckoutPaymentProcessor
             Logger::event('payment_provider_approval_persisted', [
                 'payment_id' => $paymentId,
                 'correlation_id' => $transaction['correlation_id'],
+                'provider' => $transaction['provider'],
+                'authorization_number' => $transaction['authorization_number'],
+                'transaction_link_id' => $transaction['transaction_link_id'],
+                'authorization_response_code' => $transaction['authorization_response_code'],
+                'purchase_response_code' => $transaction['purchase_response_code'],
             ], 'PAYMENTS', Logger::INFO);
             return $this->complete($completion, $context, $paymentId);
         }

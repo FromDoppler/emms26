@@ -150,6 +150,15 @@
   color: var(--color-bg);
 }
 
+.hero-registration.hero-registration--digitaltrends-pre .hero-registration__text h1 span.top {
+  background: var(--gradient-secondary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  line-height: 1;
+}
+
 .hero-registration .hero-registration__text h1 span.top.top--transition {
   letter-spacing: 1px;
   line-height: 46px;

@@ -8,7 +8,7 @@
             </div>
             <span class="emms__header__logo-separator"></span>
             <div class="emms__header__logo emms__header__logo--aniversario">
-                <img src="/src/img/logos/logo-20-aniversario.png" alt="Edición 20 Aniversario">
+                <img src="/src/img/logos/logo-doppler-hostinger.png" alt="Doppler y Hostinger">
             </div>
         </div>
         <a class="emms__header__nav--mb" id="btn-burger"></a>

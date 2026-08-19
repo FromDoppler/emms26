@@ -2,10 +2,8 @@
 //TODO: Queda pendiente que pasen el video 
 $contents = [
   '/' => [
-    'heading' => 'Descubre por qué el EMMS es una cita clave si quieres crecer en digital',
-    'body' => 'Conoce cómo este evento ayuda a profesionales, marcas y negocios 
-a actualizarse, encontrar nuevas ideas y llevarlas a la acción.
-',
+    'heading' => '¿Tienes todo listo para sumarte?',
+    'body' => 'Mira este video y descubre por qué el EMMS transformará tu estrategia de Marketing Digital, de la mano de especialistas del sector.',
     'button' => 'ASEGURA TU LUGAR GRATIS',
     'link' => 'digital-trends#registro',
     'youtubeCode' => 'rTImzuky-LE',

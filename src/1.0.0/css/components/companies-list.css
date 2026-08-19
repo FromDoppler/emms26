@@ -1,23 +1,23 @@
 .companies {
   padding: 56px 0 70px 0;
   text-align: center;
-  background-color: #ffffff;
+  background-color: var(--color-bg);
 }
 
 .companies .companies__body {
   font-weight: 700;
-  font-size: 16px;
-  line-height: 24px;
+  font-size: var(--font-p-size);
+  line-height: var(--font-p-line);
   text-align: center;
-  color: #333333;
+  color: var(--color-muted);
   margin: 35px;
 }
 
 .companies .companies__body .companies__body-link {
   font-style: normal;
   font-weight: 700;
-  font-size: 16px;
-  line-height: 24px;
+  font-size: var(--font-p-size);
+  line-height: var(--font-p-line);
   text-align: center;
   color: #33ad73;
 }
@@ -30,20 +30,54 @@
 }
 
 .companies h2 {
-  font-size: 22px;
-  line-height: 24px;
+  font-size: var(--font-h4-size);
+  line-height: var(--font-h4-line);
   font-weight: 700;
-  color: #333333;
+  color: var(--color-muted);
   margin: 0 0 52px 0;
   animation-delay: 0.1s;
 }
 
 .companies h3 {
   font-size: 20px;
-  line-height: 26px;
+  line-height: 30px;
   font-weight: 700;
-  color: #333333;
+  color: var(--color-muted);
   animation-delay: 0.2s;
+}
+
+.companies .companies__organizers {
+  margin-bottom: 52px;
+}
+
+.companies.companies--categories .companies__organizers-title {
+  margin: 0 0 24px;
+  color: #333333;
+  font-size: 30px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 32px;
+}
+
+.companies .companies__organizers-logos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 24px 32px;
+}
+
+.companies .companies__organizers-logos img {
+  display: block;
+  width: auto;
+  height: 42px;
+}
+
+.companies .companies__title {
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 24px;
 }
 
 .companies .companies-list {
@@ -71,7 +105,7 @@
   font-size: 16px;
   line-height: 22px;
   font-weight: 400;
-  color: #333333;
+  color: var(--color-muted);
   margin: 40px 0 0 0;
   display: block;
   animation-delay: 0.3s;

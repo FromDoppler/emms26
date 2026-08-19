@@ -51,7 +51,15 @@ foreach ($sponsorTypes as $type => $config) {
 
 <section class="companies companies--categories" id="aliados">
   <div class="emms__container--lg">
-    <h2 class="emms__fade-in"><?= $content['title'] ?></h2>
+    <div class="companies__organizers emms__fade-in">
+      <h2 class="companies__organizers-title">Organizan este evento:</h2>
+      <div class="companies__organizers-logos">
+        <img src="/src/img/organizers/doppler.png" alt="Doppler">
+        <img src="/src/img/organizers/hostinger.png" alt="Hostinger">
+      </div>
+    </div>
+
+    <h2 class="companies__title emms__fade-in"><?= $content['title'] ?></h2>
 
     <?php foreach ($sponsorTypes as $type => $config): ?>
       <?php if (!empty($sponsorsByType[$type])): ?>

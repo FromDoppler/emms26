@@ -21,8 +21,8 @@
 .emms__purple-anchor {
   font-style: normal;
   font-weight: 900;
-  font-size: 16px;
-  line-height: 24px;
+  font-size: var(--font-p-size);
+  line-height: var(--font-p-line);
   text-align: center;
   color: #bd7aff;
   display: block;
@@ -37,7 +37,7 @@
   font-size: 16px;
   line-height: 20px;
   font-weight: 700;
-  color: #fff;
+  color: var(--color-bg);
   background: var(--color-primary);
   border-radius: 100px;
   padding: 20px 50px;
@@ -85,7 +85,7 @@
   text-align: center;
   text-transform: uppercase;
   color: var(--color-primary);
-  background-color: #ffffff;
+  background-color: var(--color-bg);
 }
 
 .emms__cta.emms__cta--terciary {
@@ -173,7 +173,7 @@
 .emms__cta.emms__cta--inactive {
   background: #cccccc;
   pointer-events: none;
-  color: #ffffff;
+  color: var(--color-bg);
   font-size: 16px;
   line-height: 20px;
   text-align: center;
@@ -216,6 +216,15 @@
   text-decoration: unset;
 }
 
+.emms__cta.emms__cta--green {
+  background: #008046;
+  color: var(--color-bg);
+}
+
+.emms__cta.emms__cta--green:hover {
+  background: #005b32;
+}
+
 .emms__cta img {
   vertical-align: middle;
   margin-right: 5px;
@@ -227,7 +236,7 @@
   font-size: 16px;
   line-height: 20px;
   text-transform: uppercase;
-  color: #ffffff;
+  color: var(--color-bg);
 }
 
 .emms__cta.emms__cta--nd {

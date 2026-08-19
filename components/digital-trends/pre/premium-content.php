@@ -10,23 +10,23 @@ if (!function_exists('getContentForUrl')) {
 
     $contentMap = [
       'default' => [
-        'heading' => 'Capacítate gratis con <br> la Biblioteca de Recursos',
-        'body' => 'Aprovecha los materiales descargables y herramientas que traen nuestros aliados para optimizar tu estrategia digital antes del evento.',
-        'list' => null,
+        'heading' => 'Accede a la Biblioteca de Recursos <br> ¡Es gratis y súper completa!',
+        'body' => null,
+        'list' => $resourceList,
       ],
       'group1' => [
-        'heading' => 'Capacítate gratis con <br> la Biblioteca de Recursos',
-        'body' => 'Aprovecha los materiales descargables y herramientas que traen nuestros aliados para optimizar tu estrategia digital antes del evento.',
-        'list' => null,
+        'heading' => 'Accede a la Biblioteca de Recursos <br> ¡Es gratis y súper completa!',
+        'body' => null,
+        'list' => $resourceList,
       ],
       'group2' => [
-        'heading' => 'Capacítate gratis con <br> la  Biblioteca de Recursos',
-        'body' => 'Aprovecha los materiales descargables y herramientas que traen nuestros aliados para optimizar tu estrategia digital antes del evento.',
-        'list' => null,
+        'heading' => 'Accede a la Biblioteca de Recursos <br> ¡Es gratis y súper completa!',
+        'body' => null,
+        'list' => $resourceList,
       ],
       'with-list' => [
-        'heading' => 'Capacítate gratis con <br> la  Biblioteca de Recursos',
-        'body' => 'Aprovecha los materiales descargables y herramientas que traen nuestros aliados para optimizar tu estrategia digital antes del evento.',
+        'heading' => 'Accede a la Biblioteca de Recursos <br> ¡Es gratis y súper completa!',
+        'body' => null,
         'list' => $resourceList,
       ],
     ];
@@ -61,7 +61,9 @@ $isDigitalTrends = in_array($normalizedUrl, [
     </div>
     <div class="premium-content__text emms__fade-in">
       <h2><?php echo ($content['heading']); ?></h2>
-      <p><?php echo ($content['body']); ?></p>
+      <?php if (!empty($content['body'])) { ?>
+        <p><?php echo ($content['body']); ?></p>
+      <?php } ?>
 
       <?php if (!empty($content['list'])) { ?>
         <ul class="premium-content__list emms__fade-in">

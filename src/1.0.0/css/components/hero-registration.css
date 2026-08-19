@@ -725,8 +725,230 @@
 
 .hero-registration--registered.hero-registration--registered--digitaltrends-pre {
   background: #0b0627 url("../../../img/backgrounds/bg-hero-aniversario-registered.png") no-repeat;
-  background-size: 100% 100%;
+  background-size: cover;
   background-position: center center;
+  padding: 30px 0 120px;
+}
+
+.registered-hero--free {
+  padding-top: 111px;
+}
+
+.registered-hero--vip {
+  padding-top: 111px;
+}
+
+@media (max-width: 992px) {
+  .registered-hero--free,
+  .registered-hero--vip {
+    padding-top: 77px;
+  }
+}
+
+.hero-registration--registered.hero-registration--registered--digitaltrends-vip {
+  padding: 105px 0 120px;
+  background: #0b0627 url("../../../img/backgrounds/bg-hero-aniversario-registered.png") center / cover no-repeat;
+}
+
+.hero-registration--registered--digitaltrends-vip .emms__container--md {
+  max-width: 990px;
+}
+
+.hero-registration--registered--digitaltrends-vip h1 {
+  font-size: 50px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 52px;
+  letter-spacing: -1px;
+}
+
+.hero-registration--registered.hero-registration--registered--digitaltrends-vip h1 em {
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 23.121px;
+  letter-spacing: 1.2px;
+}
+
+.hero-registration--registered--digitaltrends-vip h1 span {
+  display: block;
+}
+
+.hero-registration--registered--digitaltrends-vip .hero-registration__vip-copy {
+  max-width: 950px;
+  margin: 30px auto 0;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 24px;
+}
+
+.hero-registration--registered--digitaltrends-vip .hero-registration__vip-copy a {
+  color: var(--color-bg);
+}
+
+.hero-registration--registered--digitaltrends-vip .hero-registration__vip-referral {
+  box-sizing: border-box;
+  min-width: 544px;
+  margin-top: 50px;
+  padding: 16px 42px;
+  font-size: 21px;
+  line-height: 23px;
+  letter-spacing: 0.5px;
+}
+
+.hero-registration--registered--digitaltrends-pre .emms__container--md {
+  max-width: 990px;
+}
+
+.hero-registration--registered--digitaltrends-pre h1 {
+  font-size: 50px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 52px;
+  letter-spacing: -1px;
+}
+
+.hero-registration--registered.hero-registration--withoutform.hero-registration--registered--digitaltrends-pre h1 em {
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 23.121px;
+  letter-spacing: 1.2px;
+}
+
+.hero-registration--registered--digitaltrends-pre h1 span {
+  display: block;
+}
+
+.hero-registration--registered--digitaltrends-pre .hero-registration__vip-copy {
+  max-width: 950px;
+  margin: 18px auto 23px;
+  font-size: 16px;
+  font-style: normal;
+  line-height: 24px;
+  font-weight: 700;
+}
+
+.hero-registration--registered--digitaltrends-pre .hero-registration__vip-copy strong {
+  color: #2fffa8;
+}
+
+.hero-registration--registered--digitaltrends-pre .emms-counter {
+  flex-direction: column;
+  padding: 0 0 27px;
+  background: transparent;
+}
+
+.hero-registration--registered--digitaltrends-pre .emms-counter__title {
+  margin: 0 0 6px;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 19px;
+}
+
+.hero-registration--registered--digitaltrends-pre .emms-counter__item {
+  margin-right: 18px;
+}
+
+.hero-registration--registered--digitaltrends-pre .emms-counter__item::after {
+  left: calc(100% + 8px);
+  width: 4px;
+  height: 12px;
+}
+
+.hero-registration--registered--digitaltrends-pre .emms-counter__digit {
+  width: 30px;
+  height: 28px;
+  border-radius: 2px;
+  color: #1e0143;
+  font-size: 21px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 27px;
+}
+
+.hero-registration--registered--digitaltrends-pre .emms-counter__label {
+  top: calc(100% + 3px);
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 19px;
+}
+
+.hero-registration--registered--digitaltrends-pre .hero-registration__vip-actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 32px;
+}
+
+.hero-registration--registered--digitaltrends-pre .hero-registration__vip-actions .emms__cta {
+  margin: 0;
+  padding: 16px 42px;
+  border-width: 1px;
+  font-size: 21px;
+  line-height: 23px;
+  letter-spacing: 0.5px;
+}
+
+@media (max-width: 620px) {
+  .hero-registration--registered.hero-registration--registered--digitaltrends-vip {
+    padding: 70px 20px 120px;
+    background-size: cover;
+  }
+
+  .hero-registration--registered--digitaltrends-vip h1 {
+    font-size: 28px;
+    line-height: 32px;
+  }
+
+  .hero-registration--registered--digitaltrends-vip .hero-registration__vip-copy {
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  .hero-registration--registered--digitaltrends-vip .hero-registration__vip-copy br {
+    display: none;
+  }
+
+  .hero-registration--registered--digitaltrends-vip .hero-registration__vip-referral {
+    width: 100%;
+    min-width: 0;
+    max-width: 544px;
+  }
+
+  .hero-registration--registered.hero-registration--registered--digitaltrends-pre {
+    padding: 40px 20px 120px;
+    background-size: cover;
+  }
+
+  .hero-registration--registered--digitaltrends-pre h1 {
+    font-size: 28px;
+    line-height: 32px;
+  }
+
+  .hero-registration--registered--digitaltrends-pre .hero-registration__vip-copy {
+    font-size: 12px;
+    line-height: 18px;
+  }
+
+  .hero-registration--registered--digitaltrends-pre .hero-registration__vip-copy br {
+    display: none;
+  }
+
+  .hero-registration--registered--digitaltrends-pre .hero-registration__vip-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-registration--registered--digitaltrends-pre .hero-registration__vip-actions .emms__cta {
+    width: 100%;
+    max-width: 320px;
+  }
 }
 
 .hero-registration--registered.hero-registration--registered--post .emms__calendar__list {

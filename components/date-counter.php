@@ -1,5 +1,5 @@
 <div id="emmsCounter" class="emms-counter">
-    <h5 class="emms-counter__title">⏳ ¡Cuenta regresiva para el EMMS E-commerce! 28 y 29 de abril: Conferencias, Workshops y Networking.</h5>
+    <h5 class="emms-counter__title"><?= htmlspecialchars($counterTitle ?? '⏳ ¡Cuenta regresiva para el EMMS E-commerce! 28 y 29 de abril: Conferencias, Workshops y Networking.') ?></h5>
     <ul class="emms-counter__list">
         <li class="emms-counter__item">
             <div class="emms-counter__box d">

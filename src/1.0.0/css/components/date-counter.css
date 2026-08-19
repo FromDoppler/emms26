@@ -8,7 +8,7 @@
 }
 
 .emms-counter__title {
-  color: #fff;
+  color: var(--color-bg);
   margin: 0px 12px 0px 0px;
   font-weight: 700;
   font-size: 13px;
@@ -26,7 +26,7 @@
   display: inline-block;
   vertical-align: middle;
   position: relative;
-  color: #fff;
+  color: var(--color-bg);
   margin-right: 30px;
 }
 
@@ -58,7 +58,7 @@
   text-align: center;
   width: 28px;
   height: 28px;
-  background: #ffffff;
+  background: var(--color-bg);
   border-radius: 5px;
   overflow: hidden;
   line-height: 32px;

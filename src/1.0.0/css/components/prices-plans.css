@@ -15,7 +15,7 @@
 }
 
 .emms__plans__title {
-  color: #fff;
+  color: var(--color-bg);
   text-align: center;
   max-width: 1020px;
   width: 100%;
@@ -27,19 +27,23 @@
 }
 
 .emms__plans__title h2 {
-  font-size: 40px;
-  line-height: 44px;
+  font-size: var(--font-h2-size);
+  font-style: normal;
   font-weight: 700;
+  line-height: var(--font-h2-line);
+  letter-spacing: -1px;
   margin-bottom: 35px;
 }
 
 .emms__plans__title p {
   font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
   line-height: 22px;
-  color: #fff;
+  color: var(--color-bg);
+  max-width: 800px;
   margin: 0 auto;
   margin-bottom: 24px;
-  font-weight: 500;
 }
 
 .emms__plans__title.emms__plans__title--live p {
@@ -64,7 +68,7 @@
 }
 
 .emms__plans__card {
-  background: #fff;
+  background: var(--color-bg);
   max-width: 375px;
   width: 100%;
   padding: 37px 15px 50px 15px;
@@ -82,7 +86,7 @@
   font-size: 20px;
   line-height: 37px;
   text-align: center;
-  color: #fff;
+  color: var(--color-bg);
   position: absolute;
   top: 0;
   left: 0;
@@ -107,8 +111,8 @@
 .emms__plans__card__head__price p.emms__plans__card__head__price__sub-title {
   font-style: normal;
   font-weight: 400;
-  font-size: 16px;
-  line-height: 24px;
+  font-size: var(--font-p-size);
+  line-height: var(--font-p-line);
   align-items: center;
   text-align: center;
   color: #212121;
@@ -136,7 +140,7 @@
   font-size: 40px;
   line-height: 1;
   font-weight: 700;
-  color: #333333;
+  color: var(--color-muted);
 }
 
 .emms__plans__card__head__price h4 small {
@@ -144,12 +148,12 @@
   font-weight: 700;
   font-size: 22px;
   line-height: 47px;
-  color: #333333;
+  color: var(--color-muted);
 }
 
 .emms__plans__card__head__price h4 span {
-  font-size: 16px;
-  line-height: 24px;
+  font-size: var(--font-p-size);
+  line-height: var(--font-p-line);
   font-weight: 400;
   color: #808080;
   display: block;
@@ -226,5 +230,229 @@
 @media (max-width: 620px) {
   .emms__plans__card__main ul {
     width: 100%;
+  }
+}
+
+/* Comparison table */
+
+.emms__plans__title p span {
+  color: var(--color-secondary);
+  font-weight: 700;
+}
+
+.emms__plans__table {
+  width: 100%;
+  max-width: 1020px;
+  margin: 0 auto;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.emms__plans__table th,
+.emms__plans__table td {
+  background: var(--color-bg);
+  padding: 16px 24px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* Table head */
+
+.emms__plans__table thead .emms__plans__table__legend {
+  background: transparent;
+  padding: 0;
+  width: 40%;
+  vertical-align: bottom;
+}
+
+.emms__plans__table__legend span {
+  display: block;
+  background: var(--color-bg);
+  padding: 20px 24px 20px 48px;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: var(--font-p-line);
+  text-align: left;
+  text-transform: uppercase;
+  color: var(--color-text);
+}
+
+.emms__plans__table thead .emms__plans__table__plan {
+  padding: 0;
+  width: 30%;
+  vertical-align: top;
+}
+
+.emms__plans__table__plan__tag {
+  display: block;
+  padding: 6px 10px;
+  font-size: var(--font-small-size);
+  line-height: var(--font-small-line);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--color-bg);
+}
+
+.emms__plans__table__plan--vip .emms__plans__table__plan__tag {
+  background: linear-gradient(90deg, #a67c00 0%, #d4af37 15%, #ffd700 50%, #d4af37 85%, #a67c00 100%);
+}
+
+.emms__plans__table__plan--free .emms__plans__table__plan__tag {
+  background: #7d04f6;
+}
+
+.emms__plans__table__plan__body {
+  display: block;
+  padding: 18px 15px 22px;
+}
+
+.emms__plans__table__plan__label {
+  display: block;
+  font-size: var(--font-p-size);
+  font-style: normal;
+  font-weight: 400;
+  line-height: var(--font-p-line);
+  color: #212121;
+}
+
+.emms__plans__table__plan__price {
+  display: block;
+  font-size: 32px;
+  line-height: 38px;
+  font-weight: 700;
+  color: var(--color-muted);
+}
+
+.emms__plans__table__plan__note {
+  display: block;
+  font-size: var(--font-p-size);
+  font-style: normal;
+  font-weight: 400;
+  line-height: var(--font-p-line);
+  color: #212121;
+}
+
+/* Table body */
+
+.emms__plans__table tbody th,
+.emms__plans__table tbody td {
+  border-top: 1px solid #e0e0e0;
+}
+
+.emms__plans__table tbody th + td,
+.emms__plans__table tbody td + td {
+  border-left: 1px solid #e0e0e0;
+}
+
+.emms__plans__table tbody th {
+  padding-left: 48px;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+  text-align: left;
+  color: var(--color-text);
+}
+
+.emms__plans__table__value img {
+  display: block;
+  margin: 0 auto;
+}
+
+/* Table actions */
+
+.emms__plans__actions {
+  display: grid;
+  grid-template-columns: 40% 30% 30%;
+  max-width: 1020px;
+  margin: 0 auto;
+}
+
+.emms__plans__actions__cell {
+  background: var(--color-bg);
+  padding: 26px 15px 30px;
+  text-align: center;
+  border-top: 1px solid #e0e0e0;
+}
+
+.emms__plans__actions__cell + .emms__plans__actions__cell {
+  border-left: 1px solid #e0e0e0;
+}
+
+.emms__plans__actions .emms__cta {
+  width: 100%;
+  max-width: 220px;
+  padding: 15px 20px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 620px) {
+  .emms__plans__table th,
+  .emms__plans__table td {
+    padding: 12px 8px;
+  }
+
+  .emms__plans__table thead .emms__plans__table__legend {
+    width: 46%;
+  }
+
+  .emms__plans__table__legend span {
+    padding: 12px 10px 12px 16px;
+    font-size: 16px;
+    line-height: var(--font-small-line);
+  }
+
+  .emms__plans__table thead .emms__plans__table__plan {
+    width: 27%;
+  }
+
+  .emms__plans__table__plan__tag {
+    font-size: 11px;
+    line-height: 16px;
+    letter-spacing: 0;
+  }
+
+  .emms__plans__table__plan__body {
+    padding: 12px 6px 16px;
+  }
+
+  .emms__plans__table__plan__label,
+  .emms__plans__table__plan__note {
+    font-size: 11px;
+    line-height: 14px;
+  }
+
+  .emms__plans__table__plan__price {
+    font-size: 20px;
+    line-height: 26px;
+  }
+
+  .emms__plans__table tbody th {
+    padding-left: 16px;
+    font-size: 13px;
+    line-height: 17px;
+  }
+
+  .emms__plans__actions {
+    grid-template-columns: 1fr;
+    padding: 20px 12px 26px;
+    background: var(--color-bg);
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .emms__plans__actions__cell,
+  .emms__plans__actions__cell + .emms__plans__actions__cell {
+    padding: 6px 0;
+    border: none;
+  }
+
+  .emms__plans__actions__cell:empty {
+    display: none;
+  }
+
+  .emms__plans__actions .emms__cta {
+    max-width: none;
   }
 }

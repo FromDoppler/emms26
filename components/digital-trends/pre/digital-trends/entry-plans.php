@@ -1,80 +1,62 @@
+<?php
+$entryPlanBenefits = [
+  ["text" => "Cuenta gratuita en Doppler 6 meses valorada en hasta USD 500", "free" => false],
+  ["text" => "Hasta 10 Workshops prácticos con cupos limitados", "free" => false],
+  ["text" => "Acceso de por vida a los Workshops.", "free" => false],
+  ["text" => "Certificado de asistencia a Workshops.", "free" => false],
+  ["text" => "Guías con herramientas y tips exclusivos", "free" => false],
+  ["text" => "Sesiones de preguntas y respuestas con referentes", "free" => false],
+  ["text" => "Acceso a todas las Conferencias con speakers internacionales.", "free" => true],
+  ["text" => "Volver a verlas todas las veces que quieras", "free" => true],
+  ["text" => "Ingreso a la Biblioteca de Recursos (E-books, plantillas, audiovisual)", "free" => true],
+  ["text" => "Participación en sorteos", "free" => true],
+  ["text" => "Descuentos en herramientas y capacitaciones", "free" => true],
+];
+?>
 <div class="emms__bg-dark-gradient--2 ">
   <!-- Prices plans -->
   <div class="emms__plans  hidden--vip" id="entradas">
     <div class="emms__container--lg">
       <div class="emms__plans__title">
         <h2>Hazte VIP y acelera el crecimiento de tu negocio</h2>
-        <p>Compra tu entrada y accede a: Conferencias, Workshops con certificado, Recursos descargables, ¡y mucho más! También te regalamos una cuenta en Doppler por 6 meses (válido para cuentas nuevas).</p>
+        <p>Compra tu entrada y accede a una gran variedad de beneficios. Por tiempo limitado, tu pase tiene un <span>20% de descuento</span>. Consíguelo por sólo <span>USD 7,99</span>. ¡Se paga solo!</p>
       </div>
-      <div class="emms__plans__cards">
-        <div class="emms__plans__card emms__plans__card--vip">
-          <div class="emms__plans__card__head">
-            <h3 class="emms__plans__card__head__top">ASISTENTE VIP</h3>
-            <div class="emms__plans__card__head__price">
-              <div class="emms__plans__card__head__price__content">
-                <p class="emms__plans__card__head__price__sub-title">Precio entrada VIP</p>
-                <h4>USD9,99</h4>
-              </div>
-            </div>
-            <a href="./checkout" class="emms__cta emms__cta--terciary">HAZTE VIP AHORA</a>
-          </div>
-          <div class="emms__plans__card__main">
-            <h5>Beneficios</h5>
-            <ul>
-              <li>Cuenta gratuita en Doppler durante
-                6 meses (válido para cuentas nuevas).</li>
-              <li> Workshops prácticos </li>
-              <li>Acceso de por vida a los Workshops</li>
-              <li>Certificado de asistencia a Workshops</li>
-              <li>Más guías con herramientas
-                y tips exclusivos</li>
-              <li>Sesiones de preguntas y respuestas
-                con tus referentes del Marketing</li>
-              <li>Acceso a todas las conferencias con speakers internacionales </li>
-              <li>Volver a ver las conferencias todas las veces que quieras </li>
-              <li>Ingreso a la Biblioteca de Recursos
-                con E-books, plantillas, material
-                audiovisual y más</li>
-              <li>Participación en sorteos</li>
-              <li>Descuentos en herramientas
-                y capacitaciones</li>
-            </ul>
-          </div>
-        </div>
-        <div class="emms__plans__card emms__plans__card--free">
-          <div class="emms__plans__card__head">
-            <h3 class="emms__plans__card__head__top">ASISTENTE FREE</h3>
-            <div class="emms__plans__card__head__price">
-              <div class="emms__plans__card__head__price__content">
-                <p class="emms__plans__card__head__price__sub-title">Precio entrada FREE</p>
-                <h4>Gratis</h4>
-              </div>
-            </div>
-            <a class="emms__cta inactive">ACCEDE AHORA</a>
-          </div>
-          <div class="emms__plans__card__main">
-            <h5>Beneficios</h5>
-            <ul>
-              <li class="exclude">Cuenta gratuita en Doppler durante 6 meses (válido para cuentas nuevas).</li>
-              <li class="exclude"> Workshops prácticos </li>
-              <li class="exclude">Acceso de por vida a los Workshops</li>
-              <li class="exclude">Certificado de asistencia a Workshops</li>
-              <li class="exclude">Más guías con herramientas
-                y tips exclusivos</li>
-              <li class="exclude">Sesiones de preguntas y respuestas
-                con tus referentes del Marketing</li>
-              <li>Acceso a todas las conferencias con speakers internacionales </li>
-              <li>Volver a ver las conferencias todas las veces que quieras </li>
-              <li>Ingreso a la Biblioteca de Recursos
-                con E-books, plantillas, material
-                audiovisual y más</li>
-              <li>Participación en sorteos</li>
-              <li>Descuentos en herramientas
-                y capacitaciones</li>
-            </ul>
-          </div>
-        </div>
-
+      <table class="emms__plans__table">
+        <thead>
+          <tr>
+            <th class="emms__plans__table__legend" scope="col"><span>Beneficios</span></th>
+            <th class="emms__plans__table__plan emms__plans__table__plan--vip" scope="col">
+              <span class="emms__plans__table__plan__tag">Asistente VIP</span>
+              <span class="emms__plans__table__plan__body">
+                <span class="emms__plans__table__plan__label">Precio entrada VIP</span>
+                <span class="emms__plans__table__plan__price">USD7,99*</span>
+                <span class="emms__plans__table__plan__note">*antes del 2 de septiembre</span>
+              </span>
+            </th>
+            <th class="emms__plans__table__plan emms__plans__table__plan--free" scope="col">
+              <span class="emms__plans__table__plan__tag">Asistente FREE</span>
+              <span class="emms__plans__table__plan__body">
+                <span class="emms__plans__table__plan__label">Precio entrada FREE</span>
+                <span class="emms__plans__table__plan__price">Gratis</span>
+                <span class="emms__plans__table__plan__note">(tu Plan actual)</span>
+              </span>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php foreach ($entryPlanBenefits as $benefit): ?>
+            <tr>
+              <th scope="row"><?= $benefit["text"] ?></th>
+              <td class="emms__plans__table__value"><img src="/src/img/icons/icon-check--green.svg" alt="Incluido" width="24" height="24"></td>
+              <td class="emms__plans__table__value"><img src="/src/img/icons/<?= $benefit["free"] ? "icon-check--green.svg" : "icon-exclude.svg" ?>" alt="<?= $benefit["free"] ? "Incluido" : "No incluido" ?>" width="24" height="24"></td>
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+      <div class="emms__plans__actions">
+        <div class="emms__plans__actions__cell"></div>
+        <div class="emms__plans__actions__cell"><a href="./checkout" class="emms__cta emms__cta--green">Hazte VIP ahora</a></div>
+        <div class="emms__plans__actions__cell"><a class="emms__cta inactive">Accede ahora</a></div>
       </div>
     </div>
   </div>

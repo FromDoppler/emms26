@@ -1,11 +1,25 @@
 <section class="hero-registration--registered hero-registration--withoutform hero-registration--registered--digitaltrends-pre">
   <div class="emms__container--md">
-    <h1 class="emms__fade-top"><em>ONLINE Y GRATUITO - DEL 29 DE SEPTIEMBRE AL 1 DE OCTUBRE</em><span>&iexcl;Ya eres parte del EMMS 2026!</span></h1>
-    <p class="emms__fade-in">Te damos la bienvenida al evento que marcar&aacute; las tendencias del presente<br>y futuro del Marketing y el Comercio Electr&oacute;nico. Guarda la fecha para no perderte nada.<br>Muy pronto te contaremos por Email la agenda y todas las novedades del EMMS.</p>
-    <div class="hero-registration__buttons">
-      <p class="emms__fade-in"><img src="/src/img/icons/icon-calendar-hero.png" alt="" aria-hidden="true" align="absmiddle">AG&Eacute;NDALO EN TU CALENDARIO:</p>
-      <a class="emms__fade-in emms__cta emms__cta--secondary-solid emms__cta--xl" href="https://www.addevent.com/event/gjdyrqqk638d"><span>D&Iacute;A 1</span></a>
-      <a class="emms__fade-in emms__cta emms__cta--secondary-solid emms__cta--xl" href="https://www.addevent.com/event/3d6ps69vc5wt"><span>D&Iacute;A 2</span></a>
+    <h1 class="emms__fade-top">
+      <em>ONLINE Y GRATUITO - Del 29 de septiembre al 1 de octubre</em>
+      <span>Gracias por sumarte al EMMS 2026</span>
+    </h1>
+    <p class="hero-registration__vip-copy emms__fade-in">
+      El pase VIP nunca fue tan accesible.<br>
+      Ya tienes acceso a las Conferencias gratuitas. Es momento de dar el salto y acceder a tu pase VIP:<br>
+      más de 10 Workshops, certificado oficial y 6 meses gratis en Doppler —<br>
+      <strong>por solo USD 7,99 si te sumas antes del 2 de septiembre.</strong>
+    </p>
+
+    <?php
+    $counterTitle = 'NOS VEMOS EN:';
+    include($_SERVER['DOCUMENT_ROOT'] . '/components/date-counter.php');
+    unset($counterTitle);
+    ?>
+
+    <div class="hero-registration__vip-actions emms__fade-in">
+      <a class="emms__cta emms__cta--terciary" href="./checkout">ACCEDE A TU VIP A USD 9.99</a>
+      <a class="emms__cta emms__cta--primary-light" href="#entradas">CONOCE LOS BENEFICIOS</a>
     </div>
   </div>
   <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/marquee.php') ?>

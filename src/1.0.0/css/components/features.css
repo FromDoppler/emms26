@@ -8,25 +8,25 @@
 }
 
 .features__title h2 {
-  font-size: 40px;
+  font-size: var(--font-h2-size);
   font-weight: 700;
-  line-height: 44px;
+  line-height: var(--font-h2-line);
   letter-spacing: -1px;
-  color: #333;
+  color: var(--color-muted);
 }
 
 .features__title p {
-  font-size: 16px;
+  font-size: var(--font-p-size);
   font-weight: 400;
-  line-height: 24px;
-  color: #333;
+  line-height: var(--font-p-line);
+  color: var(--color-muted);
   margin: 18px 0 0 0;
 }
 
 .features__divisor {
   width: 100%;
   height: 7px;
-  background: #fff;
+  background: var(--color-bg);
 }
 
 .features__item {
@@ -95,8 +95,8 @@
 }
 
 .features__item .features__item__text p {
-  font-size: 16px;
-  line-height: 24px;
+  font-size: var(--font-p-size);
+  line-height: var(--font-p-line);
   font-weight: 400;
   color: #212121;
   margin: 24px 0 27px 0;
@@ -138,7 +138,7 @@
   font-weight: 700;
   font-size: 21px;
   line-height: 26px;
-  color: #333333;
+  color: var(--color-muted);
   margin-bottom: 0px;
   max-width: 450px;
 }
@@ -227,5 +227,92 @@
   .features__item .features__item__text h3 {
     font-size: 28px;
     line-height: 30px;
+  }
+}
+
+/* ---------------------------------------------- Launch price ---------------------------------------------- */
+
+.features--launch-price .features__title {
+  max-width: 800px;
+  padding: 56px 0 30px 0;
+}
+
+.features--launch-price .features__item {
+  padding: 40px 0 90px 0;
+}
+
+@media (min-width: 992px) {
+  .features--launch-price .features__item .emms__container--lg {
+    align-items: flex-start;
+  }
+}
+
+.features__counter {
+  display: flex;
+  justify-content: center;
+  padding: 0 0 12px 0;
+}
+
+.features__counter .emms-counter {
+  background: none;
+  padding: 0 0 22px 0;
+}
+
+.features__counter .emms-counter__item {
+  margin-right: 34px;
+}
+
+.features__counter .emms-counter__item::after {
+  display: none;
+}
+
+.features__counter .emms-counter__box {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+.features__counter .emms-counter__digit {
+  background: linear-gradient(180deg, #6716f3 0%, #7d04f6 100%);
+  border-radius: 8px;
+  color: #fff;
+  width: 34px;
+  height: 38px;
+  line-height: 38px;
+  font-size: 24px;
+}
+
+.features__counter .emms-counter__label {
+  color: var(--color-muted);
+  font-size: 12px;
+}
+
+.features__item .features__item__text .features__item__text__price .features__item__text__price__before {
+  display: inline;
+  font-size: 16px;
+  line-height: 47px;
+  font-weight: 400;
+  color: var(--color-muted);
+  margin: 0 0 0 10px;
+}
+
+@media (max-width: 620px) {
+  .features--launch-price .features__title {
+    padding: 36px 0 24px 0;
+  }
+
+  .features--launch-price .features__item {
+    padding: 30px 0 50px 0;
+  }
+
+  .features__counter .emms-counter__item {
+    margin-right: 20px;
+  }
+
+  .features__counter .emms-counter__digit {
+    width: 26px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 18px;
   }
 }

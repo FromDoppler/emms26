@@ -1,5 +1,8 @@
-<div id="emmsCounter" class="emms-counter">
-    <h5 class="emms-counter__title"><?= htmlspecialchars($counterTitle ?? '⏳ ¡Cuenta regresiva para el EMMS E-commerce! 28 y 29 de abril: Conferencias, Workshops y Networking.') ?></h5>
+<?php $counterTitle = $counterTitle ?? '⏳ ¡Cuenta regresiva para el EMMS E-commerce! 28 y 29 de abril: Conferencias, Workshops y Networking.'; ?>
+<div class="emms-counter">
+    <?php if ($counterTitle !== '') : ?>
+    <h5 class="emms-counter__title"><?= htmlspecialchars($counterTitle) ?></h5>
+    <?php endif; ?>
     <ul class="emms-counter__list">
         <li class="emms-counter__item">
             <div class="emms-counter__box d">
@@ -33,4 +36,6 @@
         </li>
     </ul>
 </div>
-<script src="src/<?= VERSION ?>/js/dateCounter.js"></script>
+<?php if (!defined('DATE_COUNTER_SCRIPT')) : define('DATE_COUNTER_SCRIPT', true); ?>
+<script src="src/<?= VERSION ?>/js/dateCounter.js" defer></script>
+<?php endif; ?>

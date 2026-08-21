@@ -12,13 +12,13 @@
      </div>
    </div>
    <div class="show--vip">
-     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/referral.php') ?>
+     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/referral-prizes.php') ?>
    </div>
    <div class="hidden--vip centralvideo--tickets">
      <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/during/digital-trends/entry-plans.php') ?>
      <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/during/digital-trends/video-ticketing.php') ?>
      <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/during/digital-trends/vip-features.php') ?>
-     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/referral.php') ?>
+     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/referral-prizes.php') ?>
    </div>
    <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/during/premium-content.php') ?>
    <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/sponsorsList.php') ?>

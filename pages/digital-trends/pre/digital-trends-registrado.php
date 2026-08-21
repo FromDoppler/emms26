@@ -41,7 +41,7 @@ $isPost = false;
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/digital-trends/vip-features.php') ?>
     <?php require_once($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/grid-event-types-preset.php'); ?>
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/grid-event-types.php'); ?>
-    <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/referral.php') ?>
+    <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/referral-prizes.php') ?>
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/academyBanner.php'); ?>
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/sponsorsList.php') ?>
   </main>

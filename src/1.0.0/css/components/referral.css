@@ -101,7 +101,7 @@
   padding: 10px 6px;
   border: 1px solid rgba(119, 77, 191, 0.18);
   border-radius: 4px;
-  background: #fff;
+  background: var(--color-bg);
   box-shadow: 0 4px 10px rgba(33, 0, 73, 0.2);
   text-align: center;
   padding-bottom: 0px;
@@ -258,5 +258,48 @@
     padding: 12px 20px;
     font-size: var(--font-small-size);
     line-height: var(--font-small-line);
+  }
+}
+
+/* --- Prizes variant ------------------------------------------------------
+   The podium ships as a flat composite (premios.png / premios-mobile.png),
+   so the amounts live in the artwork and the alt text, not in markup.
+   ponytail: changing a prize means a new export from design, not a CSS edit.
+   Rebuild the cards as real markup if the amounts start moving per edition. */
+
+.referral--prizes .referral__subtitle {
+  font-size: var(--font-h4-size);
+  line-height: var(--font-h4-line);
+}
+
+.referral--prizes .referral__prizes {
+  width: 100%;
+  max-width: 441px;
+  margin: 0 0 16px;
+}
+
+.referral--prizes .referral__prizes img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.referral--prizes .referral__note {
+  margin: 0;
+  max-width: 445px;
+  color: var(--color-bg);
+  font-size: var(--font-small-size);
+  font-weight: 600;
+  line-height: var(--font-small-line);
+}
+
+@media (max-width: 768px) {
+  .referral--prizes .referral__prizes {
+    max-width: 300px;
+    margin-bottom: 14px;
+  }
+
+  .referral--prizes .referral__note {
+    margin-bottom: 20px;
   }
 }

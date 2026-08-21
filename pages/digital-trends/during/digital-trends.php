@@ -55,6 +55,7 @@ $isPost = $digitalTrendsStates['isPost'];
     render_modal('form-modal', 'form',  'form', true);
     ?>
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/footer.php'); ?>
+    <script src="/src/<?= VERSION ?>/js/newDate.js" type="module"></script>
 </body>
 
 </html>

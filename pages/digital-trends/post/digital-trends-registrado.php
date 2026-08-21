@@ -51,7 +51,7 @@ $isPost = $digitalTrendsStates['isPost']
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/academyBanner.php'); ?>
   </main>
   <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/footer.php'); ?>
-  <script src="src/<?= VERSION ?>/js/newDate.js" type="module"></script>
+  <script src="/src/<?= VERSION ?>/js/newDate.js" type="module"></script>
 
 </body>
 

@@ -46,7 +46,7 @@ $isPost = false;
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/sponsorsList.php') ?>
   </main>
   <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/footer.php'); ?>
-  <script src="src/<?= VERSION ?>/js/newDate.js" type="module"></script>
+  <script src="/src/<?= VERSION ?>/js/newDate.js" type="module"></script>
 
 </body>
 

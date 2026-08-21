@@ -26,7 +26,7 @@ $block = getScheduleBlock2($normalizedUrl);
   <div class="emms__container--lg">
     <div class="emms__calendar__title emms__fade-in">
       <h2>AGENDA EMMS 2026</h2>
-      <?php if ($normalizedUrl && $isPost): ?>
+      <?php if ($isPost): ?>
         <p>
           Figuras internacionales de marcas líderes compartieron las últimas <br>
           tendencias en Marketing Digital. ¡Conócelas aquí!

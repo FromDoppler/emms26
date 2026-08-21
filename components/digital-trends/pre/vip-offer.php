@@ -6,17 +6,17 @@
         <span>tu entrada VIP gratis</span>
       </h2>
       <p class="vip-offer__description">
-        Si te registras entre las primeras 1.000 personas, accedes sin costo a la experiencia VIP del EMMS.
+        Para celebrar los 20 años de Doppler, las primeras 1000 personas en registrarse podrán acceder sin costo a la experiencia VIP completa del EMMS 2026.
       </p>
       <ul class="vip-offer__benefits">
-        <li class="vip-offer__benefit">Diez Workshops en salas reducidas con especialistas.</li>
-        <li class="vip-offer__benefit">Cuenta en Doppler gratis por 6 meses.</li>
-        <li class="vip-offer__benefit">Premios, recursos descargables y beneficios especiales.</li>
+        <li class="vip-offer__benefit">WORKSHOPS CON REFERENTES INTERNACIONALES</li>
+        <li class="vip-offer__benefit">CUENTA EN DOPPLER GRATIS POR 6 MESES (VÁLIDO PARA CUENTAS NUEVAS)</li>
+        <li class="vip-offer__benefit">RECURSOS DESCARGABLES Y MUCHO MÁS.</li>
       </ul>
       <p class="vip-offer__cta-note">
         Los cupos VIP son limitados. Regístrate hoy y asegura el tuyo.
       </p>
-      <a href="#registro" class="emms__cta emms__cta--md vip-offer__cta">Inscríbete ahora</a>
+      <a href="#registro" class="emms__cta emms__cta--md vip-offer__cta">INSCRÍBETE AHORA</a>
     </div>
 
     <div class="vip-offer__visual" aria-hidden="true">

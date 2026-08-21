@@ -44,7 +44,7 @@ $resources = json_decode($resourcesJson, true);
     <div class="emms__container--lg">
         <header class="resources-grid__header">
             <h2 class="resources-grid__title">
-                Aprovecha estos recursos exclusivos que obtienes por ser parte del evento
+                Recursos descargables
             </h2>
         </header>
         <ul class="resources-grid__content">

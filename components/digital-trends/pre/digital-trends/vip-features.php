@@ -2,7 +2,7 @@
   <div class="features features--launch-price hidden--vip">
     <div class="features__launch-price emms__fade-in">
       <div class="features__title">
-        <h2>Precio de lanzamiento: USD 7,99 sólo hasta el 2 de septiembre. ¡Luego vuelve a USD 9,99!</h2>
+        <h2>Precio de lanzamiento: USD <?= VIP_PRICE_CURRENT ?> sólo hasta el <?= VIP_OFFER_DEADLINE_LABEL ?>. ¡Luego vuelve a USD <?= VIP_PRICE_LIST ?>!</h2>
       </div>
       <div class="features__counter">
         <?php
@@ -24,9 +24,10 @@
             <li>Cuenta gratis en Doppler por 6 meses, valorada en hasta 500 USD. (¡Puedes cancelar cuando quieras!)</li>
             <li>Sección de preguntas y respuestas con tus referentes.</li>
           </ul>
+          <?php [$vipUnits, $vipCents] = vipPriceUnits(VIP_PRICE_CURRENT); ?>
           <p class="features__item__text__price features__item__text__price--live">
-            <em>¡INVIERTE EN TU FUTURO POR SOLO</em><small>USD</small>7<small>.99!</small>
-            <span class="features__item__text__price__before">Antes: <s>USD9.99</s></span>
+            <em>¡INVIERTE EN TU FUTURO POR SOLO</em><small>USD</small><?= $vipUnits ?><small>,<?= $vipCents ?>!</small>
+            <span class="features__item__text__price__before">Antes: <s>USD<?= VIP_PRICE_LIST ?></s></span>
           </p>
           <a href="#entradas" class="emms__cta emms__cta--terciary"> ASEGURA TU PRECIO DE LANZAMIENTO
           </a>

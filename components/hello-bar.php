@@ -16,7 +16,7 @@ $contentsPre = [
     'helloBarCtaLink' => '#registro',
   ],
   '/digital-trends-registrado' => [
-    'helloBarText' => '¡Accede a tu entrada VIP por solo 9.99 USD! Conferencias, Workshops y beneficios especiales.',
+    'helloBarText' => '¡Accede a tu entrada VIP por solo ' . VIP_PRICE_CURRENT . ' USD! Conferencias, Workshops y beneficios especiales.',
     'helloBarCtaTxt' => 'COMPRA TU ENTRADA',
     'helloBarCtaLink' => '#entradas',
   ],

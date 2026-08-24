@@ -13,7 +13,7 @@
             <div class="emms__plans__card__head__price">
               <div class="emms__plans__card__head__price__content">
                 <p class="emms__plans__card__head__price__sub-title">Precio entrada VIP</p>
-                <h4>USD9,99</h4>
+                <h4>USD<?= VIP_PRICE_LIST ?></h4>
               </div>
             </div>
             <a href="./checkout" class="emms__cta emms__cta--terciary">HAZTE VIP AHORA</a>

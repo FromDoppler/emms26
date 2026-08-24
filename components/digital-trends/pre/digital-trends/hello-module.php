@@ -8,7 +8,7 @@
       El pase VIP nunca fue tan accesible.<br>
       Ya tienes acceso a las Conferencias gratuitas. Es momento de dar el salto y acceder a tu pase VIP:<br>
       más de 10 Workshops, certificado oficial y 6 meses gratis en Doppler —<br>
-      <strong>por solo USD 7,99 si te sumas antes del 2 de septiembre.</strong>
+      <strong>por solo USD <?= VIP_PRICE_CURRENT ?> si te sumas antes del <?= VIP_OFFER_DEADLINE_LABEL ?>.</strong>
     </p>
 
     <?php
@@ -18,7 +18,7 @@
     ?>
 
     <div class="hero-registration__vip-actions emms__fade-in">
-      <a class="emms__cta emms__cta--terciary" href="./checkout">ACCEDE A TU VIP A USD 9.99</a>
+      <a class="emms__cta emms__cta--terciary" href="./checkout">ACCEDE A TU VIP A USD <?= VIP_PRICE_CURRENT ?></a>
       <a class="emms__cta emms__cta--primary-light" href="#entradas">CONOCE LOS BENEFICIOS</a>
     </div>
   </div>

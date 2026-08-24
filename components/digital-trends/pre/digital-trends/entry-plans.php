@@ -19,7 +19,7 @@ $entryPlanBenefits = [
     <div class="emms__container--lg">
       <div class="emms__plans__title">
         <h2>Hazte VIP y acelera el crecimiento de tu negocio</h2>
-        <p>Compra tu entrada y accede a una gran variedad de beneficios. Por tiempo limitado, tu pase tiene un <span>20% de descuento</span>. Consíguelo por sólo <span>USD 7,99</span>. ¡Se paga solo!</p>
+        <p>Compra tu entrada y accede a una gran variedad de beneficios. Por tiempo limitado, tu pase tiene un <span><?= VIP_OFFER_DISCOUNT_LABEL ?> de descuento</span>. Consíguelo por sólo <span>USD <?= VIP_PRICE_CURRENT ?></span>. ¡Se paga solo!</p>
       </div>
       <table class="emms__plans__table">
         <thead>
@@ -29,8 +29,8 @@ $entryPlanBenefits = [
               <span class="emms__plans__table__plan__tag">Asistente VIP</span>
               <span class="emms__plans__table__plan__body">
                 <span class="emms__plans__table__plan__label">Precio entrada VIP</span>
-                <span class="emms__plans__table__plan__price">USD7,99*</span>
-                <span class="emms__plans__table__plan__note">*antes del 2 de septiembre</span>
+                <span class="emms__plans__table__plan__price">USD<?= VIP_PRICE_CURRENT ?>*</span>
+                <span class="emms__plans__table__plan__note">*antes del <?= VIP_OFFER_DEADLINE_LABEL ?></span>
               </span>
             </th>
             <th class="emms__plans__table__plan emms__plans__table__plan--free" scope="col">

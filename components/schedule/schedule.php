@@ -25,15 +25,20 @@ $block = getScheduleBlock2($normalizedUrl);
 <section class="emms__calendar" id="agenda">
   <div class="emms__container--lg">
     <div class="emms__calendar__title emms__fade-in">
-      <h2>AGENDA EMMS DIGITAL TRENDS 2025</h2>
-      <?php if ($normalizedUrl && $isPost): ?>
+      <h2>AGENDA EMMS 2026</h2>
+      <?php if ($isPost): ?>
         <p>
-          Figuras internacionales de marcas líderes compartieron las últimas </br>
+          Figuras internacionales de marcas líderes compartieron las últimas <br>
           tendencias en Marketing Digital. ¡Conócelas aquí!
+        </p>
+      <?php elseif ($isRegistered): ?>
+        <p>
+          Conoce las Conferencias y Workshops de figuras internacionales del Marketing Digital
         </p>
       <?php else: ?>
         <p>
-          Conoce a las figuras internacionales que participan del evento de Marketing Digital más esperado del año.
+          Conoce a las figuras internacionales que ya confirmaron su presencia en el evento de Marketing Digital <br>
+          más esperado del año. ¡Y prepárate! Muy pronto anunciaremos el resto de la agenda.
         </p>
       <?php endif; ?>
 

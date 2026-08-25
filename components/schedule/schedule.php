@@ -1,25 +1,5 @@
 <?php
-include_once($_SERVER['DOCUMENT_ROOT'] . '/components/helpers/urlHelper.php');
 include_once($_SERVER['DOCUMENT_ROOT'] . '/components/schedule/speaker-grid-helper.php');
-
-$normalizedUrl = getNormalizeUrl();
-function getScheduleBlock2($url)
-{
-  $blocks = [
-    '/digital-trends' => [
-      'block' => 'digital-trends',
-    ],
-    '/digital-trends-registrado' => [
-      'block' => 'digital-trends-registrado',
-    ],
-    '/*' => [
-      'block' => 'digital-trend',
-    ],
-  ];
-
-  return $blocks[$url] ?? $blocks['/*'];
-}
-$block = getScheduleBlock2($normalizedUrl);
 ?>
 
 <section class="emms__calendar" id="agenda">
@@ -51,14 +31,11 @@ $block = getScheduleBlock2($normalizedUrl);
     <?php
     //TODO: Abstraer ecommerceStates a un getter que pase el state del currentEvent para volver agnostica la genda de eventos
     render_speaker_grid($digitalTrendsStates, $isRegistered, $isPost); ?>
-    <?php if ($block['block'] === 'digital-trends') : ?>
-      <div class="emms__calendar__bottom emms__fade-in  eventHiddenElements">
+    <?php if (!$isPost && !$isRegistered) : ?>
+      <div class="emms__calendar__bottom emms__fade-in">
         <a href="#registro" class="emms__cta">
-          REGÍSTRATE GRATIS
+          SUMATE AHORA
         </a>
-      </div>
-      <div class="emms__calendar__bottom  eventShowElements">
-        <a href="#registro" class="emms__cta alreadyRegisterForm"><span class="button__text">SÚMATE GRATIS</span></a>
       </div>
     <?php endif; ?>
   </div>

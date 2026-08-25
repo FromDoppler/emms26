@@ -4,8 +4,6 @@ $contents = [
   '/' => [
     'heading' => '¿Tienes todo listo para sumarte?',
     'body' => 'Mira este video y descubre por qué el EMMS transformará tu estrategia de Marketing Digital, de la mano de especialistas del sector.',
-    'button' => 'ASEGURA TU LUGAR GRATIS',
-    'link' => 'digital-trends#registro',
     'youtubeCode' => 'rTImzuky-LE',
   ],
   '/digital-trends' => [

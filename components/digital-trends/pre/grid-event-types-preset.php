@@ -1,31 +1,45 @@
 <?php
-$gridTitle = 'EMMS 2026: anticípate al futuro del Marketing';
-$gridColumns = 2;
-$showAnniversaryConfetti = true;
+$gridTitleLines = [
+  'DESCUBRE LA EXPERIENCIA COMPLETA',
+  'CON TU ENTRADA VIP',
+];
+$gridColumns = 3;
+$showAnniversaryConfetti = false;
 $gridItems = [
   [
-    'img' => '/src/img/grid-event-types/ia.png',
-    'alt' => 'Inteligencia Artificial',
-    'title' => 'Inteligencia Artificial',
-    'text' => 'Descubre cómo usar IA para automatizar Campañas, personalizar experiencias y mejorar tus resultados.',
+    'img' => '/src/img/conferencias.png',
+    'alt' => 'Conferencias',
+    'title' => 'Conferencias',
+    'text' => 'Escucha a referentes internacionales y conoce las últimas tendencias digitales.',
   ],
   [
-    'img' => '/src/img/grid-event-types/marketingyecommerce.png',
-    'alt' => 'Marketing y E-commerce',
-    'title' => 'Marketing y E-commerce',
-    'text' => 'Aprende estrategias para atraer tráfico, convertir clientes y fidelizar audiencias en mercados cada vez más competitivos.',
+    'img' => '/src/img/entrevistas.png',
+    'alt' => 'Entrevistas',
+    'title' => 'Entrevistas',
+    'text' => 'Aprende de influencers y creadores que marcan el rumbo de la industria.',
   ],
   [
-    'img' => '/src/img/grid-event-types/casosdeexito.png',
+    'img' => '/src/img/casos-de-exito.png',
     'alt' => 'Casos de Éxito',
     'title' => 'Casos de Éxito',
-    'text' => 'Conoce a las empresas que están cambiando las reglas del juego y replica sus tácticas en 
-tu negocio.',
+    'text' => 'Descubre cómo las marcas más reconocidas están transformando el sector.',
   ],
   [
-    'img' => '/src/img/grid-event-types/regalos.png',
-    'alt' => 'Sorpresas por Aniversario',
-    'title' => 'Sorpresas por Aniversario',
-    'text' => 'Descuentos exclusivos, premios y beneficios únicos por nuestra edición aniversario.',
+    'img' => '/src/img/gifs.png',
+    'alt' => 'Regalos y beneficios',
+    'title' => 'Regalos y beneficios',
+    'text' => 'Accede a descuentos especiales y premios exclusivos para asistentes VIP.',
+  ],
+  [
+    'img' => '/src/img/workshop.png',
+    'alt' => 'Workshops',
+    'title' => 'Workshops',
+    'text' => 'Participa en talleres prácticos y aplica lo aprendido al instante.',
+  ],
+  [
+    'img' => '/src/img/recursos.png',
+    'alt' => 'Recursos',
+    'title' => 'Recursos',
+    'text' => 'Accede a materiales exclusivos: guías, plantillas, e-books, ¡y mucho más!',
   ],
 ];

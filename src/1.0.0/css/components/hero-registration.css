@@ -71,6 +71,10 @@
   display: block;
 }
 
+.hero-registration.hero-registration--digitaltrends-pre .hero-registration__text h1 em {
+  font-size: 16px;
+}
+
 .hero-registration .hero-registration__text h1 em small,
 .hero-registration--registered h1 em small {
   font-style: normal;

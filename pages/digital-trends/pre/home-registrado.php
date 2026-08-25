@@ -8,10 +8,15 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/utils/cacheSettings.php');
 <head>
   <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/home/head.php'); ?>
   <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/head.php'); ?>
+  <script type="module">
+    import { toggleVipDigitalTrendsElements } from '/src/<?= VERSION ?>/js/toggleVipElements.js';
+    toggleVipDigitalTrendsElements();
+  </script>
 </head>
 
 <body class="emms__home">
   <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/gtm.php'); ?>
+  <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/hellobar-vip.php'); ?>
   <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/navbar-reg.php') ?>
   <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/share.php') ?>
   <main>

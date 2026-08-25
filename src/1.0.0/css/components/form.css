@@ -88,14 +88,14 @@
 }
 
 .emms_switch__container__switch input:not(:checked)::after {
-  color: #1e1e1e;
+  color: var(--color-text);
   transition: color 0.5s 0.2s;
 }
 
 .emms_switch__container__switch input:not(:checked) + label {
   left: 130px;
   right: 10px;
-  background: #fff;
+  background: var(--color-bg);
   transition:
     left 0.4s 0.2s,
     right 0.5s,
@@ -135,7 +135,7 @@
 }
 
 .emms__form {
-  background: #fff;
+  background: var(--color-bg);
   padding: 28px;
   border-radius: 14px;
   min-height: 446px;
@@ -158,7 +158,7 @@
   font-size: 12px;
   line-height: 14px;
   font-weight: 700;
-  color: #333333;
+  color: var(--color-muted);
   display: block;
   margin: 0 0 5px 0;
 }
@@ -171,7 +171,7 @@ select {
   border: solid 1px #b4b4b4;
   background: #f5f2f2;
   padding: 0 9px;
-  font-size: 14px;
+  font-size: 16px;
   color: #000;
   outline: none;
 }
@@ -212,7 +212,7 @@ select {
   width: 16px;
   border: 1px solid #b4b1a5;
   border-radius: 3px;
-  background-color: #fff;
+  background-color: var(--color-bg);
   pointer-events: none;
 }
 
@@ -223,7 +223,7 @@ select {
   top: 0;
   width: 5px;
   height: 10px;
-  border: solid #fff;
+  border: solid var(--color-bg);
   border-width: 0 3px 3px 0;
   -webkit-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
@@ -237,7 +237,7 @@ select {
 
 .emms__form__field-item__checkbox input[type="checkbox"]:checked ~ .checkmark::after {
   display: block;
-  border-color: #fff;
+  border-color: var(--color-bg);
 }
 
 .emms__form__field-item__checkbox label {

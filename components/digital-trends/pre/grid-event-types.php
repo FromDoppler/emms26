@@ -47,7 +47,7 @@ if (!isset($gridItems)) {
 }
 
 $gridClass = $gridColumns === 3 ? 'emms__grid--3' : 'emms__grid--2';
-$showVipFooter = $block['block'] === 'TextBlock' && $normalizedUrl !== '/digital-trends-registrado' && $normalizedUrl !== '/registrado';
+$showVipFooter = $block['block'] === 'TextBlock' && in_array($normalizedUrl, ['/digital-trends-registrado', '/registrado'], true);
 $confettiClass = !empty($showAnniversaryConfetti) ? ' emms__grid--with-confetti' : '';
 ?>
 
@@ -58,7 +58,12 @@ $confettiClass = !empty($showAnniversaryConfetti) ? ' emms__grid--with-confetti'
   <?php endif; ?>
   <div class="emms__container--md">
     <div class="emms__grid__title emms__fade-in">
-      <h2><?= $gridTitle ?></h2>
+      <h2><?php if (isset($gridTitleLines)) : ?>
+        <?= htmlspecialchars($gridTitleLines[0], ENT_QUOTES, 'UTF-8') ?><br>
+        <?= htmlspecialchars($gridTitleLines[1], ENT_QUOTES, 'UTF-8') ?>
+      <?php else : ?>
+        <?= htmlspecialchars($gridTitle, ENT_QUOTES, 'UTF-8') ?>
+      <?php endif; ?></h2>
     </div>
     <ul class="emms__grid__content emms__fade-in">
       <?php foreach ($gridItems as $item) : ?>
@@ -83,7 +88,7 @@ $confettiClass = !empty($showAnniversaryConfetti) ? ' emms__grid--with-confetti'
         <?php elseif ($showVipFooter) : ?>
           <div class="hidden--vip">
             <p><strong>&iexcl;No te lo pierdas! Vive la experiencia EMMS completa con tu pase VIP.</strong></p>
-            <a href="#entradas" class="emms__cta emms__fade-in-animation emms__cta--xl">COMPRA TU ENTRADA</a>
+            <a href="/checkout" class="emms__cta emms__fade-in-animation emms__cta--xl">COMPRA TU PASE POR USD <?= VIP_PRICE_CURRENT ?></a>
           </div>
         <?php endif; ?>
       </div>

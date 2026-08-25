@@ -35,18 +35,19 @@
 }
 
 .emms__previous-editions__hero h1 {
-  font-size: 30px;
-  line-height: 32px;
+  font-size: var(--font-h3-size);
+  line-height: var(--font-h3-line);
   font-weight: 700;
-  color: #ffffff;
+  color: var(--color-bg);
   animation-delay: 0.1s;
 }
 
 .emms__previous-editions__hero p {
-  font-size: 16px;
-  line-height: 24px;
-  color: #fff;
+  font-size: var(--font-p-size);
+  line-height: var(--font-p-line);
+  color: var(--color-bg);
   margin: 30px 0 0 0;
+  text-wrap: pretty;
   animation-delay: 0.5s;
 }
 
@@ -140,7 +141,7 @@
   line-height: 34px;
   font-weight: 700;
   text-align: center;
-  color: #fff;
+  color: var(--color-bg);
   margin: 0 0 70px 0;
 }
 
@@ -159,7 +160,7 @@
 }
 
 .emms__previous-editions__list .emms__previous-editions__list__item a {
-  color: #fff;
+  color: var(--color-bg);
   position: relative;
   height: 100%;
   display: block;
@@ -235,7 +236,7 @@
   padding: 40px;
   margin: 25px 0px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--color-bg);
 }
 
 .emms__previous-editions__list .emms__previous-editions__list__item--xl .emms__previous-editions__list__item__description h4 {

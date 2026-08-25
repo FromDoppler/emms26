@@ -105,6 +105,10 @@
   background: linear-gradient(#df24c1, #7d04f6);
 }
 
+.hellobar--vip-launch {
+  background: #6716f3;
+}
+
 .hellobar--counter .hellobar__container {
   gap: 30px;
 }

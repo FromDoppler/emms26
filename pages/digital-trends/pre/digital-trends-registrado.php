@@ -26,6 +26,7 @@ $isPost = false;
 
 <body>
   <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/gtm.php'); ?>
+  <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/hellobar-vip.php'); ?>
   <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/navbar-reg.php') ?>
   <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/share.php') ?>
   <main>
@@ -35,13 +36,18 @@ $isPost = false;
     <div class="hidden--vip registered-hero--free">
       <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/digital-trends/hello-module.php') ?>
     </div>
+    <div class="show--vip">
+      <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/referral-prizes.php') ?>
+    </div>
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/schedule/schedule.php') ?>
+    <div class="show--vip">
+      <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/premium-content.php') ?>
+    </div>
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/digital-trends/entry-plans.php') ?>
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/digital-trends/video-ticketing.php') ?>
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/digital-trends/vip-features.php') ?>
     <?php require_once($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/grid-event-types-preset.php'); ?>
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/digital-trends/pre/grid-event-types.php'); ?>
-    <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/referral-prizes.php') ?>
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/academyBanner.php'); ?>
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/sponsorsList.php') ?>
   </main>

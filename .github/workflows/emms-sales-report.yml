@@ -2,7 +2,7 @@ name: EMMS sales report
 
 on:
   schedule:
-    - cron: '0 18 * * *'
+    - cron: "0 18 * * *"
       timezone: America/Argentina/Buenos_Aires
   workflow_dispatch:
 

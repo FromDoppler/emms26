@@ -16,8 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-$expectedToken = trim((string) getenv('SALES_REPORT_TRIGGER_TOKEN'));
-$webhookUrl = trim((string) getenv('SLACK_SALES_WEBHOOK_URL'));
+$expectedToken = trim((string) SALES_REPORT_TRIGGER_TOKEN);
+$webhookUrl = trim((string) SLACK_SALES_WEBHOOK_URL);
 
 if ($expectedToken === '' || $webhookUrl === '') {
     Logger::event('sales_report_config_missing', [], 'SALES_REPORT', Logger::ERROR);

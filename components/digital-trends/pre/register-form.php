@@ -1,4 +1,4 @@
-<section class="hero-registration hero-registration--digitaltrends-pre">
+<section class="hero-registration hero-registration--digitaltrends-pre" style="background-image: url('/src/img/backgrounds/bg-digitaltrends-hero-registered-2026.png');">
   <?php
   $heroRegistrationDescription = 'Inspírate y aprende en un solo evento todas las tendencias del Marketing Digital.';
   ?>

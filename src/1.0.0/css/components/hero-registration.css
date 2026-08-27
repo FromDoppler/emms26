@@ -6,7 +6,7 @@
 }
 
 .hero-registration.hero-registration--digitaltrends-pre {
-  background-image: url("../../../img/backgrounds/bg-hero-aniversario.png");
+  background-image: url("../../../img/backgrounds/bg-digitaltrends-hero-2026.png");
 }
 
 .hero-registration__columns {
@@ -728,7 +728,7 @@
 }
 
 .hero-registration--registered.hero-registration--registered--digitaltrends-pre {
-  background: #0b0627 url("../../../img/backgrounds/bg-hero-aniversario-registered.png") no-repeat;
+  background: #0b0627 url("../../../img/backgrounds/bg-digitaltrends-hero-registered-2026.png") no-repeat;
   background-size: cover;
   background-position: center center;
   padding: 30px 0 120px;
@@ -751,7 +751,7 @@
 
 .hero-registration--registered.hero-registration--registered--digitaltrends-vip {
   padding: 105px 0 120px;
-  background: #0b0627 url("../../../img/backgrounds/bg-hero-aniversario-registered.png") center / cover no-repeat;
+  background: #0b0627 url("../../../img/backgrounds/bg-digitaltrends-hero-registered-2026.png") center / cover no-repeat;
 }
 
 .hero-registration--registered--digitaltrends-vip .emms__container--md {

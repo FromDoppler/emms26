@@ -5,7 +5,7 @@ $academyBannerSectionClass = $isGreenAcademyBannerVariant ? ' academy-banner--gr
 $academyBannerIcon = $isGreenAcademyBannerVariant ? '/src/img/icons/icon-check--soft-green.svg' : '/src/img/icons/icon-check--purple.svg';
 ?>
         <!-- Doppler Academy Banner -->
-        <section class="academy-banner academy-banner--aniversario emms__bg-section-6 sponsors__hero--blue-bg<?= $academyBannerSectionClass ?>" id="aprende-con-doppler">
+        <section class="academy-banner emms__bg-section-6 sponsors__hero--blue-bg<?= $academyBannerSectionClass ?>" id="aprende-con-doppler">
             <div class="emms__container--sm">
                 <div class="academy-banner__description">
                     <h2>Lleva tu conocimiento a otro nivel con Doppler Academy</h2>

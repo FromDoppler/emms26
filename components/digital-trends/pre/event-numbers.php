@@ -1,5 +1,5 @@
 <!-- Event numbers -->
-<section class="emms__eventnumbers emms__eventnumbers--large emms__eventnumbers--globos" id="boxNumberLarge">
+<section class="emms__eventnumbers emms__eventnumbers--large" id="boxNumberLarge">
   <div class="emms__container--lg">
     <h2 class="emms__fade-in">El EMMS en números</h2>
     <ul class="emms__fade-in">

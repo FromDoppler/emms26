@@ -4,8 +4,7 @@ class SalesReportService
 {
     private const REPORT_TIMEZONE = 'America/Argentina/Buenos_Aires';
     private const REPORT_HOUR = 18;
-    private const MAX_DATA_ROWS = 200;
-    private const MAX_TABLE_CHARACTERS = 18000;
+    private const MAX_SLACK_BLOCKS = 50;
 
     private $repository;
     private $slack;
@@ -63,42 +62,29 @@ class SalesReportService
 
     private function buildSlackPayload(array $sales, DateTimeImmutable $startLocal, DateTimeImmutable $endLocal): array
     {
-        $rows = [$this->headerRow()];
-        $tableCharacters = $this->rowCharacters($rows[0]);
-        $displayed = 0;
         $totalAmount = '0.00';
-
         foreach ($sales as $sale) {
             $totalAmount = $this->addDecimal($totalAmount, (string) $sale['final_amount']);
-
-            if ($displayed >= self::MAX_DATA_ROWS) {
-                continue;
-            }
-
-            $row = $this->saleRow($sale);
-            $rowCharacters = $this->rowCharacters($row);
-            if ($tableCharacters + $rowCharacters > self::MAX_TABLE_CHARACTERS) {
-                continue;
-            }
-
-            $rows[] = $row;
-            $tableCharacters += $rowCharacters;
-            $displayed++;
         }
+
+        $count = count($sales);
+        $displayLimit = $this->resolveDisplayLimit($count);
+        $displayedSales = array_slice($sales, 0, $displayLimit);
+        $displayed = count($displayedSales);
 
         $period = $startLocal->format('d/m H:i')
             . ' → '
             . $endLocal->format('d/m H:i')
             . ' (Argentina)';
-        $count = count($sales);
         $salesLabel = $count === 1 ? '1 venta' : $count . ' ventas';
+        $title = '💰 EMMS · Ventas de hoy';
 
         $blocks = [
             [
                 'type' => 'header',
                 'text' => [
                     'type' => 'plain_text',
-                    'text' => '💰 EMMS · Ventas de hoy',
+                    'text' => $title,
                     'emoji' => true,
                 ],
             ],
@@ -109,23 +95,29 @@ class SalesReportService
                     'text' => '*Período:* ' . $period
                         . "\n*Ventas:* " . $count
                         . ' · *Facturación:* USD ' . $totalAmount,
+                    'verbatim' => true,
                 ],
             ],
-            [
-                'type' => 'data_table',
-                'caption' => 'Detalle de ventas EMMS',
-                'page_size' => min(25, max(1, $displayed)),
-                'row_header_column_index' => 1,
-                'rows' => $rows,
-            ],
         ];
+
+        foreach ($displayedSales as $sale) {
+            $blocks[] = [
+                'type' => 'section',
+                'text' => [
+                    'type' => 'mrkdwn',
+                    'text' => $this->saleText($sale),
+                    'verbatim' => true,
+                ],
+            ];
+        }
 
         if ($displayed < $count) {
             $blocks[] = [
                 'type' => 'context',
                 'elements' => [[
                     'type' => 'mrkdwn',
-                    'text' => 'Mostrando ' . $displayed . ' de ' . $count . ' ventas por límites de la tabla de Slack.',
+                    'text' => 'Mostrando ' . $displayed . ' de ' . $count . ' ventas por límites de Slack.',
+                    'verbatim' => true,
                 ]],
             ];
         }
@@ -135,6 +127,7 @@ class SalesReportService
             'elements' => [[
                 'type' => 'mrkdwn',
                 'text' => 'Incluye únicamente compras aprobadas con pago efectivo. Los cupones 100% quedan excluidos.',
+                'verbatim' => true,
             ]],
         ];
 
@@ -142,53 +135,42 @@ class SalesReportService
             'displayed_sales_count' => $displayed,
             'total_amount' => $totalAmount,
             'message' => [
-                'text' => 'EMMS · Ventas de hoy · ' . $salesLabel . ' · USD ' . $totalAmount,
+                'text' => $title . ' · ' . $salesLabel . ' · USD ' . $totalAmount,
                 'blocks' => $blocks,
             ],
         ];
     }
 
-    private function headerRow(): array
+    private function resolveDisplayLimit(int $count): int
     {
-        return array_map(function (string $text): array {
-            return ['type' => 'raw_text', 'text' => $text];
-        }, [
-            'Hora',
-            'Nombre',
-            'Email',
-            'Teléfono',
-            'País',
-            'USD',
-            'UTM Source',
-            'UTM Medium',
-            'UTM Campaign',
-        ]);
+        $fixedBlocks = 3; // header, summary and final context
+        $withoutTruncation = self::MAX_SLACK_BLOCKS - $fixedBlocks;
+
+        if ($count <= $withoutTruncation) {
+            return $count;
+        }
+
+        return $withoutTruncation - 1; // reserve one block for the truncation context
     }
 
-    private function saleRow(array $sale): array
+    private function saleText(array $sale): string
     {
         $customer = $this->customerSnapshot($sale);
         $reportedAtUtc = new DateTimeImmutable((string) $sale['updated_at'], new DateTimeZone('UTC'));
         $reportedAtLocal = $reportedAtUtc->setTimezone(new DateTimeZone(self::REPORT_TIMEZONE));
-        $firstName = trim((string) ($customer['firstname'] ?? $sale['customer_name'] ?? ''));
-        $lastName = trim((string) ($customer['lastname'] ?? ''));
-        $name = trim($firstName . ' ' . $lastName);
 
-        return [
-            $this->rawText($reportedAtLocal->format('H:i')),
-            $this->rawText($name, 120),
-            $this->rawText($sale['customer_email'] ?? '', 180),
-            $this->rawText($sale['customer_phone'] ?? '', 80),
-            $this->rawText($customer['country'] ?? '', 80),
-            [
-                'type' => 'raw_number',
-                'value' => (float) $sale['final_amount'],
-                'text' => (string) $sale['final_amount'],
-            ],
-            $this->rawText($customer['source_utm'] ?? '', 120),
-            $this->rawText($customer['medium_utm'] ?? '', 120),
-            $this->rawText($customer['campaign_utm'] ?? '', 160),
-        ];
+        $amount = $this->escapeSlackText($this->text((string) $sale['final_amount'], 20));
+        $email = $this->escapeSlackText($this->text($sale['customer_email'] ?? '', 160));
+        $phone = $this->escapeSlackText($this->text($sale['customer_phone'] ?? '', 70));
+        $source = $this->escapeSlackText($this->text($customer['source_utm'] ?? '', 60));
+        $medium = $this->escapeSlackText($this->text($customer['medium_utm'] ?? '', 60));
+        $campaign = $this->escapeSlackText($this->text($customer['campaign_utm'] ?? '', 90));
+
+        return implode("\n", [
+            '💰 *USD ' . $amount . '* · ' . $reportedAtLocal->format('H:i'),
+            '✉️ ' . $email . ' · 📞 ' . $phone,
+            '📊 ' . $source . ' · ' . $medium . ' · ' . $campaign,
+        ]);
     }
 
     private function customerSnapshot(array $sale): array
@@ -201,12 +183,13 @@ class SalesReportService
         return $raw['customer'];
     }
 
-    private function rawText($value, int $maxLength = 80): array
+    private function escapeSlackText(string $value): string
     {
-        return [
-            'type' => 'raw_text',
-            'text' => $this->text($value, $maxLength),
-        ];
+        return str_replace(
+            ['&', '<', '>'],
+            ['&amp;', '&lt;', '&gt;'],
+            $value
+        );
     }
 
     private function text($value, int $maxLength): string
@@ -221,19 +204,6 @@ class SalesReportService
         }
 
         return substr($text, 0, $maxLength);
-    }
-
-    private function rowCharacters(array $row): int
-    {
-        $characters = 0;
-        foreach ($row as $cell) {
-            if (($cell['type'] ?? null) === 'raw_number') {
-                $characters += strlen((string) ($cell['text'] ?? $cell['value'] ?? ''));
-            } else {
-                $characters += strlen((string) ($cell['text'] ?? ''));
-            }
-        }
-        return $characters;
     }
 
     private function addDecimal(string $left, string $right): string

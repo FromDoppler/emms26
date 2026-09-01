@@ -19,7 +19,7 @@ $entryPlanBenefits = [
     <div class="emms__container--lg">
       <div class="emms__plans__title">
         <h2>Hazte VIP y acelera el crecimiento de tu negocio</h2>
-        <p>Compra tu entrada y accede a una gran variedad de beneficios. Por tiempo limitado, tu pase tiene un <span><?= VIP_OFFER_DISCOUNT_LABEL ?> de descuento</span>. Consíguelo por sólo <span>USD <?= VIP_PRICE_CURRENT ?></span>. ¡Se paga solo!</p>
+        <p>Compra tu entrada y accede a Workshops con certificado, recursos descargables y una cuenta en Doppler, valorada en hasta USD 500, para implementar gratis tu estrategia de Marketing en todos tus canales. Tu pase cuesta sólo <span>USD <?= VIP_PRICE_CURRENT ?></span>. ¡Se paga solo!</p>
       </div>
       <table class="emms__plans__table">
         <thead>
@@ -29,8 +29,7 @@ $entryPlanBenefits = [
               <span class="emms__plans__table__plan__tag">Asistente VIP</span>
               <span class="emms__plans__table__plan__body">
                 <span class="emms__plans__table__plan__label">Precio entrada VIP</span>
-                <span class="emms__plans__table__plan__price">USD<?= VIP_PRICE_CURRENT ?>*</span>
-                <span class="emms__plans__table__plan__note">*antes del <?= VIP_OFFER_DEADLINE_LABEL ?></span>
+                <span class="emms__plans__table__plan__price">USD<?= VIP_PRICE_CURRENT ?></span>
               </span>
             </th>
             <th class="emms__plans__table__plan emms__plans__table__plan--free" scope="col">

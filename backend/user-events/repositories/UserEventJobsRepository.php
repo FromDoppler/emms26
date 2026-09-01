@@ -134,6 +134,27 @@ class UserEventJobsRepository
         return $this->db->affectedRows() === 1;
     }
 
+    public function restorePendingRetryJobs(array $jobIds, string $error): int
+    {
+        $jobIds = array_values(array_unique(array_map('intval', $jobIds)));
+        if (empty($jobIds)) {
+            return 0;
+        }
+
+        $placeholders = implode(', ', array_fill(0, count($jobIds), '?'));
+        $params = array_merge([$error], $jobIds);
+
+        $this->db->query(
+            "UPDATE user_event_jobs
+             SET status = 'failed', processed_at = NOW(), last_error = ?
+             WHERE status = 'pending'
+               AND id IN (" . $placeholders . ")",
+            $params
+        );
+
+        return (int) $this->db->affectedRows();
+    }
+
     public function countExhaustedFailedJobs(int $maxAttempts): int
     {
         $rows = $this->db->query(

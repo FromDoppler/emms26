@@ -115,8 +115,13 @@ class EmailTemplateManager
       $html
     );
     $html = str_replace(
-      '<p style="line-height: 140%;">⏰ Precio de lanzamiento hasta el 2 de septiembre:</p>\n<p style="line-height: 140%;"><strong>USD 7,99 </strong>(después, <span style="text-decoration: line-through; line-height: 21px;">USD 9,99</span>) </p>',
+      '<p style="line-height: 140%;">⏰ Precio de lanzamiento hasta el 2 de septiembre:</p>',
       '<p style="line-height: 140%;">⏰ Obtén tu entrada VIP a un valor de USD 9,99.</p>',
+      $html
+    );
+    $html = str_replace(
+      '<p style="line-height: 140%;"><strong>USD 7,99 </strong>(después, <span style="text-decoration: line-through; line-height: 21px;">USD 9,99</span>) </p>',
+      '',
       $html
     );
     $html = str_replace('COMPRA TU ENTRADA VIP A USD 7,99', 'COMPRA TU ENTRADA VIP', $html);

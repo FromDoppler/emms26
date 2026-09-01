@@ -1,0 +1,38 @@
+name: EMMS user event jobs retry
+
+on:
+  schedule:
+    - cron: "0 8,16,23 * * *"
+      timezone: America/Argentina/Buenos_Aires
+  workflow_dispatch:
+
+jobs:
+  retry:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Retry failed user event jobs
+        env:
+          SALES_REPORT_TRIGGER_TOKEN: ${{ secrets.SALES_REPORT_TRIGGER_TOKEN }}
+        run: |
+          if [ -z "$SALES_REPORT_TRIGGER_TOKEN" ]; then
+            echo "Missing SALES_REPORT_TRIGGER_TOKEN secret."
+            exit 1
+          fi
+
+          response_file="$(mktemp)"
+          http_code="$(curl --silent --show-error \
+            --output "$response_file" \
+            --write-out '%{http_code}' \
+            --request POST \
+            --header "X-User-Event-Retry-Token: ${SALES_REPORT_TRIGGER_TOKEN}" \
+            --header 'Accept: application/json' \
+            https://goemms.com/services/retry-user-event-jobs.php)"
+
+          cat "$response_file"
+          echo
+
+          if [ "$http_code" -lt 200 ] || [ "$http_code" -ge 300 ]; then
+            echo "User event retry endpoint returned HTTP ${http_code}."
+            exit 1
+          fi

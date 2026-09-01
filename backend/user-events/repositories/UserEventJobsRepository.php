@@ -105,6 +105,48 @@ class UserEventJobsRepository
         return $rows;
     }
 
+    public function findRetryableFailedJobs(int $maxAttempts, int $limit): array
+    {
+        $limit = max(1, $limit);
+
+        return $this->db->query(
+            "SELECT id, aggregate_type, aggregate_id, job_type, attempts
+             FROM user_event_jobs
+             WHERE status = 'failed'
+               AND attempts < ?
+             ORDER BY updated_at ASC, id ASC
+             LIMIT " . $limit,
+            [$maxAttempts]
+        )->fetchAll();
+    }
+
+    public function requeueFailedJob(int $jobId, int $maxAttempts): bool
+    {
+        $this->db->query(
+            "UPDATE user_event_jobs
+             SET status = 'pending', available_at = NOW(), processed_at = NULL
+             WHERE id = ?
+               AND status = 'failed'
+               AND attempts < ?",
+            [$jobId, $maxAttempts]
+        );
+
+        return $this->db->affectedRows() === 1;
+    }
+
+    public function countExhaustedFailedJobs(int $maxAttempts): int
+    {
+        $rows = $this->db->query(
+            "SELECT COUNT(*) AS total
+             FROM user_event_jobs
+             WHERE status = 'failed'
+               AND attempts >= ?",
+            [$maxAttempts]
+        )->fetchAll();
+
+        return isset($rows[0]['total']) ? (int) $rows[0]['total'] : 0;
+    }
+
     public function decodePayload(array $job): array
     {
         $payload = json_decode($job['payload'], true);

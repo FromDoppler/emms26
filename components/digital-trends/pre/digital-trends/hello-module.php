@@ -7,8 +7,7 @@
     <p class="hero-registration__vip-copy emms__fade-in">
       El pase VIP nunca fue tan accesible.<br>
       Ya tienes acceso a las Conferencias gratuitas. Es momento de dar el salto y acceder a tu pase VIP:<br>
-      más de 10 Workshops, certificado oficial y 6 meses gratis en Doppler —<br>
-      <strong>por solo USD <?= VIP_PRICE_CURRENT ?> si te sumas antes del <?= VIP_OFFER_DEADLINE_LABEL ?>.</strong>
+      <strong>más de 10 Workshops, certificado y 6 meses gratis en Doppler, por solo USD <?= VIP_PRICE_CURRENT ?>.</strong>
     </p>
 
     <?php

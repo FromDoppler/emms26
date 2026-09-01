@@ -1,5 +1,5 @@
 /**
- * Autocompleta el formulario principal de registro con datos recibidos por URL.
+ * Autocompleta los formularios de registro y captación con datos recibidos por URL.
  *
  * Los parámetros soportados son `email`, `name` y `phone`. La URL puede contener
  * caracteres percent-encoded y también entidades HTML heredadas.
@@ -27,33 +27,35 @@ const FormAutoComplete = {
     };
   },
 
-  completeForm() {
+  completeForms() {
     const { email, phone, name } = this.getUserValues();
-    const form = document.getElementById("commonForm");
+    const forms = document.querySelectorAll("#commonForm, #modalForm");
 
-    if (!form) {
-      console.warn("No se encontró el formulario principal de registro en la página.");
+    if (!forms.length) {
+      console.warn("No se encontraron formularios de registro o captación en la página.");
       return;
     }
 
-    form.querySelectorAll("input").forEach((input) => {
-      switch (input.name) {
-        case "email":
-          input.value = email || "";
-          break;
-        case "name":
-          input.value = name || "";
-          break;
-        case "phone":
-          input.value = phone || "";
-          break;
-      }
+    forms.forEach((form) => {
+      form.querySelectorAll("input").forEach((input) => {
+        switch (input.name) {
+          case "email":
+            input.value = email || "";
+            break;
+          case "name":
+            input.value = name || "";
+            break;
+          case "phone":
+            input.value = phone || "";
+            break;
+        }
+      });
     });
   },
 
   init() {
     document.addEventListener("DOMContentLoaded", () => {
-      this.completeForm();
+      this.completeForms();
     });
   },
 };

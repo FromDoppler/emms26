@@ -20,9 +20,7 @@ const setEmailValidationError = (inputEmail, suggestion = null) => {
   const parent = inputEmail?.closest(".holder");
   if (!parent) return;
 
-  const message = suggestion
-    ? `¡Ouch! ¿Quisiste escribir ${suggestion}?`
-    : "¡Ouch! El dominio del Email no parece válido.";
+  const message = suggestion ? `¡Ouch! ¿Quisiste escribir ${suggestion}?` : "¡Ouch! El dominio del Email no parece válido.";
 
   parent.classList.add("error");
   parent.setAttribute("data-error", message);
@@ -125,14 +123,4 @@ const validateEmailStep = (form) => {
   return validateEmptyField(emailInput) && validateEmailField(emailInput);
 };
 
-export {
-  validateEmailField,
-  validateEmptyField,
-  validateEmptyFields,
-  validatePolicyCheckbox,
-  resetErrorField,
-  validateForm,
-  validateSimpleForm,
-  validateEmailStep,
-  setEmailValidationError,
-};
+export { validateEmailField, validateEmptyField, validateEmptyFields, validatePolicyCheckbox, resetErrorField, validateForm, validateSimpleForm, validateEmailStep, setEmailValidationError };

@@ -19,8 +19,9 @@ export const buildUserData = (payload = {}) => {
   return { name, email, phone, encodeEmail, acceptPolicies, acceptPromotions, ...utms, type, events, ...extra };
 };
 
-export const setEventInLocalStorage = (fetchType, encodeEmail) => {
+export const getEventsWithEvent = (fetchType) => {
   let events = localStorage.getItem("events");
+
   try {
     events = events ? JSON.parse(events) : [];
     if (!Array.isArray(events)) events = [events];
@@ -28,10 +29,17 @@ export const setEventInLocalStorage = (fetchType, encodeEmail) => {
   } catch {
     events = [fetchType];
   }
-  if (!localStorage.getItem("dplrid")) localStorage.setItem("dplrid", encodeEmail);
-  localStorage.setItem("events", JSON.stringify(events));
-  localStorage.setItem("lastEventsUpdateTime", new Date().toString());
+
   return JSON.stringify(events);
+};
+
+export const setEventInLocalStorage = (fetchType, encodeEmail) => {
+  const events = getEventsWithEvent(fetchType);
+
+  if (!localStorage.getItem("dplrid")) localStorage.setItem("dplrid", encodeEmail);
+  localStorage.setItem("events", events);
+  localStorage.setItem("lastEventsUpdateTime", new Date().toString());
+  return events;
 };
 
 export const extractFormData = (form) => {

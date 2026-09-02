@@ -1,11 +1,36 @@
 const VERSION = window.APP?.VERSION || "1.0.0";
 const ASSET_BASE = `/src/${VERSION}/vendor/intl-tel-input/29.1.1`;
+const COUNTRY_ENDPOINT = "/services/getCountryNameAndCode.php";
 const controls = new WeakMap();
 let assetsPromise = null;
+let countryPromise = null;
 
 const hasRepeatedDigits = (value) => {
   const digits = String(value || "").replace(/\D/g, "");
   return /^(\d)\1{7,}$/.test(digits);
+};
+
+const getLanguage = () => String(window.APP?.LOCALE || document.documentElement.lang || "es").trim().toLowerCase();
+
+const getFallbackCountry = () => (getLanguage().startsWith("en") ? "us" : "ar");
+
+const normalizeCountryCode = (value) => {
+  const countryCode = String(value || "").trim().toLowerCase();
+  return /^[a-z]{2}$/.test(countryCode) && countryCode !== "xx" ? countryCode : "";
+};
+
+const resolveInitialCountry = () => {
+  if (countryPromise) return countryPromise;
+
+  countryPromise = fetch(COUNTRY_ENDPOINT, { headers: { Accept: "application/json" } })
+    .then((response) => {
+      if (!response.ok) throw new Error(`Country lookup failed: ${response.status}`);
+      return response.json();
+    })
+    .then((data) => normalizeCountryCode(data?.countryCode) || getFallbackCountry())
+    .catch(() => getFallbackCountry());
+
+  return countryPromise;
 };
 
 const ensureAssets = () => {
@@ -39,15 +64,17 @@ const ensureAssets = () => {
   return assetsPromise;
 };
 
-const createControl = (input) => {
+const createControl = (input, initialCountry) => {
   if (!input || controls.has(input) || typeof window.intlTelInput !== "function") {
     return controls.get(input) || null;
   }
 
-  const language = String(window.APP?.LOCALE || document.documentElement.lang || "es").toLowerCase();
+  const language = getLanguage();
+  const country = normalizeCountryCode(initialCountry) || getFallbackCountry();
+  const countryOrder = [country, "ar", "br", "cl", "mx", "es", "co", "pe", "ec", "us"].filter((value, index, values) => values.indexOf(value) === index);
   const instance = window.intlTelInput(input, {
-    initialCountry: language.startsWith("en") ? "us" : "ar",
-    countryOrder: ["ar", "br", "cl", "mx", "es", "co", "pe", "ec", "us"],
+    initialCountry: country,
+    countryOrder,
     countryNameLocale: language.startsWith("en") ? "en" : "es",
     separateDialCode: true,
     placeholderNumberPolicy: "AGGRESSIVE",
@@ -82,14 +109,14 @@ export const initPhoneInputs = async (root = document) => {
   if (!inputs.length) return;
 
   try {
-    await ensureAssets();
-    inputs.forEach(createControl);
+    const [, initialCountry] = await Promise.all([ensureAssets(), resolveInitialCountry()]);
+    inputs.forEach((input) => createControl(input, initialCountry));
   } catch (error) {
     console.warn("No se pudo inicializar intl-tel-input", error);
   }
 };
 
-export const getPhoneControl = (input) => controls.get(input) || createControl(input);
+export const getPhoneControl = (input) => controls.get(input) || null;
 
 export const getPhoneNumber = (input) => {
   if (!input || !String(input.value || "").trim()) return null;

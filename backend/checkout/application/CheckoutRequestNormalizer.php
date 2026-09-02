@@ -1,7 +1,5 @@
 <?php
 
-require_once($_SERVER['DOCUMENT_ROOT'] . '/utils/EmailAddressValidator.php');
-
 final class CheckoutRequestNormalizer
 {
     private const CUSTOMER_TEXT_FIELDS = [
@@ -123,7 +121,7 @@ final class CheckoutRequestNormalizer
         }
         if ($customerEmail !== null
             && $customerEmail !== ''
-            && !EmailAddressValidator::isValid($customerEmail)) {
+            && !filter_var($customerEmail, FILTER_VALIDATE_EMAIL)) {
             return null;
         }
 
@@ -163,7 +161,7 @@ final class CheckoutRequestNormalizer
         if ($email === null
             || $email === ''
             || $email === self::INVALID_VALUE
-            || !EmailAddressValidator::isValid($email)) {
+            || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return null;
         }
 

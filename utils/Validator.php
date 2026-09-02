@@ -9,11 +9,7 @@ class Validator {
             throw new Exception('Validator: Error Field Required Email');
         }
 
-        try {
-            return EmailAddressValidator::assertValid($value);
-        } catch (EmailValidationException $e) {
-            throw $e;
-        }
+        return EmailAddressValidator::assertValid($value);
     }
 
     public static function validateRequired($key, $value) {

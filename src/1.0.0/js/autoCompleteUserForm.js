@@ -21,8 +21,6 @@ const FormAutoComplete = {
     const forms = document.querySelectorAll("#commonForm, #modalForm");
     if (!forms.length) return;
 
-    const phoneInitialization = initPhoneInputs(document);
-
     forms.forEach((form) => {
       form.querySelectorAll("input").forEach((input) => {
         if (input.name === "email") input.value = email || "";
@@ -30,11 +28,17 @@ const FormAutoComplete = {
       });
     });
 
-    await phoneInitialization;
+    if (phone === null) return;
 
-    forms.forEach((form) => {
-      const phoneInput = form.querySelector('input[name="phone"]');
-      setPhoneNumber(phoneInput, phone || "");
+    const phoneInputs = Array.from(forms)
+      .map((form) => form.querySelector('input[name="phone"]'))
+      .filter(Boolean);
+    const initialPhoneValues = new Map(phoneInputs.map((input) => [input, input.value]));
+
+    await initPhoneInputs(document);
+
+    phoneInputs.forEach((phoneInput) => {
+      if (phoneInput.value === initialPhoneValues.get(phoneInput)) setPhoneNumber(phoneInput, phone);
     });
   },
 

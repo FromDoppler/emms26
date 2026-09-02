@@ -35,7 +35,7 @@ export const buildUserData = (payload = {}) => {
   };
 };
 
-export const setEventInLocalStorage = (fetchType, encodeEmail) => {
+export const getEventsWithEvent = (fetchType) => {
   let events = localStorage.getItem("events");
 
   try {
@@ -46,14 +46,20 @@ export const setEventInLocalStorage = (fetchType, encodeEmail) => {
     events = [fetchType];
   }
 
+  return JSON.stringify(events);
+};
+
+export const setEventInLocalStorage = (fetchType, encodeEmail) => {
+  const events = getEventsWithEvent(fetchType);
+
   if (!localStorage.getItem("dplrid")) {
     localStorage.setItem("dplrid", encodeEmail);
   }
 
-  localStorage.setItem("events", JSON.stringify(events));
+  localStorage.setItem("events", events);
   localStorage.setItem("lastEventsUpdateTime", new Date().toString());
 
-  return JSON.stringify(events);
+  return events;
 };
 
 export const extractFormData = (form) => {

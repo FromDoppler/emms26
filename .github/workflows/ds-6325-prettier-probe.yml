@@ -1,0 +1,19 @@
+name: DS-6325 Prettier Probe
+
+on:
+  push:
+    branches:
+      - feat/DS-6325-unify-phone-input
+
+permissions:
+  contents: read
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Format phone module
+        run: npx --yes prettier@3.9.6 --write src/1.0.0/js/intell-input/intell-input.js
+      - name: Print formatted content
+        run: base64 -w0 src/1.0.0/js/intell-input/intell-input.js

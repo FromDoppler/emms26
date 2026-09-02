@@ -1,6 +1,7 @@
 const VERSION = window.APP?.VERSION || "1.0.0";
 const ASSET_BASE = `/src/${VERSION}/vendor/intl-tel-input/29.1.1`;
 const COUNTRY_ENDPOINT = "/services/getCountryNameAndCode.php";
+const COUNTRY_LOOKUP_TIMEOUT_MS = 1500;
 const PREFERRED_COUNTRIES = ["ar", "br", "cl", "mx", "es", "co", "pe", "ec", "us"];
 const controls = new WeakMap();
 let assetsPromise = null;
@@ -20,6 +21,23 @@ const getFallbackCountry = () => {
   return getLanguage().startsWith("en") ? "us" : "ar";
 };
 
+const getUiTranslations = () => {
+  if (getLanguage().startsWith("en")) return {};
+
+  return {
+    searchPlaceholder: "Buscar",
+    clearSearchAriaLabel: "Limpiar búsqueda",
+    noCountrySelected: "Seleccionar país",
+    selectedCountryAriaLabel: "Cambiar país del teléfono, actualmente ${countryName} (${dialCode})",
+    countryListAriaLabel: "Lista de países",
+    searchEmptyState: "No se encontraron países",
+    searchSummaryAria: (count) => {
+      if (count === 0) return "No se encontraron países";
+      return count === 1 ? "1 país encontrado" : `${count} países encontrados`;
+    },
+  };
+};
+
 const normalizeCountryCode = (value) => {
   const countryCode = String(value || "")
     .trim()
@@ -29,14 +47,22 @@ const normalizeCountryCode = (value) => {
 };
 
 const fetchInitialCountry = async () => {
+  const controller = new AbortController();
+  const timeoutId = window.setTimeout(() => controller.abort(), COUNTRY_LOOKUP_TIMEOUT_MS);
+
   try {
-    const response = await fetch(COUNTRY_ENDPOINT, { headers: { Accept: "application/json" } });
+    const response = await fetch(COUNTRY_ENDPOINT, {
+      headers: { Accept: "application/json" },
+      signal: controller.signal,
+    });
     if (!response.ok) throw new Error(`Country lookup failed: ${response.status}`);
 
     const data = await response.json();
     return normalizeCountryCode(data?.countryCode) || getFallbackCountry();
   } catch {
     return getFallbackCountry();
+  } finally {
+    window.clearTimeout(timeoutId);
   }
 };
 
@@ -89,6 +115,7 @@ const createControl = (input, initialCountry) => {
     initialCountry: country,
     countryOrder,
     countryNameLocale: language.startsWith("en") ? "en" : "es",
+    uiTranslations: getUiTranslations(),
     separateDialCode: true,
     placeholderNumberPolicy: "AGGRESSIVE",
     placeholderNumberType: "MOBILE",
@@ -122,13 +149,8 @@ export const initPhoneInputs = async (root = document) => {
   const inputs = Array.from(root.querySelectorAll(selector));
   if (!inputs.length) return;
 
-  try {
-    const promises = [ensureAssets(), resolveInitialCountry()];
-    const [, initialCountry] = await Promise.all(promises);
-    inputs.forEach((input) => createControl(input, initialCountry));
-  } catch (error) {
-    console.warn("No se pudo inicializar intl-tel-input", error);
-  }
+  const [, initialCountry] = await Promise.all([ensureAssets(), resolveInitialCountry()]);
+  inputs.forEach((input) => createControl(input, initialCountry));
 };
 
 export const getPhoneControl = (input) => controls.get(input) || null;
@@ -152,6 +174,8 @@ export const setPhoneNumber = (input, value) => {
   else input.value = value || "";
 };
 
-const initialize = () => initPhoneInputs(document);
+const initialize = () => {
+  initPhoneInputs(document).catch((error) => console.warn("No se pudo inicializar intl-tel-input", error));
+};
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initialize, { once: true });
 else initialize();

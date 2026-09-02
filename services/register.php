@@ -10,6 +10,13 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/utils/SubscriptionErrors.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/config.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/services/functions.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/services/EmailService.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/user-events/repositories/UserEventJobsRepository.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/user-events/UserEventJobCreator.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/user-events/UserEventJobHandlerRegistry.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/user-events/InlineUserEventJobRunner.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/user-events/handlers/EmailSendJobHandler.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/user-events/handlers/SpreadsheetSaveJobHandler.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/user-events/handlers/DopplerListAddJobHandler.php');
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
@@ -147,7 +154,6 @@ function validateRequest($postData, $privacy, $promotions)
   Validator::validateBool('promotions', $promotions);
 }
 
-
 function getSubjectEmail($type, $phase)
 {
   $subjects = [
@@ -269,16 +275,146 @@ function isSubmitValid($ip)
   }
 }
 
+function getRegisteredId($user, $db)
+{
+  $registered = $db->query(
+    "SELECT id FROM registered WHERE email = ? LIMIT 1",
+    [$user['email']]
+  )->fetchArray();
+
+  $registeredId = isset($registered['id']) ? (int) $registered['id'] : 0;
+  if ($registeredId <= 0) {
+    throw new Exception('registered_profile_not_found_after_save');
+  }
+
+  return $registeredId;
+}
+
+function buildFreeRegistrationJobs($user, $registeredId)
+{
+  $keyPrefix = 'free_registration:' . $user['type'] . ':' . $registeredId . ':';
+
+  return [
+    [
+      'event_type' => 'free_registration',
+      'job_type' => 'doppler_list.add',
+      'payload' => ['user' => $user],
+      'idempotency_key' => $keyPrefix . 'doppler_list.add',
+    ],
+    [
+      'event_type' => 'free_registration',
+      'job_type' => 'spreadsheet.save',
+      'payload' => [
+        'spreadsheetId' => ID_SPREADSHEET,
+        'user' => $user,
+      ],
+      'idempotency_key' => $keyPrefix . 'spreadsheet.save',
+    ],
+    [
+      'event_type' => 'free_registration',
+      'job_type' => 'email.send',
+      'payload' => [
+        'user' => $user,
+        'subject' => $user['subject'],
+      ],
+      'idempotency_key' => $keyPrefix . 'email.send',
+    ],
+  ];
+}
+
+function createFreeRegistrationRunner($db)
+{
+  return new InlineUserEventJobRunner(
+    new UserEventJobsRepository($db),
+    new UserEventJobHandlerRegistry([
+      new EmailSendJobHandler(),
+      new SpreadsheetSaveJobHandler(),
+      new DopplerListAddJobHandler(),
+    ])
+  );
+}
+
+function processFreeRegistration($user, $db)
+{
+  $aggregateType = 'registered_profile';
+  $registeredId = 0;
+  $correlationId = null;
+  $transactionStarted = false;
+
+  try {
+    $correlationId = 'corr_' . bin2hex(random_bytes(16));
+
+    $db->beginTransaction();
+    $transactionStarted = true;
+
+    $db->insertSubscriptionDoppler($user);
+    $db->saveRegistered($user);
+
+    $registeredId = getRegisteredId($user, $db);
+    $jobCreator = new UserEventJobCreator(new UserEventJobsRepository($db));
+    $jobCreator->createJobs(
+      [
+        'type' => $aggregateType,
+        'id' => $registeredId,
+        'correlation_id' => $correlationId,
+      ],
+      $registeredId,
+      buildFreeRegistrationJobs($user, $registeredId)
+    );
+
+    $db->commit();
+    $transactionStarted = false;
+  } catch (Throwable $e) {
+    if ($transactionStarted) {
+      try {
+        $db->rollback();
+      } catch (Throwable $rollbackError) {
+        error_log('Free registration rollback failed: ' . $rollbackError->getMessage());
+      }
+    }
+
+    http_response_code(500);
+    throw $e;
+  }
+
+  try {
+    createFreeRegistrationRunner($db)->runForAggregate(
+      $aggregateType,
+      $registeredId,
+      ['correlation_id' => $correlationId]
+    );
+  } catch (Throwable $e) {
+    error_log(
+      'Free registration post-commit runner failed: ' . $e->getMessage()
+      . ' | registered_id=' . $registeredId
+      . ' | correlation_id=' . $correlationId
+    );
+
+    try {
+      processError(
+        'processFreeRegistration (Ejecuta user event jobs)',
+        $e->getMessage(),
+        [
+          'registered_id' => $registeredId,
+          'correlation_id' => $correlationId,
+        ]
+      );
+    } catch (Throwable $logError) {
+      error_log(
+        'Free registration post-commit logging failed: ' . $logError->getMessage()
+        . ' | original_error=' . $e->getMessage()
+      );
+    }
+  }
+}
+
 function processUser($user, $db)
 {
   if ($user['formOrigin'] === 'extraDataModal') {
     saveSubscriptionDoppler($user);
     saveSubscriptionDopplerTable($user, $db);
   } else {
-    saveSubscriptionDoppler($user);
-    saveSubscriptionDopplerTable($user, $db);
-    saveSubscriptionSpreadSheet($user, $db);
-    sendEmail($user, $user['subject']);
+    processFreeRegistration($user, $db);
   }
 }
 
@@ -309,8 +445,8 @@ try {
 } catch (Exception $e) {
   $errorMessage = "Error in Main Execution: " . $e->getMessage();
   $errorContext = [
-    'ip' => $ip,
-    'countryGeo' => $countryGeo,
+    'ip' => isset($ip) ? $ip : null,
+    'countryGeo' => isset($countryGeo) ? $countryGeo : null,
     'user' => isset($user) ? $user : null
   ];
   error_log($errorMessage . ' | Context: ' . json_encode($errorContext));

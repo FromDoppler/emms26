@@ -2,7 +2,7 @@
 
 import { validateForm } from "./formsValidators.js";
 import { toHex, fromHex } from "./decodeEmail.js";
-import { buildUserData, setEventInLocalStorage, extractFormData, toggleButtonLoading, trackMetaPixel } from "./submitHelpers.js";
+import { buildUserData, getEventsWithEvent, setEventInLocalStorage, extractFormData, toggleButtonLoading, trackMetaPixel } from "./submitHelpers.js";
 
 const redirectToRegisteredPage = () => {
   const currentPath = window.location.pathname.replace(/^\//, "");
@@ -49,24 +49,34 @@ const sendUserData = async (userData) => {
       body: JSON.stringify(userData),
     });
 
-    if (fetchResp.ok) {
-      const data = await fetchResp
-        .clone()
-        .json()
-        .catch(() => null);
-      if (data?.is_new === true) trackMetaPixel("CompleteRegistration");
+    const data = await fetchResp
+      .clone()
+      .json()
+      .catch(() => null);
+
+    if (fetchResp.ok && data?.status === "success" && data?.is_new === true) {
+      trackMetaPixel("CompleteRegistration");
     }
 
-    return { fetchResp, encodeEmail: userData.encodeEmail };
+    return { fetchResp, data, encodeEmail: userData.encodeEmail };
   } catch (error) {
     console.log("Fetch error", error);
     return null;
   }
 };
 
+const assertRegistrationConfirmed = (result) => {
+  if (!result) return;
+
+  const { fetchResp, data } = result;
+  if (!fetchResp.ok || data?.status !== "success") {
+    throw new Error(data?.message || `Server error: ${fetchResp.status}`);
+  }
+};
+
 /**
- * @returns {Promise<{fetchResp: Response, encodeEmail: string} | null | undefined>}
- *   - object on success
+ * @returns {Promise<{fetchResp: Response, data: object|null, encodeEmail: string} | null | undefined>}
+ *   - object after a confirmed registration
  *   - undefined when client-side validation fails (errors already rendered)
  *   - null when the network request throws
  */
@@ -74,7 +84,8 @@ const submitFormFetch = async (form, fetchType) => {
   if (!validateForm(form)) return;
 
   const { name, email, phone, acceptPolicies, acceptPromotions } = extractFormData(form);
-  const events = setEventInLocalStorage(fetchType, toHex(email));
+  const encodedEmail = toHex(email);
+  const events = getEventsWithEvent(fetchType);
 
   const userData = buildUserData({
     name,
@@ -90,6 +101,11 @@ const submitFormFetch = async (form, fetchType) => {
   const result = await sendUserData(userData);
   toggleButtonLoading(form, false);
 
+  if (!result) return result;
+
+  assertRegistrationConfirmed(result);
+  setEventInLocalStorage(fetchType, encodedEmail);
+
   return result;
 };
 
@@ -97,7 +113,7 @@ const submitWithoutForm = async (fetchType) => {
   const userEmail = localStorage.getItem("dplrid");
   if (!userEmail) return;
 
-  const events = setEventInLocalStorage(fetchType, userEmail);
+  const events = getEventsWithEvent(fetchType);
 
   const userData = buildUserData({
     email: fromHex(userEmail),
@@ -105,7 +121,13 @@ const submitWithoutForm = async (fetchType) => {
     events,
   });
 
-  return await sendUserData(userData);
+  const result = await sendUserData(userData);
+  if (!result) return result;
+
+  assertRegistrationConfirmed(result);
+  setEventInLocalStorage(fetchType, userEmail);
+
+  return result;
 };
 
 const submitModalForm = async (form, fetchType, formOrigin = null) => {

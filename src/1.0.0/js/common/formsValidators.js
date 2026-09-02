@@ -79,6 +79,7 @@ const activeFieldEventsValidator = (form) => {
 
 const validateEmptyFields = (form, requiredFields) => {
   activeFieldEventsValidator(form);
+
   Array.from(requiredFields).forEach((elem) => {
     if (!elem.value) {
       setErrorField(elem, "required_es");

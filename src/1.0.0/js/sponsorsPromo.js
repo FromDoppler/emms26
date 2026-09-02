@@ -3,9 +3,7 @@
 import { customError, validateForm } from "./common/index.js";
 import { getPhoneNumber } from "./intell-input/intell-input.js";
 
-document.addEventListener("click", (e) => {
-  e = e || window.event;
-  const target = e.target || e.srcElement;
+const initSponsorsPromo = () => {
   const sponsorsPromoForm = document.getElementById("sponsorsPromoForm");
   if (!sponsorsPromoForm) return;
 
@@ -23,11 +21,12 @@ document.addEventListener("click", (e) => {
 
   const mapType = (type) => ({ sponsor: "Sponsor", mediaPartner: "Media Partner" })[type];
 
-  const submitForm = async (event, dataType) => {
+  sponsorsPromoForm.addEventListener("submit", async (event) => {
     event.preventDefault();
-    if (!validateForm(sponsorsPromoForm)) return;
 
-    const endPoint = "./services/registerSponsor.php";
+    const dataType = sponsorsPromoForm.dataset.sponsorType;
+    if (!dataType || !validateForm(sponsorsPromoForm)) return;
+
     const formData = new FormData(sponsorsPromoForm);
     const phoneInput = sponsorsPromoForm.querySelector('input[name="phone"]');
     const urlParams = new URLSearchParams(window.location.search);
@@ -50,7 +49,7 @@ document.addEventListener("click", (e) => {
 
     sponsorsPromoForm.querySelector("button")?.classList.add("button--loading");
     try {
-      const fetchResp = await fetch(endPoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(sponsorData) });
+      const fetchResp = await fetch("./services/registerSponsor.php", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(sponsorData) });
       const resp = await fetchResp.json();
       if (resp === 200) {
         sponsorsPromoForm.reset();
@@ -61,26 +60,32 @@ document.addEventListener("click", (e) => {
     } finally {
       sponsorsPromoForm.querySelector("button")?.classList.remove("button--loading");
     }
-  };
+  });
 
-  let submitEventListener = null;
-  if (target.hasAttribute("data-toggle") && target.getAttribute("data-toggle") == "emms__register-modal" && target.hasAttribute("data-target")) {
-    const m_ID = target.getAttribute("data-target");
-    const dataType = target.getAttribute("data-type");
-    document.getElementById("sponsorType").innerText = mapType(dataType);
-    submitEventListener = (event) => submitForm(event, dataType);
-    sponsorsPromoForm.addEventListener("submit", submitEventListener);
-    document.getElementById(m_ID).classList.add("open");
-    document.querySelector("body").style.overflowY = "hidden";
-    e.preventDefault();
-  }
+  document.addEventListener("click", (event) => {
+    const target = event.target || event.srcElement;
+    if (!target) return;
 
-  if ((target.hasAttribute("data-dismiss") && target.getAttribute("data-dismiss") == "emms__register-modal") || target.classList.contains("emms__register-modal")) {
-    const modal = document.querySelector('[class="emms__register-modal open"]');
-    if (submitEventListener) sponsorsPromoForm.removeEventListener("submit", submitEventListener);
-    modal?.classList.remove("open");
-    document.querySelector("body").style.overflowY = "scroll";
-    toggleMessage();
-    e.preventDefault();
-  }
-});
+    if (target.hasAttribute("data-toggle") && target.getAttribute("data-toggle") == "emms__register-modal" && target.hasAttribute("data-target")) {
+      const modalId = target.getAttribute("data-target");
+      const dataType = target.getAttribute("data-type");
+      sponsorsPromoForm.dataset.sponsorType = dataType;
+      document.getElementById("sponsorType").innerText = mapType(dataType);
+      document.getElementById(modalId).classList.add("open");
+      document.querySelector("body").style.overflowY = "hidden";
+      event.preventDefault();
+    }
+
+    if ((target.hasAttribute("data-dismiss") && target.getAttribute("data-dismiss") == "emms__register-modal") || target.classList.contains("emms__register-modal")) {
+      const modal = document.querySelector('[class="emms__register-modal open"]');
+      delete sponsorsPromoForm.dataset.sponsorType;
+      modal?.classList.remove("open");
+      document.querySelector("body").style.overflowY = "scroll";
+      toggleMessage();
+      event.preventDefault();
+    }
+  });
+};
+
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initSponsorsPromo, { once: true });
+else initSponsorsPromo();

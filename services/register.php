@@ -40,6 +40,8 @@ function setDataRequest($ip, $countryGeo, $db)
   try {
     validateRequest($postData, $privacy, $promotions);
     return $user;
+  } catch (EmailValidationException $e) {
+    throw $e;
   } catch (Exception $e) {
     processError("setDataRequest (Captura datos)", $e->getMessage(), ['user' => $user]);
   }
@@ -441,6 +443,14 @@ try {
     'message' => 'User registered successfully.',
     'is_new' => $is_new,
     'user' => print_r($user, true)
+  ]);
+} catch (EmailValidationException $e) {
+  http_response_code(422);
+  echo json_encode([
+    'status' => 'error',
+    'code' => $e->getReason(),
+    'suggestion' => $e->getSuggestion(),
+    'message' => 'Invalid email address',
   ]);
 } catch (Exception $e) {
   $errorMessage = "Error in Main Execution: " . $e->getMessage();

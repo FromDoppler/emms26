@@ -1,6 +1,6 @@
 import { openModal } from "./openModal.js";
 
-const EXIT_TOP_THRESHOLD_PX = 8;
+const EXIT_EDGE_THRESHOLD_PX = 8;
 const SHOW_ONCE_PER_SESSION = true;
 
 const initExitIntentCapture = async () => {
@@ -24,7 +24,6 @@ const setupExitIntentForModal = (modalEl, canShowModal) => {
 
   const removeExitIntentListeners = () => {
     document.removeEventListener("mouseout", handleMouseOut, true);
-    document.removeEventListener("mouseleave", handleMouseLeave, true);
     document.removeEventListener("visibilitychange", handleVisibilityChange, true);
   };
 
@@ -42,11 +41,12 @@ const setupExitIntentForModal = (modalEl, canShowModal) => {
   const handleMouseOut = (e) => {
     const related = e.relatedTarget || e.toElement;
     if (related) return; // sigue dentro del documento
-    if (e.clientY <= EXIT_TOP_THRESHOLD_PX) triggerModalOnce();
-  };
 
-  const handleMouseLeave = (e) => {
-    if (!e.relatedTarget && !e.toElement) triggerModalOnce();
+    const { clientX, clientY } = e;
+    const { clientWidth, clientHeight } = document.documentElement;
+    const isNearViewportEdge = clientX <= EXIT_EDGE_THRESHOLD_PX || clientY <= EXIT_EDGE_THRESHOLD_PX || clientX >= clientWidth - EXIT_EDGE_THRESHOLD_PX || clientY >= clientHeight - EXIT_EDGE_THRESHOLD_PX;
+
+    if (isNearViewportEdge) triggerModalOnce();
   };
 
   const handleVisibilityChange = () => {
@@ -55,7 +55,6 @@ const setupExitIntentForModal = (modalEl, canShowModal) => {
 
   const addExitIntentListeners = () => {
     document.addEventListener("mouseout", handleMouseOut, true);
-    document.addEventListener("mouseleave", handleMouseLeave, true);
     document.addEventListener("visibilitychange", handleVisibilityChange, true);
   };
 

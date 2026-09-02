@@ -156,10 +156,22 @@ final class EmailAddressValidator
 
     private static function dnsRecords(string $domain, int $type): ?array
     {
+        $dnsError = false;
+        set_error_handler(function () use (&$dnsError) {
+            $dnsError = true;
+            return true;
+        });
+
         try {
-            $records = @dns_get_record($domain, $type);
+            $records = dns_get_record($domain, $type);
         } catch (Throwable $e) {
             return null;
+        } finally {
+            restore_error_handler();
+        }
+
+        if ($records === false) {
+            return $dnsError ? null : [];
         }
 
         return is_array($records) ? $records : null;

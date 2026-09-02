@@ -7,7 +7,6 @@ import { buildUserData, getEventsWithEvent, setEventInLocalStorage, extractFormD
 const redirectToRegisteredPage = () => {
   const currentPath = window.location.pathname.replace(/^\//, "");
 
-  // Special case for sponsors (preserve slug)
   if (currentPath === "sponsors") {
     const slug = sessionStorage.getItem("currentSlug");
     const baseUrl = window.APP.EVENTS.CURRENT.sharedPages.sponsors.registered.url;
@@ -27,10 +26,13 @@ const checkRegistrationStatus = async (email) => {
       body: JSON.stringify({ email }),
     });
 
-    if (!fetchResp.ok) return null;
-
     const data = await fetchResp.json().catch(() => null);
 
+    if (fetchResp.status === 422 && data?.code) {
+      return { validationError: data };
+    }
+
+    if (!fetchResp.ok) return null;
     if (!data || typeof data.registered !== "boolean") return null;
     return data.registered;
   } catch (error) {
@@ -74,12 +76,6 @@ const assertRegistrationConfirmed = (result) => {
   }
 };
 
-/**
- * @returns {Promise<{fetchResp: Response, data: object|null, encodeEmail: string} | null | undefined>}
- *   - object after a confirmed registration
- *   - undefined when client-side validation fails (errors already rendered)
- *   - null when the network request throws
- */
 const submitFormFetch = async (form, fetchType) => {
   if (!validateForm(form)) return;
 

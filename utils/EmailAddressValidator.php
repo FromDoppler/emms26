@@ -31,49 +31,31 @@ final class EmailAddressValidator
         'homail.com' => 'hotmail.com',
     ];
 
-    public static function validate($email): array
+    public static function isValid($email): bool
+    {
+        try {
+            self::assertValid($email);
+            return true;
+        } catch (EmailValidationException $e) {
+            return false;
+        }
+    }
+
+    public static function assertValid($email): string
     {
         if (!is_string($email) || $email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return self::invalid('invalid_syntax');
+            throw new EmailValidationException('invalid_syntax');
         }
 
         $domain = strtolower((string) substr(strrchr($email, '@'), 1));
         if (isset(self::KNOWN_DOMAIN_TYPOS[$domain])) {
             $localPart = substr($email, 0, strrpos($email, '@'));
-            return self::invalid(
+            throw new EmailValidationException(
                 'known_domain_typo',
                 $localPart . '@' . self::KNOWN_DOMAIN_TYPOS[$domain]
             );
         }
 
-        return [
-            'valid' => true,
-            'reason' => null,
-            'suggestion' => null,
-        ];
-    }
-
-    public static function isValid($email): bool
-    {
-        return self::validate($email)['valid'] === true;
-    }
-
-    public static function assertValid($email): string
-    {
-        $result = self::validate($email);
-        if (!$result['valid']) {
-            throw new EmailValidationException($result['reason'], $result['suggestion']);
-        }
-
-        return (string) $email;
-    }
-
-    private static function invalid(string $reason, ?string $suggestion = null): array
-    {
-        return [
-            'valid' => false,
-            'reason' => $reason,
-            'suggestion' => $suggestion,
-        ];
+        return $email;
     }
 }

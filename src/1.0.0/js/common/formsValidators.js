@@ -67,15 +67,24 @@ const activeFieldEventsValidator = (form) => {
   form.querySelectorAll("input.required,select.required,input[name='phone']").forEach((elem) => {
     elem.addEventListener("change", resetErrorField);
     elem.addEventListener("keyup", resetErrorField);
+    if (elem.matches('input[name="phone"]')) {
+      elem.addEventListener("countrychange", resetErrorField);
+    }
   });
 };
 
 const validateEmptyFields = (form, requiredFields) => {
   activeFieldEventsValidator(form);
+  let valid = true;
+
   Array.from(requiredFields).forEach((elem) => {
-    if (!elem.value) setErrorField(elem, "required_es");
+    if (!elem.value) {
+      setErrorField(elem, "required_es");
+      valid = false;
+    }
   });
-  return !form.querySelectorAll(".error").length;
+
+  return valid;
 };
 
 const validatePhoneField = (form) => {

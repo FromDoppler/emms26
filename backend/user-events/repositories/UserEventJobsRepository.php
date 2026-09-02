@@ -4,6 +4,8 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/utils/Logger.php');
 
 class UserEventJobsRepository
 {
+    private const FAILED_RETRY_DELAY_HOURS = 8;
+
     private $db;
 
     public function __construct(DB $db)
@@ -106,6 +108,21 @@ class UserEventJobsRepository
         return $rows;
     }
 
+    public function findAvailablePendingAggregates(int $limit): array
+    {
+        $limit = max(1, $limit);
+
+        return $this->db->query(
+            "SELECT aggregate_type, aggregate_id, MIN(id) AS first_job_id
+             FROM user_event_jobs
+             WHERE status = 'pending'
+               AND available_at <= NOW()
+             GROUP BY aggregate_type, aggregate_id
+             ORDER BY first_job_id ASC
+             LIMIT " . $limit
+        )->fetchAll();
+    }
+
     public function findRetryableFailedJobs(int $maxAttempts, int $limit): array
     {
         $limit = max(1, $limit);
@@ -115,7 +132,8 @@ class UserEventJobsRepository
              FROM user_event_jobs
              WHERE status = 'failed'
                AND attempts < ?
-             ORDER BY updated_at ASC, id ASC
+               AND available_at <= NOW()
+             ORDER BY available_at ASC, id ASC
              LIMIT " . $limit,
             [$maxAttempts]
         )->fetchAll();
@@ -128,32 +146,48 @@ class UserEventJobsRepository
              SET status = 'pending', available_at = NOW(), processed_at = NULL
              WHERE id = ?
                AND status = 'failed'
-               AND attempts < ?",
+               AND attempts < ?
+               AND available_at <= NOW()",
             [$jobId, $maxAttempts]
         );
 
         return $this->db->affectedRows() === 1;
     }
 
-    public function restorePendingRetryJobs(array $jobIds, string $error): int
+    public function releaseStaleProcessingJobs(int $maxAttempts, int $staleMinutes): array
     {
-        $jobIds = array_values(array_unique(array_map('intval', $jobIds)));
-        if (empty($jobIds)) {
-            return 0;
-        }
-
-        $placeholders = implode(', ', array_fill(0, count($jobIds), '?'));
-        $params = array_merge([$error], $jobIds);
+        $staleMinutes = max(1, $staleMinutes);
+        $staleCondition = "updated_at < DATE_SUB(NOW(), INTERVAL " . $staleMinutes . " MINUTE)";
 
         $this->db->query(
             "UPDATE user_event_jobs
-             SET status = 'failed', processed_at = NOW(), last_error = ?
-             WHERE status = 'pending'
-               AND id IN (" . $placeholders . ")",
-            $params
+             SET status = 'pending',
+                 available_at = NOW(),
+                 processed_at = NULL,
+                 last_error = 'stale_processing_requeued'
+             WHERE status = 'processing'
+               AND attempts < ?
+               AND " . $staleCondition,
+            [$maxAttempts]
         );
+        $requeued = (int) $this->db->affectedRows();
 
-        return (int) $this->db->affectedRows();
+        $this->db->query(
+            "UPDATE user_event_jobs
+             SET status = 'failed',
+                 processed_at = NOW(),
+                 last_error = 'stale_processing_max_attempts'
+             WHERE status = 'processing'
+               AND attempts >= ?
+               AND " . $staleCondition,
+            [$maxAttempts]
+        );
+        $exhausted = (int) $this->db->affectedRows();
+
+        return [
+            'requeued' => $requeued,
+            'exhausted' => $exhausted,
+        ];
     }
 
     public function countExhaustedFailedJobs(int $maxAttempts): int
@@ -228,7 +262,10 @@ class UserEventJobsRepository
     {
         $this->db->query(
             "UPDATE user_event_jobs
-             SET status = ?, processed_at = NOW(), last_error = ?
+             SET status = ?,
+                 processed_at = NOW(),
+                 available_at = DATE_ADD(NOW(), INTERVAL " . self::FAILED_RETRY_DELAY_HOURS . " HOUR),
+                 last_error = ?
              WHERE id = ? AND status = ?",
             ['failed', $error, $jobId, 'processing']
         );

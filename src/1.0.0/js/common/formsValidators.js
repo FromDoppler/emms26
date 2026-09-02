@@ -16,6 +16,18 @@ const setErrorField = (elem, typeMsg) => {
   parent.setAttribute("data-error", objMessages[typeMsg]);
 };
 
+const setEmailValidationError = (inputEmail, suggestion = null) => {
+  const parent = inputEmail?.closest(".holder");
+  if (!parent) return;
+
+  const message = suggestion
+    ? `¡Ouch! ¿Quisiste escribir ${suggestion}?`
+    : "¡Ouch! El dominio del Email no parece válido.";
+
+  parent.classList.add("error");
+  parent.setAttribute("data-error", message);
+};
+
 const validatePolicyCheckbox = (policyCheckbox) => {
   if (policyCheckbox.checked) {
     return true;
@@ -69,7 +81,6 @@ const activeFieldEventsValidator = (form) => {
 
 const validateEmptyFields = (form, requiredFields) => {
   activeFieldEventsValidator(form);
-
   Array.from(requiredFields).forEach((elem) => {
     if (!elem.value) {
       setErrorField(elem, "required_es");
@@ -114,4 +125,14 @@ const validateEmailStep = (form) => {
   return validateEmptyField(emailInput) && validateEmailField(emailInput);
 };
 
-export { validateEmailField, validateEmptyField, validateEmptyFields, validatePolicyCheckbox, resetErrorField, validateForm, validateSimpleForm, validateEmailStep };
+export {
+  validateEmailField,
+  validateEmptyField,
+  validateEmptyFields,
+  validatePolicyCheckbox,
+  resetErrorField,
+  validateForm,
+  validateSimpleForm,
+  validateEmailStep,
+  setEmailValidationError,
+};

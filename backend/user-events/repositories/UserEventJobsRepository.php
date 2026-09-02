@@ -47,7 +47,8 @@ class UserEventJobsRepository
                 "SELECT id, aggregate_type, aggregate_id, job_type
                  FROM user_event_jobs
                  WHERE idempotency_key = ?
-                 LIMIT 1",
+                 LIMIT 1
+                 FOR UPDATE",
                 [$data['idempotency_key']]
             )->fetchAll();
 

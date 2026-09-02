@@ -4,8 +4,15 @@ on:
   pull_request:
     paths:
       - "utils/EmailAddressValidator.php"
+      - "utils/Validator.php"
       - "config/email-validation.php"
       - "tests/email-address-validator.php"
+      - "services/checkRegistrationStatus.php"
+      - "services/register.php"
+      - "services/registerSponsor.php"
+      - "backend/checkout/application/CheckoutRequestNormalizer.php"
+      - "backend/checkout/controllers/CalculateCheckoutController.php"
+      - "backend/checkout/controllers/CreateCheckoutController.php"
       - ".github/workflows/email-address-validator.yml"
 
 jobs:
@@ -16,6 +23,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Validate PHP syntax
-        run: php -l utils/EmailAddressValidator.php
+        run: |
+          php -l utils/EmailAddressValidator.php
+          php -l utils/Validator.php
+          php -l services/checkRegistrationStatus.php
+          php -l services/register.php
+          php -l services/registerSponsor.php
+          php -l backend/checkout/application/CheckoutRequestNormalizer.php
+          php -l backend/checkout/controllers/CalculateCheckoutController.php
+          php -l backend/checkout/controllers/CreateCheckoutController.php
       - name: Run email validator tests
         run: php tests/email-address-validator.php

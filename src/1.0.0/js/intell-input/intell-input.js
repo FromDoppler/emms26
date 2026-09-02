@@ -10,24 +10,38 @@ const hasRepeatedDigits = (value) => {
   return /^(\d)\1{7,}$/.test(digits);
 };
 
-const getLanguage = () => String(window.APP?.LOCALE || document.documentElement.lang || "es").trim().toLowerCase();
+const getLanguage = () =>
+  String(window.APP?.LOCALE || document.documentElement.lang || "es")
+    .trim()
+    .toLowerCase();
 
-const getFallbackCountry = () => (getLanguage().startsWith("en") ? "us" : "ar");
+const getFallbackCountry = () =>
+  getLanguage().startsWith("en") ? "us" : "ar";
 
 const normalizeCountryCode = (value) => {
-  const countryCode = String(value || "").trim().toLowerCase();
-  return /^[a-z]{2}$/.test(countryCode) && countryCode !== "xx" ? countryCode : "";
+  const countryCode = String(value || "")
+    .trim()
+    .toLowerCase();
+  return /^[a-z]{2}$/.test(countryCode) && countryCode !== "xx"
+    ? countryCode
+    : "";
 };
 
 const resolveInitialCountry = () => {
   if (countryPromise) return countryPromise;
 
-  countryPromise = fetch(COUNTRY_ENDPOINT, { headers: { Accept: "application/json" } })
+  countryPromise = fetch(COUNTRY_ENDPOINT, {
+    headers: { Accept: "application/json" },
+  })
     .then((response) => {
-      if (!response.ok) throw new Error(`Country lookup failed: ${response.status}`);
+      if (!response.ok) {
+        throw new Error(`Country lookup failed: ${response.status}`);
+      }
       return response.json();
     })
-    .then((data) => normalizeCountryCode(data?.countryCode) || getFallbackCountry())
+    .then(
+      (data) => normalizeCountryCode(data?.countryCode) || getFallbackCountry(),
+    )
     .catch(() => getFallbackCountry());
 
   return countryPromise;
@@ -46,7 +60,9 @@ const ensureAssets = () => {
   }
 
   assetsPromise = new Promise((resolve, reject) => {
-    const existing = document.querySelector('script[data-emms-phone-input="true"]');
+    const existing = document.querySelector(
+      'script[data-emms-phone-input="true"]',
+    );
     if (existing) {
       existing.addEventListener("load", resolve, { once: true });
       existing.addEventListener("error", reject, { once: true });
@@ -65,13 +81,28 @@ const ensureAssets = () => {
 };
 
 const createControl = (input, initialCountry) => {
-  if (!input || controls.has(input) || typeof window.intlTelInput !== "function") {
+  if (
+    !input ||
+    controls.has(input) ||
+    typeof window.intlTelInput !== "function"
+  ) {
     return controls.get(input) || null;
   }
 
   const language = getLanguage();
   const country = normalizeCountryCode(initialCountry) || getFallbackCountry();
-  const countryOrder = [country, "ar", "br", "cl", "mx", "es", "co", "pe", "ec", "us"].filter((value, index, values) => values.indexOf(value) === index);
+  const countryOrder = [
+    country,
+    "ar",
+    "br",
+    "cl",
+    "mx",
+    "es",
+    "co",
+    "pe",
+    "ec",
+    "us",
+  ].filter((value, index, values) => values.indexOf(value) === index);
   const instance = window.intlTelInput(input, {
     initialCountry: country,
     countryOrder,
@@ -89,14 +120,21 @@ const createControl = (input, initialCountry) => {
     isValid() {
       const number = this.getNumber();
       if (!number || hasRepeatedDigits(number)) return false;
-      if (typeof instance.isValidNumberPrecise === "function") return Boolean(instance.isValidNumberPrecise());
-      if (typeof instance.isValidNumber === "function") return Boolean(instance.isValidNumber());
+      if (typeof instance.isValidNumberPrecise === "function") {
+        return Boolean(instance.isValidNumberPrecise());
+      }
+      if (typeof instance.isValidNumber === "function") {
+        return Boolean(instance.isValidNumber());
+      }
       return false;
     },
     setNumber(value) {
       const normalized = String(value || "").trim();
-      if (typeof instance.setNumber === "function") instance.setNumber(normalized);
-      else input.value = normalized;
+      if (typeof instance.setNumber === "function") {
+        instance.setNumber(normalized);
+      } else {
+        input.value = normalized;
+      }
     },
   };
 
@@ -105,11 +143,16 @@ const createControl = (input, initialCountry) => {
 };
 
 export const initPhoneInputs = async (root = document) => {
-  const inputs = Array.from(root.querySelectorAll("input.phone-number, input[name='phone']"));
+  const inputs = Array.from(
+    root.querySelectorAll("input.phone-number, input[name='phone']"),
+  );
   if (!inputs.length) return;
 
   try {
-    const [, initialCountry] = await Promise.all([ensureAssets(), resolveInitialCountry()]);
+    const [, initialCountry] = await Promise.all([
+      ensureAssets(),
+      resolveInitialCountry(),
+    ]);
     inputs.forEach((input) => createControl(input, initialCountry));
   } catch (error) {
     console.warn("No se pudo inicializar intl-tel-input", error);
@@ -126,7 +169,9 @@ export const getPhoneNumber = (input) => {
 export const isPhoneValid = (input) => {
   if (!input) return true;
   const hasValue = Boolean(String(input.value || "").trim());
-  if (!hasValue) return !input.classList.contains("required") && !input.required;
+  if (!hasValue) {
+    return !input.classList.contains("required") && !input.required;
+  }
   return Boolean(getPhoneControl(input)?.isValid());
 };
 
@@ -138,5 +183,8 @@ export const setPhoneNumber = (input, value) => {
 };
 
 const initialize = () => initPhoneInputs(document);
-if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initialize, { once: true });
-else initialize();
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initialize, { once: true });
+} else {
+  initialize();
+}

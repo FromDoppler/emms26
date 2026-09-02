@@ -1,6 +1,7 @@
 <?php
 
 require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/checkout/CheckoutModule.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/utils/EmailAddressValidator.php');
 
 class CalculateCheckoutController
 {
@@ -22,8 +23,20 @@ class CalculateCheckoutController
             return;
         }
 
+        $input = CheckoutRequestNormalizer::normalizeCalculate(is_array($input) ? $input : []);
+        if ($input === null) {
+            self::json(422, ['success' => false, 'error' => 'validation_error']);
+            return;
+        }
+
+        $customerEmail = $input['customerEmail'] ?? '';
+        if ($customerEmail !== '' && !EmailAddressValidator::isValid($customerEmail)) {
+            self::json(422, ['success' => false, 'error' => 'validation_error']);
+            return;
+        }
+
         try {
-            $result = CheckoutModule::createCalculateCheckoutService()->execute(is_array($input) ? $input : []);
+            $result = CheckoutModule::createCalculateCheckoutService()->execute($input);
             self::json($result['httpStatus'], $result['payload']);
         } catch (Throwable $e) {
             $correlationId = 'corr_' . bin2hex(random_bytes(16));

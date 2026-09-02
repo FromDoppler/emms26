@@ -103,19 +103,16 @@ export const initHeroRegistrationFlow = (form) => {
   const stepOneButton = stepOneEl.querySelector("button");
   const stepTwoButton = stepTwoEl.querySelector("button");
 
-  form.addEventListener("submit", (e) => e.preventDefault());
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
 
-  if (stepOneButton) {
-    stepOneButton.addEventListener("click", (e) => {
-      e.preventDefault();
+    if (form.dataset.step === "1") {
       handleEmailStep(form, stepOneEl, stepTwoEl, stepOneButton);
-    });
-  }
+      return;
+    }
 
-  if (stepTwoButton) {
-    stepTwoButton.addEventListener("click", (e) => {
-      e.preventDefault();
+    if (form.dataset.step === "2") {
       handleSubmitStep(form, stepTwoButton);
-    });
-  }
+    }
+  });
 };

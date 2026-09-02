@@ -69,18 +69,16 @@ const initializeEventListeners = () => {
     if (isEmailFirstFlow) {
       initHeroRegistrationFlow(form);
     } else {
-      const submitBtn = form.querySelector("button");
-      if (submitBtn) submitBtn.addEventListener("click", (e) => submitFormHandler(e, form));
+      form.addEventListener("submit", (e) => submitFormHandler(e, form));
       swichFormListener(form); // usando nombre original con typo
     }
   }
 
-  if (modalForm) {
-    const submitBtn = modalForm.querySelector("button");
-    if (submitBtn) submitBtn.addEventListener("click", (e) => submitFormHandler(e, modalForm));
+  if (modalForm?.tagName === "FORM") {
+    modalForm.addEventListener("submit", (e) => submitFormHandler(e, modalForm));
   }
 
-  if (extraData) {
+  if (extraData && modalForm) {
     modalForm.addEventListener("submit", modalFormSubmitHandler);
   }
 

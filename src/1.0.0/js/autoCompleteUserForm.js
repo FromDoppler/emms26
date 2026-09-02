@@ -35,7 +35,12 @@ const FormAutoComplete = {
       .filter(Boolean);
     const initialPhoneValues = new Map(phoneInputs.map((input) => [input, input.value]));
 
-    await initPhoneInputs(document);
+    try {
+      await initPhoneInputs(document);
+    } catch (error) {
+      console.warn("No se pudo inicializar el teléfono para autocompletar", error);
+      return;
+    }
 
     phoneInputs.forEach((phoneInput) => {
       if (phoneInput.value === initialPhoneValues.get(phoneInput)) setPhoneNumber(phoneInput, phone);

@@ -42,11 +42,8 @@ const setupExitIntentForModal = (modalEl, canShowModal) => {
     const related = e.relatedTarget || e.toElement;
     if (related) return; // sigue dentro del documento
 
-    const isNearViewportEdge =
-      e.clientX <= EXIT_EDGE_THRESHOLD_PX ||
-      e.clientY <= EXIT_EDGE_THRESHOLD_PX ||
-      e.clientX >= window.innerWidth - EXIT_EDGE_THRESHOLD_PX ||
-      e.clientY >= window.innerHeight - EXIT_EDGE_THRESHOLD_PX;
+    const { clientX, clientY } = e;
+    const isNearViewportEdge = clientX <= EXIT_EDGE_THRESHOLD_PX || clientY <= EXIT_EDGE_THRESHOLD_PX || clientX >= window.innerWidth - EXIT_EDGE_THRESHOLD_PX || clientY >= window.innerHeight - EXIT_EDGE_THRESHOLD_PX;
 
     if (isNearViewportEdge) triggerModalOnce();
   };

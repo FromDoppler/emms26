@@ -1,13 +1,11 @@
 <section class="hero-registration--registered hero-registration--withoutform hero-registration--registered--digitaltrends-pre">
   <div class="emms__container--md">
     <h1 class="emms__fade-top">
-      <em>ONLINE Y GRATUITO - Del 29 de septiembre al 1 de octubre</em>
-      <span>Gracias por sumarte al EMMS 2026</span>
+      <em>ONLINE Y GRATUITO • Del 29 de septiembre al 1 de octubre</em>
+      <span>Súmate a la experiencia completa con el pase VIP</span>
     </h1>
     <p class="hero-registration__vip-copy emms__fade-in">
-      El pase VIP nunca fue tan accesible.<br>
-      Ya tienes acceso a las Conferencias gratuitas. Es momento de dar el salto y acceder a tu pase VIP:<br>
-      <strong>más de 10 Workshops, certificado y 6 meses gratis en Doppler, por solo USD <?= VIP_PRICE_CURRENT ?>.</strong>
+      <strong>Más de 10 Workshops, certificado y 6 meses gratis en Doppler, por solo USD <?= VIP_PRICE_CURRENT ?>.</strong>
     </p>
 
     <?php
@@ -17,7 +15,7 @@
     ?>
 
     <div class="hero-registration__vip-actions emms__fade-in">
-      <a class="emms__cta emms__cta--terciary" href="./checkout">ACCEDE A TU VIP A USD <?= VIP_PRICE_CURRENT ?></a>
+      <a class="emms__cta emms__cta--terciary" href="./checkout">ACCEDE A TU VIP A USD <?= str_replace(',', '.', VIP_PRICE_CURRENT) ?></a>
       <a class="emms__cta emms__cta--primary-light" href="#entradas">CONOCE LOS BENEFICIOS</a>
     </div>
   </div>

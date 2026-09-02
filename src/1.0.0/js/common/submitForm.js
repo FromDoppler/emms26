@@ -1,6 +1,6 @@
 "use strict";
 
-import { validateForm } from "./formsValidators.js";
+import { setEmailValidationError, validateForm } from "./formsValidators.js";
 import { toHex, fromHex } from "./decodeEmail.js";
 import { buildUserData, getEventsWithEvent, setEventInLocalStorage, extractFormData, toggleButtonLoading, trackMetaPixel } from "./submitHelpers.js";
 
@@ -98,6 +98,11 @@ const submitFormFetch = async (form, fetchType) => {
   toggleButtonLoading(form, false);
 
   if (!result) return result;
+
+  if (result.fetchResp.status === 422 && result.data?.code) {
+    setEmailValidationError(form.querySelector('input[name="email"]'), result.data.suggestion);
+    return;
+  }
 
   assertRegistrationConfirmed(result);
   setEventInLocalStorage(fetchType, encodedEmail);

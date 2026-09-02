@@ -28,12 +28,14 @@ $DB_HOST = getenv("MYSQL_HOST");
 
 $STRIPE_PUBLIC_KEY = getenv("STRIPE_PUBLIC_KEY");
 $STRIPE_URL_SERVER = getenv("STRIPE_URL_SERVER");
-$SLACK_SALES_WEBHOOK_URL = getenv("SLACK_SALES_WEBHOOK_URL") ?: '';
+$SLACK_SALES_BOT_TOKEN = getenv("SLACK_SALES_BOT_TOKEN") ?: '';
+$SLACK_SALES_CHANNEL_ID = getenv("SLACK_SALES_CHANNEL_ID") ?: '';
 $SALES_REPORT_TRIGGER_TOKEN = getenv("SALES_REPORT_TRIGGER_TOKEN") ?: '';
 
 if (!defined('STRIPE_PUBLIC_KEY')) define('STRIPE_PUBLIC_KEY', $STRIPE_PUBLIC_KEY);
 if (!defined('STRIPE_URL_SERVER')) define('STRIPE_URL_SERVER', $STRIPE_URL_SERVER);
-if (!defined('SLACK_SALES_WEBHOOK_URL')) define('SLACK_SALES_WEBHOOK_URL', (string) $SLACK_SALES_WEBHOOK_URL);
+if (!defined('SLACK_SALES_BOT_TOKEN')) define('SLACK_SALES_BOT_TOKEN', (string) $SLACK_SALES_BOT_TOKEN);
+if (!defined('SLACK_SALES_CHANNEL_ID')) define('SLACK_SALES_CHANNEL_ID', (string) $SLACK_SALES_CHANNEL_ID);
 if (!defined('SALES_REPORT_TRIGGER_TOKEN')) define('SALES_REPORT_TRIGGER_TOKEN', (string) $SALES_REPORT_TRIGGER_TOKEN);
 
 #ADMIN
@@ -91,7 +93,6 @@ if (!defined('GTM_IDS')) define('GTM_IDS', [
 if (!defined('ALLOW_IPS')) define('ALLOW_IPS', $ALLOW_IPS);
 
 #API DOPPLER
-
 if (!defined('ACCOUNT_DOPPLER')) define('ACCOUNT_DOPPLER', $ACCOUNT_DOPPLER);
 if (!defined('API_KEY_DOPPLER')) define('API_KEY_DOPPLER', $API_KEY_DOPPLER);
 if (!defined('LIST_LANDING_ECOMMERCE')) define('LIST_LANDING_ECOMMERCE', 29037684);//QA
@@ -107,7 +108,6 @@ if (!defined('EMAIL_SPONSORS')) define('EMAIL_SPONSORS', 'lbsales@makingsense.co
 if (!defined('EMAIL_PARTNERS')) define('EMAIL_PARTNERS', 'partners@fromdoppler.com');
 
 #API RELAY
-
 if (!defined('ACCOUNT_RELAY')) define('ACCOUNT_RELAY', $ACCOUNT_RELAY);
 if (!defined('API_KEY_RELAY')) define('API_KEY_RELAY', $API_KEY_RELAY);
 
@@ -155,8 +155,6 @@ if (!defined('SUBJECT_VIP_POST_DIGITALT'))
     define('SUBJECT_VIP_POST_DIGITALT', html_entity_decode('&#x1F31F;', ENT_QUOTES, 'UTF-8') . ' Eres parte del EMMS VIP: vive la experiencia completa');
 
 #GOOGLE SPREADSHEET
-//https://docs.google.com/spreadsheets/d/1irsIKBdRzGlmeGpUlJjFcSJFaYZLN9ujvY-cTYpyeM8/edit#gid=0
-
 if (!defined('GOOGLE_CLIENT_ID')) define('GOOGLE_CLIENT_ID', $GOOGLE_CLIENT_ID);
 if (!defined('GOOGLE_CLIENT_SECRET')) define('GOOGLE_CLIENT_SECRET', $GOOGLE_CLIENT_SECRET);
 if (!defined('GOOGLE_REFRESH_TOKEN')) define('GOOGLE_REFRESH_TOKEN', $GOOGLE_REFRESH_TOKEN);
@@ -166,7 +164,6 @@ if (!defined('ID_SPREADSHEET_DT_VIP')) define('ID_SPREADSHEET_DT_VIP', $ID_SPREA
 if (!defined('GOOGLE_SPREAD_CALLBACK')) define('GOOGLE_SPREAD_CALLBACK', 'http://localhost/utils/spread/callback.php');
 
 #DATABASE
-
 if (!defined('DB_NAME')) define('DB_NAME', $DB_NAME);
 if (!defined('DB_USER')) define('DB_USER', $DB_USER);
 if (!defined('DB_PASSWORD')) define('DB_PASSWORD', $DB_PASSWORD);
@@ -178,10 +175,8 @@ if (!defined('ADMIN_RESTRICTED_SERVERS')) define('ADMIN_RESTRICTED_SERVERS', $AD
 if (!defined('ADMIN_ALLOW_IPS')) define('ADMIN_ALLOW_IPS', $ADMIN_ALLOW_IPS);
 
 #SERVER NODE SOCKET
-
 if (!defined('URL_REFRESH')) define('URL_REFRESH', 'apisqa.fromdoppler.net');
 if (!defined('PATH_REFRESH')) define('PATH_REFRESH', 'emms-socket');
-//if (!defined('SECRET_REFRESH')) define('SECRET_REFRESH', $SECRET_REFRESH);
 
 #MEMCACHED
 if (!defined('MEMCACHED_SERVER')) define('MEMCACHED_SERVER', "memcached");

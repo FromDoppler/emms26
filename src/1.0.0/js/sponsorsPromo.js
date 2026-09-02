@@ -7,6 +7,8 @@ const initSponsorsPromo = () => {
   const sponsorsPromoForm = document.getElementById("sponsorsPromoForm");
   if (!sponsorsPromoForm) return;
 
+  let isSubmitting = false;
+
   const toggleMessage = (resp = 0) => {
     const sponsorFormContainer = document.querySelector(".emms__register-modal--sponsor-promo");
     const successMessage = document.querySelector(".emms__register-modal__window--success-message");
@@ -25,7 +27,9 @@ const initSponsorsPromo = () => {
     event.preventDefault();
 
     const dataType = sponsorsPromoForm.dataset.sponsorType;
-    if (!dataType) return;
+    if (!dataType || isSubmitting) return;
+
+    isSubmitting = true;
 
     try {
       await initPhoneInputs(sponsorsPromoForm);
@@ -65,6 +69,7 @@ const initSponsorsPromo = () => {
     } catch (error) {
       customError("Error en formulario Sponsors", error);
     } finally {
+      isSubmitting = false;
       sponsorsPromoForm.querySelector("button")?.classList.remove("button--loading");
     }
   });

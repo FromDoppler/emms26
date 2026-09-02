@@ -19,7 +19,7 @@ $entryPlanBenefits = [
     <div class="emms__container--lg">
       <div class="emms__plans__title">
         <h2>Hazte VIP y acelera el crecimiento de tu negocio</h2>
-        <p>Compra tu entrada y accede a: Workshops con certificado, Recursos descargables y una cuenta en Doppler, valorada en hasta USD 500, para implementar gratis tu estrategia de Marketing en todos tus canales. Tu pase cuesta sólo <span>USD <?= VIP_PRICE_CURRENT ?></span>. ¡Se paga solo!</p>
+        <p style="font-weight: 400;">Compra tu entrada y accede a: Workshops con certificado, Recursos descargables y una cuenta en Doppler, valorada en hasta USD 500, para implementar gratis tu estrategia de Marketing en todos tus canales. Tu pase cuesta sólo <span>USD <?= VIP_PRICE_CURRENT ?></span>. ¡Se paga solo!</p>
       </div>
       <table class="emms__plans__table">
         <thead>

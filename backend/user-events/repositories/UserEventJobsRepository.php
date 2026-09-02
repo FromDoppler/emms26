@@ -48,7 +48,7 @@ class UserEventJobsRepository
                  FROM user_event_jobs
                  WHERE idempotency_key = ?
                  LIMIT 1
-                 FOR UPDATE",
+                 LOCK IN SHARE MODE",
                 [$data['idempotency_key']]
             )->fetchAll();
 

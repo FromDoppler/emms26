@@ -27,9 +27,10 @@ function getSponsorsContent($url, $isPost)
 }
 
 $content = getSponsorsContent($normalizedUrl, $isPost);
+$showSponsors = false;
 $db = new DB(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 
-if (!$db->hasActiveSponsor()) {
+if ($showSponsors && !$db->hasActiveSponsor()) {
   $db->close();
   return;
 }
@@ -44,8 +45,10 @@ $sponsorTypes = [
 ];
 
 $sponsorsByType = [];
+if ($showSponsors) {
 foreach ($sponsorTypes as $type => $config) {
   $sponsorsByType[$type] = $db->getSponsorsByType($type);
+}
 }
 ?>
 
@@ -59,6 +62,7 @@ foreach ($sponsorTypes as $type => $config) {
       </div>
     </div>
 
+    <?php if ($showSponsors): ?>
     <h2 class="companies__title emms__fade-in"><?= $content['title'] ?></h2>
 
     <?php foreach ($sponsorTypes as $type => $config): ?>
@@ -95,6 +99,7 @@ foreach ($sponsorTypes as $type => $config) {
         Escríbenos a <a href="mailto:partners@fromdoppler.com" class="companies__body-link">partners@fromdoppler.com</a>
         <a href="/sponsors-promo" class="emms__cta emms__cta--secondary">QUIERO SER ALIADO</a>
       </p>
+    <?php endif; ?>
     <?php endif; ?>
   </div>
 

@@ -31,6 +31,7 @@ const checkRegistrationStatus = async (email) => {
     if (!fetchResp.ok) return null;
 
     const data = await fetchResp.json().catch(() => null);
+
     if (!data || typeof data.registered !== "boolean") return null;
     return data.registered;
   } catch (error) {
@@ -54,7 +55,9 @@ const sendUserData = async (userData) => {
       .json()
       .catch(() => null);
 
-    if (fetchResp.ok && data?.status === "success" && data?.is_new === true) trackMetaPixel("CompleteRegistration");
+    if (fetchResp.ok && data?.status === "success" && data?.is_new === true) {
+      trackMetaPixel("CompleteRegistration");
+    }
 
     return { fetchResp, data, encodeEmail: userData.encodeEmail };
   } catch (error) {
@@ -67,7 +70,9 @@ const assertRegistrationConfirmed = (result) => {
   if (!result) return;
 
   const { fetchResp, data } = result;
-  if (!fetchResp.ok || data?.status !== "success") throw new Error(data?.message || `Server error: ${fetchResp.status}`);
+  if (!fetchResp.ok || data?.status !== "success") {
+    throw new Error(data?.message || `Server error: ${fetchResp.status}`);
+  }
 };
 
 /**
@@ -111,7 +116,13 @@ const submitWithoutForm = async (fetchType) => {
   if (!userEmail) return;
 
   const events = getEventsWithEvent(fetchType);
-  const userData = buildUserData({ email: fromHex(userEmail), type: fetchType, events });
+
+  const userData = buildUserData({
+    email: fromHex(userEmail),
+    type: fetchType,
+    events,
+  });
+
   const result = await sendUserData(userData);
   if (!result) return result;
 
@@ -139,7 +150,15 @@ const submitModalForm = async (form, fetchType, formOrigin = null) => {
     return null;
   }
 
-  const userData = buildUserData({ email: fromHex(encodedEmail), type: fetchType, jobPosition, company, website, emailPlatform, formOrigin });
+  const userData = buildUserData({
+    email: fromHex(encodedEmail),
+    type: fetchType,
+    jobPosition,
+    company,
+    website,
+    emailPlatform,
+    formOrigin,
+  });
   toggleButtonLoading(form, true);
   const result = await sendUserData(userData);
   toggleButtonLoading(form, false);

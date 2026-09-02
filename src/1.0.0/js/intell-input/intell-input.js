@@ -21,7 +21,9 @@ const getFallbackCountry = () => {
 };
 
 const normalizeCountryCode = (value) => {
-  const countryCode = String(value || "").trim().toLowerCase();
+  const countryCode = String(value || "")
+    .trim()
+    .toLowerCase();
   if (!/^[a-z]{2}$/.test(countryCode) || countryCode === "xx") return "";
   return countryCode;
 };

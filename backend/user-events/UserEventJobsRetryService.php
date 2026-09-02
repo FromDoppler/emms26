@@ -7,6 +7,7 @@ class UserEventJobsRetryService
 {
     private const DEFAULT_MAX_ATTEMPTS = 6;
     private const DEFAULT_BATCH_SIZE = 50;
+    private const DEFAULT_STALE_PROCESSING_MINUTES = 15;
 
     private $jobsRepository;
     private $runnerFactory;
@@ -19,7 +20,8 @@ class UserEventJobsRetryService
 
     public function run(
         int $maxAttempts = self::DEFAULT_MAX_ATTEMPTS,
-        int $batchSize = self::DEFAULT_BATCH_SIZE
+        int $batchSize = self::DEFAULT_BATCH_SIZE,
+        int $staleProcessingMinutes = self::DEFAULT_STALE_PROCESSING_MINUTES
     ): array {
         if ($maxAttempts < 2) {
             throw new InvalidArgumentException('maxAttempts must be at least 2');
@@ -27,92 +29,70 @@ class UserEventJobsRetryService
         if ($batchSize < 1) {
             throw new InvalidArgumentException('batchSize must be at least 1');
         }
-
-        $jobs = $this->jobsRepository->findRetryableFailedJobs($maxAttempts, $batchSize);
-        $candidateAggregates = [];
-
-        foreach ($jobs as $job) {
-            $aggregateType = (string) $job['aggregate_type'];
-            $aggregateId = (int) $job['aggregate_id'];
-            $key = $aggregateType . ':' . $aggregateId;
-
-            if (!isset($candidateAggregates[$key])) {
-                $candidateAggregates[$key] = [
-                    'aggregate_type' => $aggregateType,
-                    'aggregate_id' => $aggregateId,
-                    'jobs' => [],
-                ];
-            }
-
-            $candidateAggregates[$key]['jobs'][] = $job;
+        if ($staleProcessingMinutes < 1) {
+            throw new InvalidArgumentException('staleProcessingMinutes must be at least 1');
         }
 
+        $staleProcessing = $this->jobsRepository->releaseStaleProcessingJobs(
+            $maxAttempts,
+            $staleProcessingMinutes
+        );
+
+        $failedJobs = $this->jobsRepository->findRetryableFailedJobs($maxAttempts, $batchSize);
+        $failedRequeued = 0;
+
+        foreach ($failedJobs as $job) {
+            if ($this->jobsRepository->requeueFailedJob((int) $job['id'], $maxAttempts)) {
+                $failedRequeued++;
+            }
+        }
+
+        $pendingAggregates = $this->jobsRepository->findAvailablePendingAggregates($batchSize);
         $runner = null;
-        if (!empty($candidateAggregates)) {
+        if (!empty($pendingAggregates)) {
             $runner = call_user_func($this->runnerFactory);
             if (!$runner instanceof InlineUserEventJobRunner) {
                 throw new RuntimeException('runnerFactory must return InlineUserEventJobRunner');
             }
         }
 
-        $requeued = 0;
         $aggregates = 0;
         $processed = 0;
         $failed = 0;
         $claimFailed = 0;
         $skipped = 0;
         $uncertain = 0;
-        $restored = 0;
 
-        foreach ($candidateAggregates as $aggregate) {
-            $retryJobIds = [];
-
-            foreach ($aggregate['jobs'] as $job) {
-                if (!$this->jobsRepository->requeueFailedJob((int) $job['id'], $maxAttempts)) {
-                    continue;
-                }
-
-                $retryJobIds[] = (int) $job['id'];
-                $requeued++;
-            }
-
-            if (empty($retryJobIds)) {
-                continue;
-            }
-
+        foreach ($pendingAggregates as $aggregate) {
             $aggregates++;
 
-            try {
-                $result = $runner->runForAggregate(
-                    $aggregate['aggregate_type'],
-                    $aggregate['aggregate_id']
-                );
+            $result = $runner->runForAggregate(
+                (string) $aggregate['aggregate_type'],
+                (int) $aggregate['aggregate_id']
+            );
 
-                $processed += (int) ($result['processed'] ?? 0);
-                $failed += (int) ($result['failed'] ?? 0);
-                $claimFailed += (int) ($result['claim_failed'] ?? 0);
-                $skipped += (int) ($result['skipped'] ?? 0);
-                $uncertain += (int) ($result['uncertain'] ?? 0);
-            } finally {
-                $restored += $this->jobsRepository->restorePendingRetryJobs(
-                    $retryJobIds,
-                    'retry_not_processed'
-                );
-            }
+            $processed += (int) ($result['processed'] ?? 0);
+            $failed += (int) ($result['failed'] ?? 0);
+            $claimFailed += (int) ($result['claim_failed'] ?? 0);
+            $skipped += (int) ($result['skipped'] ?? 0);
+            $uncertain += (int) ($result['uncertain'] ?? 0);
         }
 
         return [
-            'candidates' => count($jobs),
-            'requeued' => $requeued,
+            'stale_processing_requeued' => (int) ($staleProcessing['requeued'] ?? 0),
+            'stale_processing_exhausted' => (int) ($staleProcessing['exhausted'] ?? 0),
+            'failed_candidates' => count($failedJobs),
+            'failed_requeued' => $failedRequeued,
+            'pending_aggregates' => count($pendingAggregates),
             'aggregates' => $aggregates,
             'recovered' => $processed,
             'still_failed' => $failed,
             'claim_failed' => $claimFailed,
             'skipped' => $skipped,
             'uncertain' => $uncertain,
-            'restored' => $restored,
             'exhausted' => $this->jobsRepository->countExhaustedFailedJobs($maxAttempts),
             'max_attempts' => $maxAttempts,
+            'stale_processing_minutes' => $staleProcessingMinutes,
         ];
     }
 }

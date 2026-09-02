@@ -26,15 +26,22 @@ class EmailValidationException extends InvalidArgumentException
 final class EmailAddressValidator
 {
     private static $knownDomainTypos = null;
-    private static $domainCache = [];
 
-    public static function validate($email): array
+    private $dnsLookup;
+
+    public function __construct(?callable $dnsLookup = null)
+    {
+        $this->dnsLookup = $dnsLookup ?: static function (string $domain, int $type): ?array {
+            return self::dnsRecords($domain, $type);
+        };
+    }
+
+    public function validate($email): array
     {
         if (!is_string($email)) {
             return self::invalid('invalid_syntax');
         }
 
-        $email = trim($email);
         if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             return self::invalid('invalid_syntax');
         }
@@ -47,7 +54,7 @@ final class EmailAddressValidator
             return self::invalid('known_domain_typo', $localPart . '@' . $suggestedDomain);
         }
 
-        $domainStatus = self::domainCanReceiveEmail($domain);
+        $domainStatus = $this->domainCanReceiveEmail($domain);
         if ($domainStatus === false) {
             return self::invalid('invalid_domain');
         }
@@ -61,17 +68,17 @@ final class EmailAddressValidator
 
     public static function isValid($email): bool
     {
-        return self::validate($email)['valid'] === true;
+        return (new self())->validate($email)['valid'] === true;
     }
 
     public static function assertValid($email): string
     {
-        $result = self::validate($email);
+        $result = (new self())->validate($email);
         if (!$result['valid']) {
             throw new EmailValidationException($result['reason'], $result['suggestion']);
         }
 
-        return trim((string) $email);
+        return (string) $email;
     }
 
     private static function invalid(string $reason, ?string $suggestion = null): array
@@ -107,39 +114,35 @@ final class EmailAddressValidator
         return self::$knownDomainTypos;
     }
 
-    private static function domainCanReceiveEmail(string $domain): ?bool
+    private function domainCanReceiveEmail(string $domain): ?bool
     {
-        if (array_key_exists($domain, self::$domainCache)) {
-            return self::$domainCache[$domain];
-        }
-
-        $mxRecords = self::dnsRecords($domain, DNS_MX);
+        $mxRecords = ($this->dnsLookup)($domain, DNS_MX);
         if ($mxRecords === null) {
-            return self::$domainCache[$domain] = null;
+            return null;
         }
 
         if (self::hasNullMx($mxRecords)) {
-            return self::$domainCache[$domain] = false;
+            return false;
         }
 
         if (!empty($mxRecords)) {
-            return self::$domainCache[$domain] = true;
+            return true;
         }
 
-        $aRecords = self::dnsRecords($domain, DNS_A);
+        $aRecords = ($this->dnsLookup)($domain, DNS_A);
         if ($aRecords === null) {
-            return self::$domainCache[$domain] = null;
+            return null;
         }
         if (!empty($aRecords)) {
-            return self::$domainCache[$domain] = true;
+            return true;
         }
 
-        $aaaaRecords = self::dnsRecords($domain, DNS_AAAA);
+        $aaaaRecords = ($this->dnsLookup)($domain, DNS_AAAA);
         if ($aaaaRecords === null) {
-            return self::$domainCache[$domain] = null;
+            return null;
         }
 
-        return self::$domainCache[$domain] = !empty($aaaaRecords);
+        return !empty($aaaaRecords);
     }
 
     private static function hasNullMx(array $records): bool

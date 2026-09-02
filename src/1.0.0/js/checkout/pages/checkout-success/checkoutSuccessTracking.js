@@ -49,6 +49,7 @@ export function trackApprovedVipPurchaseOnce(paymentId, payment = {}) {
     let tracked = false;
 
     if (typeof window.fbq === "function") {
+      window.fbq("track", "EMMS_VIP");
       window.fbq("track", "Purchase", payload);
       tracked = true;
     }

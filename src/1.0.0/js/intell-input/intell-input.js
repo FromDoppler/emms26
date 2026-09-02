@@ -1,6 +1,17 @@
 const VERSION = window.APP?.VERSION || "1.0.0";
 const ASSET_BASE = `/src/${VERSION}/vendor/intl-tel-input/29.1.1`;
 const COUNTRY_ENDPOINT = "/services/getCountryNameAndCode.php";
+const PREFERRED_COUNTRIES = [
+  "ar",
+  "br",
+  "cl",
+  "mx",
+  "es",
+  "co",
+  "pe",
+  "ec",
+  "us",
+];
 const controls = new WeakMap();
 let assetsPromise = null;
 let countryPromise = null;
@@ -10,40 +21,39 @@ const hasRepeatedDigits = (value) => {
   return /^(\d)\1{7,}$/.test(digits);
 };
 
-const getLanguage = () =>
-  String(window.APP?.LOCALE || document.documentElement.lang || "es")
-    .trim()
-    .toLowerCase();
+const getLanguage = () => {
+  const language = window.APP?.LOCALE || document.documentElement.lang || "es";
+  return String(language).trim().toLowerCase();
+};
 
-const getFallbackCountry = () =>
-  getLanguage().startsWith("en") ? "us" : "ar";
+const getFallbackCountry = () => {
+  return getLanguage().startsWith("en") ? "us" : "ar";
+};
 
 const normalizeCountryCode = (value) => {
-  const countryCode = String(value || "")
-    .trim()
-    .toLowerCase();
-  return /^[a-z]{2}$/.test(countryCode) && countryCode !== "xx"
-    ? countryCode
-    : "";
+  const countryCode = String(value || "").trim().toLowerCase();
+  if (!/^[a-z]{2}$/.test(countryCode) || countryCode === "xx") return "";
+  return countryCode;
+};
+
+const fetchInitialCountry = async () => {
+  try {
+    const response = await fetch(COUNTRY_ENDPOINT, {
+      headers: { Accept: "application/json" },
+    });
+    if (!response.ok) {
+      throw new Error(`Country lookup failed: ${response.status}`);
+    }
+
+    const data = await response.json();
+    return normalizeCountryCode(data?.countryCode) || getFallbackCountry();
+  } catch {
+    return getFallbackCountry();
+  }
 };
 
 const resolveInitialCountry = () => {
-  if (countryPromise) return countryPromise;
-
-  countryPromise = fetch(COUNTRY_ENDPOINT, {
-    headers: { Accept: "application/json" },
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`Country lookup failed: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then(
-      (data) => normalizeCountryCode(data?.countryCode) || getFallbackCountry(),
-    )
-    .catch(() => getFallbackCountry());
-
+  if (!countryPromise) countryPromise = fetchInitialCountry();
   return countryPromise;
 };
 
@@ -51,7 +61,8 @@ const ensureAssets = () => {
   if (typeof window.intlTelInput === "function") return Promise.resolve();
   if (assetsPromise) return assetsPromise;
 
-  if (!document.querySelector('link[data-emms-phone-input="true"]')) {
+  const styleSelector = 'link[data-emms-phone-input="true"]';
+  if (!document.querySelector(styleSelector)) {
     const link = document.createElement("link");
     link.rel = "stylesheet";
     link.href = `${ASSET_BASE}/css/intlTelInput.min.css`;
@@ -60,9 +71,8 @@ const ensureAssets = () => {
   }
 
   assetsPromise = new Promise((resolve, reject) => {
-    const existing = document.querySelector(
-      'script[data-emms-phone-input="true"]',
-    );
+    const scriptSelector = 'script[data-emms-phone-input="true"]';
+    const existing = document.querySelector(scriptSelector);
     if (existing) {
       existing.addEventListener("load", resolve, { once: true });
       existing.addEventListener("error", reject, { once: true });
@@ -91,18 +101,8 @@ const createControl = (input, initialCountry) => {
 
   const language = getLanguage();
   const country = normalizeCountryCode(initialCountry) || getFallbackCountry();
-  const countryOrder = [
-    country,
-    "ar",
-    "br",
-    "cl",
-    "mx",
-    "es",
-    "co",
-    "pe",
-    "ec",
-    "us",
-  ].filter((value, index, values) => values.indexOf(value) === index);
+  const countries = [country, ...PREFERRED_COUNTRIES];
+  const countryOrder = Array.from(new Set(countries));
   const instance = window.intlTelInput(input, {
     initialCountry: country,
     countryOrder,
@@ -143,16 +143,13 @@ const createControl = (input, initialCountry) => {
 };
 
 export const initPhoneInputs = async (root = document) => {
-  const inputs = Array.from(
-    root.querySelectorAll("input.phone-number, input[name='phone']"),
-  );
+  const selector = "input.phone-number, input[name='phone']";
+  const inputs = Array.from(root.querySelectorAll(selector));
   if (!inputs.length) return;
 
   try {
-    const [, initialCountry] = await Promise.all([
-      ensureAssets(),
-      resolveInitialCountry(),
-    ]);
+    const promises = [ensureAssets(), resolveInitialCountry()];
+    const [, initialCountry] = await Promise.all(promises);
     inputs.forEach((input) => createControl(input, initialCountry));
   } catch (error) {
     console.warn("No se pudo inicializar intl-tel-input", error);

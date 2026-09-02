@@ -5,7 +5,7 @@
       <span>Súmate a la experiencia completa con el pase VIP</span>
     </h1>
     <p class="hero-registration__vip-copy emms__fade-in">
-      <strong>Más de 10 Workshops, certificado y 6 meses gratis en Doppler, por solo USD <?= VIP_PRICE_CURRENT ?>.</strong>
+      Más de 10 Workshops, certificado y 6 meses gratis en Doppler, por <strong>solo USD <?= VIP_PRICE_CURRENT ?></strong>.
     </p>
 
     <?php

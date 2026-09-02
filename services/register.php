@@ -278,7 +278,7 @@ function isSubmitValid($ip)
 function getRegisteredId($user, $db)
 {
   $registered = $db->query(
-    "SELECT id FROM registered WHERE email = ? LIMIT 1",
+    "SELECT id FROM registered WHERE email = ? LIMIT 1 FOR UPDATE",
     [$user['email']]
   )->fetchArray();
 
@@ -322,12 +322,10 @@ function buildFreeRegistrationJobs($user, $registeredId)
   ];
 }
 
-function createFreeRegistrationRunner()
+function createFreeRegistrationRunner($db)
 {
-  $runnerDb = new DB(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-
   return new InlineUserEventJobRunner(
-    new UserEventJobsRepository($runnerDb),
+    new UserEventJobsRepository($db),
     new UserEventJobHandlerRegistry([
       new EmailSendJobHandler(),
       new SpreadsheetSaveJobHandler(),
@@ -345,7 +343,14 @@ function processFreeRegistration($user, $db)
   $db->beginTransaction();
   try {
     $db->insertSubscriptionDoppler($user);
-    $db->saveRegistered($user);
+
+    try {
+      $db->saveRegistered($user);
+    } catch (Throwable $e) {
+      if ($db->lastErrno() !== 1062) {
+        throw $e;
+      }
+    }
 
     $registeredId = getRegisteredId($user, $db);
     $jobCreator = new UserEventJobCreator(new UserEventJobsRepository($db));
@@ -370,20 +375,33 @@ function processFreeRegistration($user, $db)
   }
 
   try {
-    createFreeRegistrationRunner()->runForAggregate(
+    createFreeRegistrationRunner($db)->runForAggregate(
       $aggregateType,
       $registeredId,
       ['correlation_id' => $correlationId]
     );
   } catch (Throwable $e) {
-    processError(
-      'processFreeRegistration (Ejecuta user event jobs)',
-      $e->getMessage(),
-      [
-        'registered_id' => $registeredId,
-        'correlation_id' => $correlationId,
-      ]
+    error_log(
+      'Free registration post-commit runner failed: ' . $e->getMessage()
+      . ' | registered_id=' . $registeredId
+      . ' | correlation_id=' . $correlationId
     );
+
+    try {
+      processError(
+        'processFreeRegistration (Ejecuta user event jobs)',
+        $e->getMessage(),
+        [
+          'registered_id' => $registeredId,
+          'correlation_id' => $correlationId,
+        ]
+      );
+    } catch (Throwable $logError) {
+      error_log(
+        'Free registration post-commit logging failed: ' . $logError->getMessage()
+        . ' | original_error=' . $e->getMessage()
+      );
+    }
   }
 }
 
@@ -430,5 +448,6 @@ try {
   ];
   error_log($errorMessage . ' | Context: ' . json_encode($errorContext));
 
+  http_response_code(500);
   echo json_encode(['status' => 'error', 'message' => 'User registered error.']);
 }

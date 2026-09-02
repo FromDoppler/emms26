@@ -21,13 +21,20 @@ const FormAutoComplete = {
     const forms = document.querySelectorAll("#commonForm, #modalForm");
     if (!forms.length) return;
 
-    await initPhoneInputs(document);
+    const phoneInitialization = initPhoneInputs(document);
+
     forms.forEach((form) => {
       form.querySelectorAll("input").forEach((input) => {
         if (input.name === "email") input.value = email || "";
         if (input.name === "name") input.value = name || "";
-        if (input.name === "phone") setPhoneNumber(input, phone || "");
       });
+    });
+
+    await phoneInitialization;
+
+    forms.forEach((form) => {
+      const phoneInput = form.querySelector('input[name="phone"]');
+      setPhoneNumber(phoneInput, phone || "");
     });
   },
 

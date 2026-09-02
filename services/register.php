@@ -371,6 +371,8 @@ function processFreeRegistration($user, $db)
     } catch (Throwable $rollbackError) {
       error_log('Free registration rollback failed: ' . $rollbackError->getMessage());
     }
+
+    http_response_code(500);
     throw $e;
   }
 
@@ -448,6 +450,5 @@ try {
   ];
   error_log($errorMessage . ' | Context: ' . json_encode($errorContext));
 
-  http_response_code(500);
   echo json_encode(['status' => 'error', 'message' => 'User registered error.']);
 }

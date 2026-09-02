@@ -20,9 +20,8 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/user-events/handlers/DopplerL
 
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
-function setDataRequest($ip, $countryGeo, $db)
+function setDataRequest($postData, $ip, $countryGeo, $db)
 {
-  $postData = getPostData();
   $eventsData = processEvents(json_decode($postData['events'], true));
 
   $firstname = getFirstName($postData, $db);
@@ -38,10 +37,8 @@ function setDataRequest($ip, $countryGeo, $db)
   $user = buildUserArray($postData, $eventsData, $firstname, $privacy, $promotions, $utmData, $ip, $countryGeo, $type, $phase, $list, $subject, $formOrigin);
 
   try {
-    validateRequest($postData, $privacy, $promotions);
+    validateConsents($privacy, $promotions);
     return $user;
-  } catch (EmailValidationException $e) {
-    throw $e;
   } catch (Exception $e) {
     processError("setDataRequest (Captura datos)", $e->getMessage(), ['user' => $user]);
   }
@@ -149,9 +146,8 @@ function buildUserArray($postData, $eventsData, $firstname, $privacy, $promotion
   ];
 }
 
-function validateRequest($postData, $privacy, $promotions)
+function validateConsents($privacy, $promotions)
 {
-  Validator::validateEmail($postData['email']);
   Validator::validateBool('privacy', $privacy);
   Validator::validateBool('promotions', $promotions);
 }
@@ -424,8 +420,12 @@ try {
   $ip = getIp();
   $countryGeo = getCountryName();
   isSubmitValid($ip);
+
+  $postData = getPostData();
+  Validator::validateEmail($postData['email']);
+
   $db = new DB(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-  $user = setDataRequest($ip, $countryGeo, $db);
+  $user = setDataRequest($postData, $ip, $countryGeo, $db);
 
   $is_new = false;
   try {

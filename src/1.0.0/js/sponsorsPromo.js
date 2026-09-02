@@ -1,7 +1,7 @@
 "use strict";
 
 import { customError, validateForm } from "./common/index.js";
-import { getPhoneNumber } from "./intell-input/intell-input.js";
+import { getPhoneNumber, initPhoneInputs } from "./intell-input/intell-input.js";
 
 const initSponsorsPromo = () => {
   const sponsorsPromoForm = document.getElementById("sponsorsPromoForm");
@@ -25,38 +25,45 @@ const initSponsorsPromo = () => {
     event.preventDefault();
 
     const dataType = sponsorsPromoForm.dataset.sponsorType;
-    if (!dataType || !validateForm(sponsorsPromoForm)) return;
+    if (!dataType) return;
 
-    const formData = new FormData(sponsorsPromoForm);
-    const phoneInput = sponsorsPromoForm.querySelector('input[name="phone"]');
-    const urlParams = new URLSearchParams(window.location.search);
-    const sponsorData = {
-      name: formData.get("name"),
-      email: formData.get("email"),
-      company: formData.get("company"),
-      phone: getPhoneNumber(phoneInput),
-      acceptPolicies: formData.get("privacy") === "true" ? true : null,
-      acceptPromotions: formData.get("promotions") === "true" ? true : null,
-      utm_source: urlParams.get("utm_source") || "direct",
-      utm_campaign: urlParams.get("utm_campaign"),
-      utm_content: urlParams.get("utm_content"),
-      utm_term: urlParams.get("utm_term"),
-      utm_medium: urlParams.get("utm_medium"),
-      origin: urlParams.get("origin"),
-      emms_ref: urlParams.get("emms_ref"),
-      dataType,
-    };
-
-    sponsorsPromoForm.querySelector("button")?.classList.add("button--loading");
     try {
-      const fetchResp = await fetch("./services/registerSponsor.php", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(sponsorData) });
+      await initPhoneInputs(sponsorsPromoForm);
+      if (!validateForm(sponsorsPromoForm)) return;
+
+      const formData = new FormData(sponsorsPromoForm);
+      const phoneInput = sponsorsPromoForm.querySelector('input[name="phone"]');
+      const urlParams = new URLSearchParams(window.location.search);
+      const sponsorData = {
+        name: formData.get("name"),
+        email: formData.get("email"),
+        company: formData.get("company"),
+        phone: getPhoneNumber(phoneInput),
+        acceptPolicies: formData.get("privacy") === "true" ? true : null,
+        acceptPromotions: formData.get("promotions") === "true" ? true : null,
+        utm_source: urlParams.get("utm_source") || "direct",
+        utm_campaign: urlParams.get("utm_campaign"),
+        utm_content: urlParams.get("utm_content"),
+        utm_term: urlParams.get("utm_term"),
+        utm_medium: urlParams.get("utm_medium"),
+        origin: urlParams.get("origin"),
+        emms_ref: urlParams.get("emms_ref"),
+        dataType,
+      };
+
+      sponsorsPromoForm.querySelector("button")?.classList.add("button--loading");
+      const fetchResp = await fetch("./services/registerSponsor.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(sponsorData),
+      });
       const resp = await fetchResp.json();
       if (resp === 200) {
         sponsorsPromoForm.reset();
         toggleMessage(resp);
       }
     } catch (error) {
-      customError("Fetch error", error);
+      customError("Error en formulario Sponsors", error);
     } finally {
       sponsorsPromoForm.querySelector("button")?.classList.remove("button--loading");
     }

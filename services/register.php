@@ -278,7 +278,7 @@ function isSubmitValid($ip)
 function getRegisteredId($user, $db)
 {
   $registered = $db->query(
-    "SELECT id FROM registered WHERE email = ? LIMIT 1 FOR UPDATE",
+    "SELECT id FROM registered WHERE email = ? LIMIT 1",
     [$user['email']]
   )->fetchArray();
 
@@ -336,21 +336,19 @@ function createFreeRegistrationRunner($db)
 
 function processFreeRegistration($user, $db)
 {
-  $correlationId = 'corr_' . bin2hex(random_bytes(16));
   $aggregateType = 'registered_profile';
   $registeredId = 0;
+  $correlationId = null;
+  $transactionStarted = false;
 
-  $db->beginTransaction();
   try {
-    $db->insertSubscriptionDoppler($user);
+    $correlationId = 'corr_' . bin2hex(random_bytes(16));
 
-    try {
-      $db->saveRegistered($user);
-    } catch (Throwable $e) {
-      if ($db->lastErrno() !== 1062) {
-        throw $e;
-      }
-    }
+    $db->beginTransaction();
+    $transactionStarted = true;
+
+    $db->insertSubscriptionDoppler($user);
+    $db->saveRegistered($user);
 
     $registeredId = getRegisteredId($user, $db);
     $jobCreator = new UserEventJobCreator(new UserEventJobsRepository($db));
@@ -365,11 +363,14 @@ function processFreeRegistration($user, $db)
     );
 
     $db->commit();
+    $transactionStarted = false;
   } catch (Throwable $e) {
-    try {
-      $db->rollback();
-    } catch (Throwable $rollbackError) {
-      error_log('Free registration rollback failed: ' . $rollbackError->getMessage());
+    if ($transactionStarted) {
+      try {
+        $db->rollback();
+      } catch (Throwable $rollbackError) {
+        error_log('Free registration rollback failed: ' . $rollbackError->getMessage());
+      }
     }
 
     http_response_code(500);
@@ -441,7 +442,7 @@ try {
     'is_new' => $is_new,
     'user' => print_r($user, true)
   ]);
-} catch (Throwable $e) {
+} catch (Exception $e) {
   $errorMessage = "Error in Main Execution: " . $e->getMessage();
   $errorContext = [
     'ip' => isset($ip) ? $ip : null,

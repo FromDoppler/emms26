@@ -45,7 +45,7 @@
       </li>
     </ul>
     <div class="emms__form__btn">
-      <button class="emms__cta " id="register-button" type="button"><span class="button__text">REGÍSTRATE GRATIS</span></button>
+      <button class="emms__cta " id="register-button" type="submit"><span class="button__text">REGÍSTRATE GRATIS</span></button>
     </div>
     <div class="emms__form__legal close">
       <a class="emms__form__legal__btn" id="legalBtn">Información básica sobre privacidad </a>

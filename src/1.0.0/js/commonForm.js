@@ -2,24 +2,31 @@
 
 import { customError } from "./common/customsError.js";
 import { submitFormFetch, submitModalForm, submitWithoutForm, redirectToRegisteredPage } from "./common/submitForm.js";
-import { validateForm } from "./common/formsValidators.js";
 import { alreadyAccountListener, swichFormListener } from "./common/switchForm.js";
 import { closeModal, openModal } from "../../../components/modal/openModal.js";
 import { initHeroRegistrationFlow } from "./heroRegistrationFlow.js";
 
+const submittingForms = new WeakSet();
+
 // Form submit handler
 const submitFormHandler = async (e, form) => {
   e.preventDefault();
-  if (!form) return;
+  if (!form || submittingForms.has(form)) return;
 
-  if (!validateForm(form)) return;
+  submittingForms.add(form);
 
   try {
-    const { fetchResp: resp } = await submitFormFetch(form, window.APP.EVENTS.CURRENT.freeId);
+    const result = await submitFormFetch(form, window.APP.EVENTS.CURRENT.freeId);
+    if (result === undefined) return;
+    if (result === null) throw new Error("Fetch fail in registration form submit");
+
+    const { fetchResp: resp } = result;
     if (!resp.ok) throw new Error(`Server error: ${resp.status}`);
     redirectToRegisteredPage();
   } catch (error) {
     customError("Error en formulario", error);
+  } finally {
+    submittingForms.delete(form);
   }
 };
 
@@ -69,18 +76,16 @@ const initializeEventListeners = () => {
     if (isEmailFirstFlow) {
       initHeroRegistrationFlow(form);
     } else {
-      const submitBtn = form.querySelector("button");
-      if (submitBtn) submitBtn.addEventListener("click", (e) => submitFormHandler(e, form));
+      form.addEventListener("submit", (e) => submitFormHandler(e, form));
       swichFormListener(form); // usando nombre original con typo
     }
   }
 
-  if (modalForm) {
-    const submitBtn = modalForm.querySelector("button");
-    if (submitBtn) submitBtn.addEventListener("click", (e) => submitFormHandler(e, modalForm));
+  if (modalForm?.tagName === "FORM") {
+    modalForm.addEventListener("submit", (e) => submitFormHandler(e, modalForm));
   }
 
-  if (extraData) {
+  if (extraData && modalForm) {
     modalForm.addEventListener("submit", modalFormSubmitHandler);
   }
 

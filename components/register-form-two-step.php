@@ -13,7 +13,7 @@
         </li>
       </ul>
       <div class="emms__form__btn">
-        <button class="emms__cta" type="button"><span class="button__text">SIGUIENTE</span></button>
+        <button class="emms__cta" type="submit"><span class="button__text">SIGUIENTE</span></button>
       </div>
       <p class="emms__form__reassurance"><em>Tu información está protegida.</em></p>
     </div>
@@ -53,7 +53,7 @@
         </li>
       </ul>
       <div class="emms__form__btn">
-        <button class="emms__cta" id="register-button" type="button"><span class="button__text">REGÍSTRATE GRATIS</span></button>
+        <button class="emms__cta" id="register-button" type="submit"><span class="button__text">REGÍSTRATE GRATIS</span></button>
       </div>
     </div>
   </form>

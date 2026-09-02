@@ -16,32 +16,37 @@ const STEP_TRANSITION_MS = 280;
 const prefersReducedMotion = () => typeof window !== "undefined" && window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const goToStepTwo = (form, stepOneEl, stepTwoEl) => {
-  form.dataset.step = "2";
   const nameInput = stepTwoEl.querySelector('input[name="name"]');
 
   if (prefersReducedMotion()) {
     stepOneEl.hidden = true;
     stepTwoEl.hidden = false;
+    form.dataset.step = "2";
     nameInput?.focus();
-    return;
+    return Promise.resolve();
   }
 
   stepOneEl.classList.add("is-leaving");
 
-  window.setTimeout(() => {
-    stepOneEl.hidden = true;
-    stepOneEl.classList.remove("is-leaving");
+  return new Promise((resolve) => {
+    window.setTimeout(() => {
+      stepOneEl.hidden = true;
+      stepOneEl.classList.remove("is-leaving");
 
-    stepTwoEl.classList.add("is-entering");
-    stepTwoEl.hidden = false;
-    nameInput?.focus();
+      stepTwoEl.classList.add("is-entering");
+      stepTwoEl.hidden = false;
+      form.dataset.step = "2";
+      nameInput?.focus();
 
-    requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        stepTwoEl.classList.remove("is-entering");
+        requestAnimationFrame(() => {
+          stepTwoEl.classList.remove("is-entering");
+        });
       });
-    });
-  }, STEP_TRANSITION_MS);
+
+      resolve();
+    }, STEP_TRANSITION_MS);
+  });
 };
 
 const handleEmailStep = async (form, stepOneEl, stepTwoEl, stepOneButton) => {
@@ -63,7 +68,7 @@ const handleEmailStep = async (form, stepOneEl, stepTwoEl, stepOneButton) => {
     }
 
     // false OR null (fail-open): reveal step 2
-    goToStepTwo(form, stepOneEl, stepTwoEl);
+    await goToStepTwo(form, stepOneEl, stepTwoEl);
   } finally {
     setButtonLoading(stepOneButton, false);
   }
@@ -103,19 +108,16 @@ export const initHeroRegistrationFlow = (form) => {
   const stepOneButton = stepOneEl.querySelector("button");
   const stepTwoButton = stepTwoEl.querySelector("button");
 
-  form.addEventListener("submit", (e) => e.preventDefault());
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
 
-  if (stepOneButton) {
-    stepOneButton.addEventListener("click", (e) => {
-      e.preventDefault();
+    if (form.dataset.step === "1") {
       handleEmailStep(form, stepOneEl, stepTwoEl, stepOneButton);
-    });
-  }
+      return;
+    }
 
-  if (stepTwoButton) {
-    stepTwoButton.addEventListener("click", (e) => {
-      e.preventDefault();
+    if (form.dataset.step === "2") {
       handleSubmitStep(form, stepTwoButton);
-    });
-  }
+    }
+  });
 };

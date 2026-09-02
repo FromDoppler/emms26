@@ -6,10 +6,14 @@ const SHOW_ONCE_PER_SESSION = true;
 
 const initExitIntentCapture = async () => {
   const version = window.APP.VERSION;
-  const { createCanShowModal } = await import(`./scripts/modalConditions.js?v=${encodeURIComponent(version)}`);
+  const { createCanShowModal } = await import(
+    `./scripts/modalConditions.js?v=${encodeURIComponent(version)}`,
+  );
   const canShowModal = await createCanShowModal();
 
-  document.querySelectorAll('.popup-modal[data-captor="1"]').forEach((modalEl) => setupExitIntentForModal(modalEl, canShowModal));
+  document
+    .querySelectorAll('.popup-modal[data-captor="1"]')
+    .forEach((modalEl) => setupExitIntentForModal(modalEl, canShowModal));
 };
 
 const setupExitIntentForModal = (modalEl, canShowModal) => {
@@ -29,7 +33,11 @@ const setupExitIntentForModal = (modalEl, canShowModal) => {
     document.removeEventListener("mousemove", handleMouseMove, true);
     document.removeEventListener("mouseout", handleMouseOut, true);
     document.removeEventListener("mouseleave", handleMouseLeave, true);
-    document.removeEventListener("visibilitychange", handleVisibilityChange, true);
+    document.removeEventListener(
+      "visibilitychange",
+      handleVisibilityChange,
+      true,
+    );
   };
 
   const triggerModalOnce = () => {
@@ -81,5 +89,7 @@ const setupExitIntentForModal = (modalEl, canShowModal) => {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-  initExitIntentCapture().catch((err) => console.error("Exit intent init error:", err));
+  initExitIntentCapture().catch((err) =>
+    console.error("Exit intent init error:", err),
+  );
 });

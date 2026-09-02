@@ -1,6 +1,7 @@
 <?php
 require_once($_SERVER['DOCUMENT_ROOT'] . '/config.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/utils/cacheSettings.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/components/modal/modal.php');
 $isPost = false;
 ?>
 
@@ -51,6 +52,9 @@ $isPost = false;
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/academyBanner.php'); ?>
     <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/sponsorsList.php') ?>
   </main>
+  <?php
+  render_modal('modalVip', 'vipmodal', 'vip', true);
+  ?>
   <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/footer.php'); ?>
   <script src="/src/<?= VERSION ?>/js/newDate.js" type="module"></script>
 

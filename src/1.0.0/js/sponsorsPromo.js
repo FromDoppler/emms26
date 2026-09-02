@@ -1,6 +1,6 @@
 "use strict";
 
-import { customError, validateForm } from "./common/index.js";
+import { customError, setEmailValidationError, validateForm } from "./common/index.js";
 
 document.addEventListener("click", (e) => {
   e = e || window.event;
@@ -64,14 +64,19 @@ document.addEventListener("click", (e) => {
           body: JSON.stringify(sponsorData),
         });
         const resp = await fetchResp.json();
+        if (fetchResp.status === 422 && resp?.code) {
+          setEmailValidationError(sponsorsPromoForm.querySelector('input[name="email"]'), resp.suggestion);
+          return;
+        }
         if (resp === 200) {
           sponsorsPromoForm.reset();
           toggleMessage(resp);
         }
       } catch (error) {
         customError("Fetch error", error);
+      } finally {
+        sponsorsPromoForm.querySelector("button").classList.remove("button--loading");
       }
-      sponsorsPromoForm.querySelector("button").classList.remove("button--loading");
     }
   };
 

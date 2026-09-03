@@ -1,5 +1,9 @@
 @charset "utf-8";
 
+:root {
+  --speaker-logo-preview-bg: linear-gradient(180deg, #390555 0%, #48016f 55%, #000000 100%);
+}
+
 * {
   box-sizing: border-box;
 }
@@ -295,7 +299,7 @@ a {
 
 .media-thumb--company,
 .image-preview[data-preview-for="image_company"] {
-  background: #d0d5dd;
+  background: var(--speaker-logo-preview-bg);
 }
 
 .speaker-type {

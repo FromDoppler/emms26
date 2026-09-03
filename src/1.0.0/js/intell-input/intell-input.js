@@ -122,6 +122,14 @@ const createControl = (input, initialCountry) => {
     strictMode: true,
   });
 
+  if (typeof instance.setSelectedCountry === "function") {
+    try {
+      instance.setSelectedCountry(country);
+    } catch {
+      // Keep the widget usable if the library rejects an unexpected country code.
+    }
+  }
+
   const control = {
     getNumber() {
       return String(instance.getNumber?.() || input.value || "").trim();

@@ -274,6 +274,21 @@ a {
   padding: 4px;
 }
 
+.media-thumb--company,
+.image-preview[data-preview-for="image_company"] {
+  background-color: #d0d5dd;
+  background-image: linear-gradient(45deg, #f2f4f7 25%, transparent 25%),
+    linear-gradient(-45deg, #f2f4f7 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #f2f4f7 75%),
+    linear-gradient(-45deg, transparent 75%, #f2f4f7 75%);
+  background-position:
+    0 0,
+    0 8px,
+    8px -8px,
+    -8px 0;
+  background-size: 16px 16px;
+}
+
 .speaker-type {
   display: inline-block;
   padding: 5px 9px;
@@ -437,6 +452,22 @@ a {
   max-width: 100%;
   max-height: 160px;
   object-fit: contain;
+}
+
+.image-preview__empty-state strong,
+.image-preview__empty-state small {
+  display: block;
+}
+
+.image-preview__empty-state strong {
+  color: #475467;
+  font-size: 13px;
+}
+
+.image-preview__empty-state small {
+  margin-top: 5px;
+  color: #667085;
+  line-height: 1.35;
 }
 
 .image-file-name {

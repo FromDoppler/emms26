@@ -14,7 +14,7 @@ $modalImage = !empty($speaker['image_modal']) ? $speaker['image_modal'] : $speak
 
         <div class="modal__content">
             <span class="modal__close-btn">&times;</span>
-            <p class="modal__label">Speaker/s</p>
+            <p class="modal__label">SPEAKER/S</p>
             <p class="modal__name"><?= $speaker['name'] ?></p>
 
             <?php include('speaker-modal-social.php'); ?>

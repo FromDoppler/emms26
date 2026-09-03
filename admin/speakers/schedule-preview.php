@@ -22,22 +22,19 @@ if (!isset($eventLabels[$previewEvent])) {
 
 $eventStates = $previewEvent === 'ecommerce' ? $ecommerceStates : $digitalTrendsStates;
 $db = new DB(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-$speakers = $db
+$dayRows = $db
     ->query(
-        'SELECT * FROM speakers WHERE event = ? ORDER BY CAST(day AS UNSIGNED), CAST(orden AS UNSIGNED)',
+        "SELECT DISTINCT day FROM speakers WHERE event = ? AND day IS NOT NULL AND day <> '' ORDER BY CAST(day AS UNSIGNED)",
         [$previewEvent]
     )
     ->fetchAll();
-$db->close();
 
 $speakersByDay = [];
-foreach ($speakers as $speaker) {
-    $day = !empty($speaker['day']) ? $speaker['day'] : '-';
-    if (!isset($speakersByDay[$day])) {
-        $speakersByDay[$day] = [];
-    }
-    $speakersByDay[$day][] = $speaker;
+foreach ($dayRows as $dayRow) {
+    $day = $dayRow['day'];
+    $speakersByDay[$day] = $db->getSpeakersByDay($day, $previewEvent);
 }
+$db->close();
 ?>
 <!DOCTYPE html>
 <html lang="es">

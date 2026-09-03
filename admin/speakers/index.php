@@ -19,11 +19,13 @@ if (isset($_GET['delete_id'])) {
         $redirect .= "&day=" . urlencode($selectedDay);
     }
     @header("Location: " . $redirect);
+    exit;
 }
 if (isset($_GET['changestatus_id'])) {
     $sql_query = "UPDATE speakers SET `status`='" . $_GET['status'] . "' WHERE id=" . $_GET['changestatus_id'];
     mysqli_query($con, $sql_query);
     header("Location: $_SERVER[PHP_SELF]");
+    exit;
 }
 
 $eventLabels = [
@@ -90,7 +92,7 @@ function speakersAdminUrl($token, $event = '', $day = '')
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="style.css?v=2" type="text/css" />
+    <link rel="stylesheet" href="style.css?v=3" type="text/css" />
 </head>
 
 <body>
@@ -102,10 +104,20 @@ function speakersAdminUrl($token, $event = '', $day = '')
                 <p>Administrá speakers, charlas y su ubicación dentro de la agenda.</p>
             </div>
             <div class="speakers-admin__header-actions">
-                <a class="btn btn-default" href="schedule-preview.php" target="_blank" rel="noopener">Ver agenda</a>
-                <a class="btn btn-primary" href="add_speakers.php?token=<?= urlencode($token) ?>">+ Agregar speaker</a>
+                <?php if ($selectedEvent !== '') : ?>
+                    <a class="btn btn-default" href="schedule-preview.php?event=<?= urlencode($selectedEvent) ?>" target="_blank" rel="noopener">Ver agenda</a>
+                <?php else : ?>
+                    <span class="btn btn-default disabled" title="Seleccioná un evento para previsualizar su agenda">Ver agenda</span>
+                <?php endif; ?>
+                <a class="btn btn-primary" href="add_speakers.php?token=<?= urlencode($token) ?><?= $selectedEvent !== '' ? '&event=' . urlencode($selectedEvent) : '' ?>">+ Agregar speaker</a>
             </div>
         </header>
+
+        <?php if (isset($_GET['updated'])) : ?>
+            <div class="alert alert-success">Speaker actualizado correctamente.</div>
+        <?php elseif (isset($_GET['created'])) : ?>
+            <div class="alert alert-success">Speaker guardado correctamente.</div>
+        <?php endif; ?>
 
         <section class="speakers-admin__toolbar">
             <div class="speakers-admin__search">

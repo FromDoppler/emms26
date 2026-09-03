@@ -1,5 +1,6 @@
 <?php
 $modalId = 'modal-' . $speaker['id'] . ($isMobile ? '-mobile' : '');
+$modalImage = !empty($speaker['image_modal']) ? $speaker['image_modal'] : $speaker['image'];
 ?>
 <div class="modal-overlay" id="<?= $modalId ?>">
     <div class="modal <?= 'modal--' . $speaker['exposes'] ?>">
@@ -7,7 +8,7 @@ $modalId = 'modal-' . $speaker['id'] . ($isMobile ? '-mobile' : '');
             <?php if ($speaker['exposes'] === 'networking'): ?>
                 <img src="/src/img/networking-template-image.png" alt="networking" class="speaker-card__photo">
             <?php else: ?>
-                <img src="./admin/speakers/uploads/<?= $speaker['image'] ?>" alt="<?= $speaker['alt_image'] ?>" class="speaker-card__photo">
+                <img src="./admin/speakers/uploads/<?= $modalImage ?>" alt="<?= $speaker['alt_image'] ?>" class="speaker-card__photo">
             <?php endif; ?>
         </div>
 

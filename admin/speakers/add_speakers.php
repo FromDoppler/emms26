@@ -16,6 +16,13 @@ if ($selectedEvent !== '') {
 }
 
 if (isset($_POST['btn-save'])) {
+    $orden = trim($_POST['orden'] ?? '');
+    if ($orden !== '' && !ctype_digit($orden)) {
+        $saveError = 'El orden debe ser un número entero mayor o igual a 0.';
+    }
+}
+
+if (isset($_POST['btn-save']) && empty($saveError)) {
     $name = $_POST['name'];
 
     $image = $_FILES['image']['name'];
@@ -46,7 +53,6 @@ if (isset($_POST['btn-save'])) {
     $alt_image_company = $_POST['alt_image_company'];
     $time = $_POST['time'];
     $link_time = $_POST['link_time'];
-    $orden = $_POST['orden'];
     $day = $_POST['day'];
     $event = $_POST['event'];
     $exposes = $_POST['exposes'];
@@ -217,7 +223,7 @@ if (isset($_POST['btn-save'])) {
                     </div>
                     <div class="speaker-form-field">
                         <label for="orden">Orden</label>
-                        <input type="text" class="form-control" id="orden" name="orden">
+                        <input type="number" class="form-control" id="orden" name="orden" min="0" step="1" value="<?= htmlspecialchars($_POST['orden'] ?? '') ?>">
                     </div>
                     <div class="speaker-form-field">
                         <label for="link_time">URL zona horaria</label>

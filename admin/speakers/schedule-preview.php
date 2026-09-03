@@ -77,17 +77,17 @@ $db->close();
     </main>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             function closeModal(modal) {
                 modal.classList.remove('modal-overlay--show');
                 modal.classList.add('modal-overlay--hide');
-                setTimeout(function () {
+                setTimeout(function() {
                     modal.style.display = 'none';
                 }, 300);
             }
 
-            document.querySelectorAll('.speaker-card__more-info').forEach(function (card) {
-                card.addEventListener('click', function () {
+            document.querySelectorAll('.speaker-card__more-info').forEach(function(card) {
+                card.addEventListener('click', function() {
                     var speakerCard = card.closest('.speaker-card');
                     var targetId = speakerCard && speakerCard.getAttribute('data-target-speaker');
                     var modal = targetId ? document.getElementById(targetId) : null;
@@ -98,14 +98,14 @@ $db->close();
                 });
             });
 
-            document.querySelectorAll('.modal .modal__close-btn').forEach(function (button) {
-                button.addEventListener('click', function () {
+            document.querySelectorAll('.modal .modal__close-btn').forEach(function(button) {
+                button.addEventListener('click', function() {
                     var modal = button.closest('.modal-overlay');
                     if (modal) closeModal(modal);
                 });
             });
 
-            window.addEventListener('click', function (event) {
+            window.addEventListener('click', function(event) {
                 if (event.target.classList.contains('modal-overlay')) {
                     closeModal(event.target);
                 }

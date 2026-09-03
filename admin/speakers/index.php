@@ -70,6 +70,7 @@ if ($listConditions) {
 }
 $sql_query .= " ORDER BY event, CAST(day AS UNSIGNED), CAST(orden AS UNSIGNED)";
 $result_set = mysqli_query($con, $sql_query);
+$hasSpeakers = mysqli_num_rows($result_set) > 0;
 
 function speakersAdminUrl($token, $event = '', $day = '')
 {
@@ -164,6 +165,12 @@ function speakersAdminUrl($token, $event = '', $day = '')
                         </tr>
                     </thead>
                     <tbody id="speakers-list-body">
+                        <?php if (!$hasSpeakers) : ?>
+                            <tr class="speaker-search-empty">
+                                <td colspan="8">No hay speakers para el evento o día seleccionado.</td>
+                            </tr>
+                        <?php endif; ?>
+
                         <?php while ($row = mysqli_fetch_assoc($result_set)) :
                             $searchText = strtolower(trim(($row['name'] ?? '') . ' ' . ($row['job'] ?? '') . ' ' . ($row['title'] ?? '')));
                             $editParams = [
@@ -177,12 +184,14 @@ function speakersAdminUrl($token, $event = '', $day = '')
                                 $editParams['return_day'] = $selectedDay;
                             }
                             $deleteUrl = speakersAdminUrl($token, $selectedEvent, $selectedDay) . '&delete_id=' . urlencode($row['id']);
+                            $hasCardImage = !empty($row['image']);
+                            $hasModalImage = !empty($row['image_modal']);
                         ?>
                             <tr class="speaker-row" data-search="<?= htmlspecialchars($searchText) ?>">
                                 <td>
                                     <div class="speaker-summary">
                                         <div class="media-thumb media-thumb--speaker">
-                                            <?php if (!empty($row['image'])) : ?>
+                                            <?php if ($hasCardImage) : ?>
                                                 <img src="uploads/<?= htmlspecialchars($row['image']) ?>" alt="<?= htmlspecialchars($row['alt_image'] ?? '') ?>">
                                             <?php else : ?>
                                                 <span>Sin imagen</span>
@@ -196,13 +205,13 @@ function speakersAdminUrl($token, $event = '', $day = '')
                                         </div>
                                     </div>
                                 </td>
-                                <td class="speaker-title" title="<?= htmlspecialchars($row['title'] ?? '') ?>"><?= htmlspecialchars($row['title'] ?? '') ?></td>
+                                <td><span class="speaker-title" title="<?= htmlspecialchars($row['title'] ?? '') ?>"><?= htmlspecialchars($row['title'] ?? '') ?></span></td>
                                 <td><span class="speaker-type speaker-type--<?= htmlspecialchars($row['exposes'] ?? '') ?>"><?= htmlspecialchars($typeLabels[$row['exposes']] ?? ($row['exposes'] ?? '')) ?></span></td>
                                 <td>
-                                    <strong>Día <?= htmlspecialchars($row['day'] ?? '-') ?></strong>
+                                    <strong>Día <?= !empty($row['day']) ? htmlspecialchars($row['day']) : '-' ?></strong>
                                     <small><?= htmlspecialchars($row['time'] ?? '') ?></small>
                                 </td>
-                                <td><span class="speaker-order"><?= htmlspecialchars($row['orden'] ?? '-') ?></span></td>
+                                <td><span class="speaker-order"><?= !empty($row['orden']) ? htmlspecialchars($row['orden']) : '-' ?></span></td>
                                 <td>
                                     <div class="media-thumb media-thumb--company">
                                         <?php if (!empty($row['image_company'])) : ?>
@@ -214,8 +223,8 @@ function speakersAdminUrl($token, $event = '', $day = '')
                                 </td>
                                 <td>
                                     <div class="media-status">
-                                        <span>Card ✓</span>
-                                        <span class="<?= !empty($row['image_modal']) ? 'is-ready' : 'is-fallback' ?>">Modal <?= !empty($row['image_modal']) ? '✓' : '↩ card' ?></span>
+                                        <span class="<?= $hasCardImage ? 'is-ready' : 'is-fallback' ?>">Card <?= $hasCardImage ? '✓' : '—' ?></span>
+                                        <span class="<?= $hasModalImage ? 'is-ready' : 'is-fallback' ?>">Modal <?= $hasModalImage ? '✓' : ($hasCardImage ? '↩ card' : '—') ?></span>
                                     </div>
                                 </td>
                                 <td class="speaker-actions">

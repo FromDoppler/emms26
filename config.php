@@ -123,7 +123,7 @@ if (!defined('SUBJECT_FREE_DURING_ECOMMERCE'))
     define('SUBJECT_FREE_DURING_ECOMMERCE', html_entity_decode('&#x1F389;', ENT_QUOTES, 'UTF-8') . ' Ya eres parte del EMMS E-commerce 2025');
 
 if (!defined('SUBJECT_FREE_POST_ECOMMERCE'))
-    define('SUBJECT_FREE_POST_ECOMMERCE', 'Revive las mejores estrategias del EMMS E-commerce 2025 ' . html_entity_decode('&#x1F4A1;', ENT_QUOTES, 'UTF-8') . ' ');
+    define('SUBJECT_FREE_POST_ECOMMERCE', 'Revive las mejores estrategias del EMMS E-commerce 2025 ' . html_entity_decode('&#x1F4A1;', ENT_QUOTES, 'UTF-8'));
 
 // --- VIP ---
 if (!defined('SUBJECT_VIP_PRE_ECOMMERCE'))

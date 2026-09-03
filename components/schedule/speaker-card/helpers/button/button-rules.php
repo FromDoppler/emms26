@@ -25,11 +25,11 @@ function applySpeakerButtonExceptions(array $button, array $speaker, string $eve
   }
 
   // ───────────────────────────────────────────────
-  // A) SPEAKERS NORMALES (conference / successStory)
+  // A) SPEAKERS DE CONTENIDO (conference / debate / successStory)
   //     - Si está registrado y NO hay video → "VIDEO PRONTO DISPONIBLE"
   //     - Si NO está registrado → mantener CTA de registro
   // ───────────────────────────────────────────────
-  if (in_array($type, ['conference', 'successStory'], true) && $isRegistered && !$hasVideo) {
+  if (in_array($type, ['conference', 'debate', 'successStory'], true) && $isRegistered && !$hasVideo) {
     $button['text'] = 'VIDEO PRONTO DISPONIBLE';
     $button['href'] = '#';
     $existingClass = $button['class'] ?? '';

@@ -62,6 +62,11 @@
   background: linear-gradient(242.55deg, #cd930d 8.54%, #dcc958 42.26%, #d59501 123.98%);
 }
 
+.speaker-card.speaker-card--debate .speaker-card__button {
+  color: #ffffff;
+  background: linear-gradient(240.27deg, #047df6, #6716f3);
+}
+
 /* Shine Animation */
 .speaker-card.speaker-card--networking .speaker-card__button::after,
 .speaker-card.speaker-card--workshop .speaker-card__button::after {

@@ -1,16 +1,12 @@
 import { toHex } from "./index.js";
+import { getPhoneNumber } from "../intell-input/intell-input.js";
 
-export const buildUserObject = (email, events) => ({
-  userEmail: email,
-  userEvents: events,
-});
+export const buildUserObject = (email, events) => ({ userEmail: email, userEvents: events });
 
 export const buildUserData = (payload = {}) => {
   const { name = null, email, phone = null, acceptPolicies = null, acceptPromotions = null, type, events, ...extra } = payload;
   const encodeEmail = toHex(JSON.stringify(buildUserObject(email, events)));
-
   const urlParams = new URLSearchParams(window.location.search);
-
   const utms = {
     utm_source: urlParams.get("utm_source") || "direct",
     utm_campaign: urlParams.get("utm_campaign"),
@@ -20,19 +16,7 @@ export const buildUserData = (payload = {}) => {
     origin: urlParams.get("origin"),
     emms_ref: urlParams.get("emms_ref"),
   };
-
-  return {
-    name,
-    email,
-    phone,
-    encodeEmail,
-    acceptPolicies,
-    acceptPromotions,
-    ...utms,
-    type,
-    events,
-    ...extra,
-  };
+  return { name, email, phone, encodeEmail, acceptPolicies, acceptPromotions, ...utms, type, events, ...extra };
 };
 
 export const getEventsWithEvent = (fetchType) => {
@@ -52,26 +36,19 @@ export const getEventsWithEvent = (fetchType) => {
 export const setEventInLocalStorage = (fetchType, encodeEmail) => {
   const events = getEventsWithEvent(fetchType);
 
-  if (!localStorage.getItem("dplrid")) {
-    localStorage.setItem("dplrid", encodeEmail);
-  }
-
+  if (!localStorage.getItem("dplrid")) localStorage.setItem("dplrid", encodeEmail);
   localStorage.setItem("events", events);
   localStorage.setItem("lastEventsUpdateTime", new Date().toString());
-
   return events;
 };
 
 export const extractFormData = (form) => {
   const formData = new FormData(form);
-  const email = formData.get("email");
-  const dialCode = document.querySelector(".iti__selected-dial-code")?.innerHTML || "";
-  const phone = formData.get("phone").trim() ? dialCode + formData.get("phone") : null;
-
+  const phoneInput = form.querySelector('input[name="phone"]');
   return {
     name: formData.get("name"),
-    email,
-    phone,
+    email: formData.get("email"),
+    phone: getPhoneNumber(phoneInput),
     acceptPolicies: formData.get("privacy") === "true" || null,
     acceptPromotions: formData.get("promotions") === "true" || null,
   };
@@ -83,7 +60,5 @@ export const toggleButtonLoading = (form, isLoading) => {
 };
 
 export const trackMetaPixel = (event) => {
-  if (typeof fbq === "function") {
-    fbq("track", event);
-  }
+  if (typeof fbq === "function") fbq("track", event);
 };

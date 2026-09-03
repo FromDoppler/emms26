@@ -7,6 +7,7 @@ function translateExposes($exposes)
         'conference'    => 'Conferencia',
         'workshop'      => 'workshop',
         'networking'    => 'NETWORKING',
+        'debate'        => 'MESA DE DEBATE',
         'successStory'  => 'CASO DE EXITO'
     ];
 

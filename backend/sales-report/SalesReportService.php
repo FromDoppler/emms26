@@ -9,7 +9,7 @@ class SalesReportService
     private $repository;
     private $slack;
 
-    public function __construct(SalesReportRepository $repository, SlackWebhookClient $slack)
+    public function __construct(SalesReportRepository $repository, SlackChatClient $slack)
     {
         $this->repository = $repository;
         $this->slack = $slack;
@@ -24,24 +24,28 @@ class SalesReportService
 
         [$startLocal, $endLocal] = $this->resolvePeriod($nowLocal);
         $utc = new DateTimeZone('UTC');
-        $sales = $this->repository->findPaidSales(
-            $startLocal->setTimezone($utc),
-            $endLocal->setTimezone($utc)
-        );
+        $startUtc = $startLocal->setTimezone($utc);
+        $endUtc = $endLocal->setTimezone($utc);
+        $sales = $this->repository->findPaidSales($startUtc, $endUtc);
+        $couponVipCount = $this->repository->countCouponVipUsers($startUtc, $endUtc);
 
         $result = [
             'period_start' => $startLocal->format(DateTimeInterface::ATOM),
             'period_end' => $endLocal->format(DateTimeInterface::ATOM),
             'sales_count' => count($sales),
+            'coupon_vip_count' => $couponVipCount,
             'status' => 'no_sales',
         ];
 
-        if ($sales === []) {
+        if ($sales === [] && $couponVipCount === 0) {
             return $result;
         }
 
-        $payload = $this->buildSlackPayload($sales, $startLocal, $endLocal);
-        $this->slack->send($payload['message']);
+        $payload = $this->buildSlackPayload($sales, $couponVipCount, $startLocal, $endLocal);
+        $parentTs = $this->slack->postMessage($payload['summary_message']);
+        if ($sales !== []) {
+            $this->slack->postMessage($payload['detail_message'], $parentTs);
+        }
 
         $result['status'] = 'sent';
         $result['displayed_sales_count'] = $payload['displayed_sales_count'];
@@ -60,8 +64,12 @@ class SalesReportService
         return [$end->modify('-1 day'), $end];
     }
 
-    private function buildSlackPayload(array $sales, DateTimeImmutable $startLocal, DateTimeImmutable $endLocal): array
-    {
+    private function buildSlackPayload(
+        array $sales,
+        int $couponVipCount,
+        DateTimeImmutable $startLocal,
+        DateTimeImmutable $endLocal
+    ): array {
         $totalAmount = '0.00';
         foreach ($sales as $sale) {
             $totalAmount = $this->addDecimal($totalAmount, (string) $sale['final_amount']);
@@ -77,31 +85,27 @@ class SalesReportService
             . $endLocal->format('d/m H:i')
             . ' (Argentina)';
         $salesLabel = $count === 1 ? '1 venta' : $count . ' ventas';
-        $title = '💰 EMMS · Ventas de hoy';
+        $reportDate = $endLocal->format('d/m');
+        $summaryTitle = '💰 EMMS · Ventas ' . $reportDate;
+        $summaryText = $summaryTitle
+            . ' — VIP pagos: ' . $count
+            . ' · Facturación: USD ' . $totalAmount
+            . ' · VIP con cupón 100%: ' . $couponVipCount;
 
-        $blocks = [
-            [
-                'type' => 'header',
-                'text' => [
-                    'type' => 'plain_text',
-                    'text' => $title,
-                    'emoji' => true,
-                ],
-            ],
+        $detailBlocks = [
             [
                 'type' => 'section',
                 'text' => [
                     'type' => 'mrkdwn',
-                    'text' => '*Período:* ' . $period
-                        . "\n*Ventas:* " . $count
-                        . ' · *Facturación:* USD ' . $totalAmount,
+                    'text' => '*Detalle de ventas*'
+                        . "\n*Período:* " . $period,
                     'verbatim' => true,
                 ],
             ],
         ];
 
         foreach ($displayedSales as $sale) {
-            $blocks[] = [
+            $detailBlocks[] = [
                 'type' => 'section',
                 'text' => [
                     'type' => 'mrkdwn',
@@ -112,7 +116,7 @@ class SalesReportService
         }
 
         if ($displayed < $count) {
-            $blocks[] = [
+            $detailBlocks[] = [
                 'type' => 'context',
                 'elements' => [[
                     'type' => 'mrkdwn',
@@ -122,7 +126,7 @@ class SalesReportService
             ];
         }
 
-        $blocks[] = [
+        $detailBlocks[] = [
             'type' => 'context',
             'elements' => [[
                 'type' => 'mrkdwn',
@@ -134,16 +138,30 @@ class SalesReportService
         return [
             'displayed_sales_count' => $displayed,
             'total_amount' => $totalAmount,
-            'message' => [
-                'text' => $title . ' · ' . $salesLabel . ' · USD ' . $totalAmount,
-                'blocks' => $blocks,
+            'summary_message' => [
+                'text' => $summaryText,
+                'blocks' => [[
+                    'type' => 'section',
+                    'text' => [
+                        'type' => 'mrkdwn',
+                        'text' => '*' . $summaryTitle . '*'
+                            . "\n*VIP pagos:* " . $count
+                            . ' · *Facturación:* USD ' . $totalAmount
+                            . "\n*VIP con cupón 100%:* " . $couponVipCount,
+                        'verbatim' => true,
+                    ],
+                ]],
+            ],
+            'detail_message' => [
+                'text' => 'Detalle · ' . $salesLabel . ' · USD ' . $totalAmount,
+                'blocks' => $detailBlocks,
             ],
         ];
     }
 
     private function resolveDisplayLimit(int $count): int
     {
-        $fixedBlocks = 3; // header, summary and final context
+        $fixedBlocks = 2; // detail header and final context
         $withoutTruncation = self::MAX_SLACK_BLOCKS - $fixedBlocks;
 
         if ($count <= $withoutTruncation) {

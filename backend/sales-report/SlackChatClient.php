@@ -3,6 +3,7 @@
 class SlackChatClient
 {
     private const API_URL = 'https://slack.com/api/chat.postMessage';
+    private const MAX_RATE_LIMIT_RETRIES = 1;
 
     private $botToken;
     private $channelId;
@@ -29,6 +30,28 @@ class SlackChatClient
             throw new RuntimeException('slack_sales_payload_encode_failed');
         }
 
+        $rateLimitRetries = 0;
+
+        while (true) {
+            $result = $this->sendRequest($json);
+
+            if ($result['status'] !== 429) {
+                return $this->messageTs($result['response'], $result['status']);
+            }
+
+            $retryAfter = $result['retry_after'];
+            if ($rateLimitRetries >= self::MAX_RATE_LIMIT_RETRIES || $retryAfter === null) {
+                throw new RuntimeException('slack_sales_http_error_429');
+            }
+
+            sleep($retryAfter);
+            $rateLimitRetries++;
+        }
+    }
+
+    private function sendRequest(string $json): array
+    {
+        $retryAfter = null;
         $curl = curl_init(self::API_URL);
         if ($curl === false) {
             throw new RuntimeException('slack_sales_curl_init_failed');
@@ -44,6 +67,16 @@ class SlackChatClient
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_CONNECTTIMEOUT => 5,
             CURLOPT_TIMEOUT => 15,
+            CURLOPT_HEADERFUNCTION => static function ($curl, string $header) use (&$retryAfter): int {
+                if (stripos($header, 'Retry-After:') === 0) {
+                    $value = trim(substr($header, strlen('Retry-After:')));
+                    if (ctype_digit($value) && (int) $value > 0) {
+                        $retryAfter = (int) $value;
+                    }
+                }
+
+                return strlen($header);
+            },
         ]);
 
         $response = curl_exec($curl);
@@ -56,11 +89,20 @@ class SlackChatClient
             throw new RuntimeException('slack_sales_transport_error: ' . substr($error, 0, 300));
         }
 
+        return [
+            'response' => (string) $response,
+            'status' => $status,
+            'retry_after' => $retryAfter,
+        ];
+    }
+
+    private function messageTs(string $response, int $status): string
+    {
         if ($status < 200 || $status >= 300) {
             throw new RuntimeException('slack_sales_http_error_' . $status);
         }
 
-        $decoded = json_decode((string) $response, true);
+        $decoded = json_decode($response, true);
         if (!is_array($decoded)) {
             throw new RuntimeException('slack_sales_invalid_response');
         }

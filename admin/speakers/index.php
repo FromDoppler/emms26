@@ -94,19 +94,19 @@ if (isset($_GET['changestatus_id'])) {
                     }
                     $result_set = mysqli_query($con, $sql_query);
                     $i = 1;
-                    while ($row = mysqli_fetch_row($result_set)) {
+                    while ($row = mysqli_fetch_assoc($result_set)) {
                     ?>
                         <tr>
                             <td align="center"><?php echo $i; ?></td>
-                            <td align="center"> <a href="javascript:view_id('<?= $row[0] ?>', '<?= $_GET['token'] ?>')"> <?php echo $row[1]; ?> </a> </td>
-                            <td align="center"> <img src="uploads/<?= $row[2] ?>" alt="<?= $row[3] ?>" width="100" height="100"></td>
-                            <td align="center"> <?php echo $row[16]; ?> </td>
-                            <td align="center"> <?php echo $row[13]; ?> </td>
-                            <td align="center"> <?php echo $row[15]; ?> </td>
-                            <td align="center"> <img src="uploads/<?= $row[11] ?>" alt="<?= $row[12] ?>" width="100" height="100"></td>
+                            <td align="center"> <a href="javascript:view_id('<?= $row['id'] ?>', '<?= $_GET['token'] ?>')"> <?php echo $row['name']; ?> </a> </td>
+                            <td align="center"> <img src="uploads/<?= $row['image'] ?>" alt="<?= $row['alt_image'] ?>" width="100" height="100"></td>
+                            <td align="center"> <?php echo $row['day']; ?> </td>
+                            <td align="center"> <?php echo $row['time']; ?> </td>
+                            <td align="center"> <?php echo $row['orden']; ?> </td>
+                            <td align="center"> <img src="uploads/<?= $row['image_company'] ?>" alt="<?= $row['alt_image_company'] ?>" width="100" height="100"></td>
                             </td>
-                            <td align="center"><a href="javascript:edt_id('<?= $row[0] ?>', '<?= $_GET['token'] ?>')">Edit</a></td>
-                            <td align="center"><a href="javascript:delete_id('<?= $row[0] ?>', '<?= $_GET['token'] ?>')">Delete</a></td>
+                            <td align="center"><a href="javascript:edt_id('<?= $row['id'] ?>', '<?= $_GET['token'] ?>')">Edit</a></td>
+                            <td align="center"><a href="javascript:delete_id('<?= $row['id'] ?>', '<?= $_GET['token'] ?>')">Delete</a></td>
                         </tr>
                     <?php
                         $i++;

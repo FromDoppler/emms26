@@ -133,6 +133,7 @@ CREATE TABLE IF NOT EXISTS `speakers` (
   `exposes` varchar(255) NOT NULL DEFAULT 'conference',
   `name` varchar(255) NOT NULL,
   `image` varchar(255) NOT NULL,
+  `image_modal` varchar(255) DEFAULT NULL,
   `alt_image` varchar(255) NOT NULL,
   `job` varchar(255) NOT NULL,
   `sm_twitter` varchar(255) DEFAULT NULL,

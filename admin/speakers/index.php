@@ -116,10 +116,8 @@ function speakerUpdatedLabel($value)
                 <p>Administrá speakers, charlas y su ubicación dentro de la agenda.</p>
             </div>
             <div class="speakers-admin__header-actions">
-                <?php if ($selectedEvent !== '') : ?>
-                    <a class="btn btn-default" href="<?= htmlspecialchars(speakerSchedulePreviewUrl($token, $selectedEvent)) ?>" target="_blank" rel="noopener">Ver agenda</a>
-                <?php else : ?>
-                    <span class="btn btn-default disabled" title="Seleccioná un evento para previsualizar su agenda">Ver agenda</span>
+                <?php if (speakerSupportsSchedulePreview($selectedEvent)) : ?>
+                    <a class="btn btn-default" href="<?= htmlspecialchars(speakerSchedulePreviewUrl($token)) ?>" target="_blank" rel="noopener">Ver agenda</a>
                 <?php endif; ?>
                 <a class="btn btn-primary" href="add_speakers.php?token=<?= urlencode($token) ?><?= $selectedEvent !== '' ? '&event=' . urlencode($selectedEvent) : '' ?>">+ Agregar speaker</a>
             </div>
@@ -195,7 +193,7 @@ function speakerUpdatedLabel($value)
                             }
                             $deleteUrl = speakersAdminUrl($token, $selectedEvent, $selectedDay) . '&delete_id=' . urlencode($row['id']);
                             $hasCardImage = !empty($row['image']);
-                            $hasModalImage = !empty($row['image_modal']);
+                            $hasModalImage = speakerSupportsModalImage($row['event'] ?? '') && !empty($row['image_modal']);
                             $updatedLabel = speakerUpdatedLabel($row['updated_at'] ?? '');
                         ?>
                             <tr class="speaker-row" data-search="<?= htmlspecialchars($searchText) ?>">

@@ -46,15 +46,17 @@ if (isset($_POST['btn-update']) && empty($updateError)) {
         move_uploaded_file($_FILES['image']['tmp_name'], 'uploads/' . $image);
     }
 
-    if (!speakerSupportsModalImage($event)) {
-        $image_modal = null;
-    } elseif (isset($_POST['use_card_image'])) {
-        $image_modal = null;
-    } elseif ($_FILES['image_modal']['name'] == '') {
-        $image_modal = $fetched_row['image_modal'];
+    if (speakerSupportsModalImage($event)) {
+        if (isset($_POST['use_card_image'])) {
+            $image_modal = null;
+        } elseif ($_FILES['image_modal']['name'] == '') {
+            $image_modal = $fetched_row['image_modal'];
+        } else {
+            $image_modal = $_FILES['image_modal']['name'];
+            move_uploaded_file($_FILES['image_modal']['tmp_name'], 'uploads/' . $image_modal);
+        }
     } else {
-        $image_modal = $_FILES['image_modal']['name'];
-        move_uploaded_file($_FILES['image_modal']['tmp_name'], 'uploads/' . $image_modal);
+        $image_modal = $fetched_row['image_modal'];
     }
 
     $alt_image = $_POST['alt_image'];

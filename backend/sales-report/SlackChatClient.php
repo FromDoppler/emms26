@@ -69,7 +69,7 @@ class SlackChatClient
             CURLOPT_HEADERFUNCTION => static function ($curl, string $header) use (&$retryAfter): int {
                 if (stripos($header, 'Retry-After:') === 0) {
                     $value = trim(substr($header, strlen('Retry-After:')));
-                    if (ctype_digit($value) && (int) $value > 0) {
+                    if (ctype_digit($value)) {
                         $retryAfter = (int) $value;
                     }
                 }

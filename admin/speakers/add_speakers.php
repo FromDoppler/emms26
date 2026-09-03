@@ -1,6 +1,7 @@
 <?php
 include_once '../config.php';
 include_once '../../utils/GeoIp.php';
+require_once __DIR__ . '/speaker-admin-urls.php';
 $ip = GeoIp::getIp();
 isIPAllow($ip, $ALLOW_IPS);
 
@@ -93,7 +94,7 @@ if (isset($_POST['btn-save'])) {
                 <p>Cargá la información que se mostrará en la agenda.</p>
             </div>
             <div class="speaker-form-header__actions">
-                <a id="schedule-preview-link" class="btn btn-default<?= $selectedEvent === '' ? ' disabled' : '' ?>" href="<?= $selectedEvent !== '' ? 'schedule-preview.php?event=' . urlencode($selectedEvent) : '#' ?>" target="_blank" rel="noopener" aria-disabled="<?= $selectedEvent === '' ? 'true' : 'false' ?>">Ver agenda</a>
+                <a id="schedule-preview-link" class="btn btn-default<?= $selectedEvent === '' ? ' disabled' : '' ?>" href="<?= $selectedEvent !== '' ? htmlspecialchars(speakerSchedulePreviewUrl($token, $selectedEvent)) : '#' ?>" target="_blank" rel="noopener" aria-disabled="<?= $selectedEvent === '' ? 'true' : 'false' ?>">Ver agenda</a>
             </div>
         </header>
 
@@ -266,6 +267,7 @@ if (isset($_POST['btn-save'])) {
         (function () {
             var eventSelect = document.getElementById('event');
             var previewLink = document.getElementById('schedule-preview-link');
+            var previewBaseUrl = <?= json_encode(speakerSchedulePreviewUrl($token)) ?>;
 
             function syncPreviewLink() {
                 if (!eventSelect.value) {
@@ -274,7 +276,7 @@ if (isset($_POST['btn-save'])) {
                     previewLink.classList.add('disabled');
                     return;
                 }
-                previewLink.setAttribute('href', 'schedule-preview.php?event=' + encodeURIComponent(eventSelect.value));
+                previewLink.setAttribute('href', previewBaseUrl + '&event=' + encodeURIComponent(eventSelect.value));
                 previewLink.setAttribute('aria-disabled', 'false');
                 previewLink.classList.remove('disabled');
             }

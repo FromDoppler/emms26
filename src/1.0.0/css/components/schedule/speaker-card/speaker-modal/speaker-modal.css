@@ -171,10 +171,15 @@
 .modal.modal--debate .modal__image {
   padding: 0;
   overflow: hidden;
+  max-height: none;
   background: transparent;
 }
 
 .modal.modal--debate .modal__image img {
+  width: 100%;
+  height: auto;
+  max-width: 360px;
+  min-width: 0;
   border-radius: 25px;
 }
 

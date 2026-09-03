@@ -6,7 +6,7 @@ $ip = GeoIp::getIp();
 isIPAllow($ip, $ALLOW_IPS);
 
 $token = $_GET['token'] ?? '';
-$selectedEvent = $_GET['event'] ?? '';
+$selectedEvent = $_POST['event'] ?? ($_GET['event'] ?? '');
 if (!in_array($selectedEvent, ['ecommerce', 'digital-trends'], true)) {
     $selectedEvent = '';
 }
@@ -17,7 +17,11 @@ if ($selectedEvent !== '') {
 
 if (isset($_POST['btn-save'])) {
     $orden = trim($_POST['orden'] ?? '');
-    if ($orden !== '' && !ctype_digit($orden)) {
+    $event = $_POST['event'] ?? '';
+
+    if (!in_array($event, ['ecommerce', 'digital-trends'], true)) {
+        $saveError = 'Seleccioná un evento válido.';
+    } elseif ($orden !== '' && !ctype_digit($orden)) {
         $saveError = 'El orden debe ser un número entero mayor o igual a 0.';
     }
 }
@@ -30,9 +34,12 @@ if (isset($_POST['btn-save']) && empty($saveError)) {
         move_uploaded_file($_FILES['image']['tmp_name'], 'uploads/' . $image);
     }
 
-    $image_modal = $_FILES['image_modal']['name'];
-    if ($image_modal != '') {
-        move_uploaded_file($_FILES['image_modal']['tmp_name'], 'uploads/' . $image_modal);
+    $image_modal = '';
+    if (speakerSupportsModalImage($event)) {
+        $image_modal = $_FILES['image_modal']['name'];
+        if ($image_modal != '') {
+            move_uploaded_file($_FILES['image_modal']['tmp_name'], 'uploads/' . $image_modal);
+        }
     }
 
     $alt_image = $_POST['alt_image'];
@@ -54,7 +61,6 @@ if (isset($_POST['btn-save']) && empty($saveError)) {
     $time = $_POST['time'];
     $link_time = $_POST['link_time'];
     $day = $_POST['day'];
-    $event = $_POST['event'];
     $exposes = $_POST['exposes'];
     $slug = $_POST['slug'];
     $youtube = $_POST['youtube'];
@@ -100,7 +106,7 @@ if (isset($_POST['btn-save']) && empty($saveError)) {
                 <p>Cargá la información que se mostrará en la agenda.</p>
             </div>
             <div class="speaker-form-header__actions">
-                <a id="schedule-preview-link" class="btn btn-default<?= $selectedEvent === '' ? ' disabled' : '' ?>" href="<?= $selectedEvent !== '' ? htmlspecialchars(speakerSchedulePreviewUrl($token, $selectedEvent)) : '#' ?>" target="_blank" rel="noopener" aria-disabled="<?= $selectedEvent === '' ? 'true' : 'false' ?>">Ver agenda</a>
+                <a id="schedule-preview-link" class="btn btn-default" href="<?= htmlspecialchars(speakerSchedulePreviewUrl($token)) ?>" target="_blank" rel="noopener" <?= speakerSupportsSchedulePreview($selectedEvent) ? '' : 'hidden' ?>>Ver agenda</a>
             </div>
         </header>
 
@@ -146,7 +152,7 @@ if (isset($_POST['btn-save']) && empty($saveError)) {
 
             <section class="speaker-form-section">
                 <h2>Imágenes</h2>
-                <p class="speaker-form-section__description">La imagen del modal es opcional. Si no se carga, el modal utilizará la imagen de la card.</p>
+                <p class="speaker-form-section__description">Digital Trends permite cargar una imagen específica para el modal. Si no se carga, utiliza la imagen de la card.</p>
                 <div class="speaker-form-grid">
                     <div class="speaker-form-field">
                         <label for="image">Imagen de la card</label>
@@ -160,12 +166,12 @@ if (isset($_POST['btn-save']) && empty($saveError)) {
                             </div>
                         </div>
                     </div>
-                    <div class="speaker-form-field">
+                    <div class="speaker-form-field" id="modal-image-field" <?= speakerSupportsModalImage($selectedEvent) ? '' : 'hidden' ?>>
                         <label for="image_modal">Imagen del modal <span class="speaker-form-help">Opcional</span></label>
                         <div class="image-field">
                             <div class="image-preview" data-preview-for="image_modal"><span>Usará la imagen de la card</span></div>
                             <div>
-                                <input type="file" class="form-control" id="image_modal" name="image_modal" accept="image/*" data-image-input>
+                                <input type="file" class="form-control" id="image_modal" name="image_modal" accept="image/*" data-image-input <?= speakerSupportsModalImage($selectedEvent) ? '' : 'disabled' ?>>
                                 <div class="image-file-name" data-file-name-for="image_modal"></div>
                                 <span class="speaker-form-help">Si queda vacío, se mantiene el fallback a la imagen de la card.</span>
                             </div>
@@ -273,22 +279,18 @@ if (isset($_POST['btn-save']) && empty($saveError)) {
         (function () {
             var eventSelect = document.getElementById('event');
             var previewLink = document.getElementById('schedule-preview-link');
-            var previewBaseUrl = <?= json_encode(speakerSchedulePreviewUrl($token)) ?>;
+            var modalImageField = document.getElementById('modal-image-field');
+            var modalImageInput = document.getElementById('image_modal');
 
-            function syncPreviewLink() {
-                if (!eventSelect.value) {
-                    previewLink.setAttribute('href', '#');
-                    previewLink.setAttribute('aria-disabled', 'true');
-                    previewLink.classList.add('disabled');
-                    return;
-                }
-                previewLink.setAttribute('href', previewBaseUrl + '&event=' + encodeURIComponent(eventSelect.value));
-                previewLink.setAttribute('aria-disabled', 'false');
-                previewLink.classList.remove('disabled');
+            function syncEventCapabilities() {
+                var supportsDigitalTrendsAgenda = eventSelect.value === 'digital-trends';
+                previewLink.hidden = !supportsDigitalTrendsAgenda;
+                modalImageField.hidden = !supportsDigitalTrendsAgenda;
+                modalImageInput.disabled = !supportsDigitalTrendsAgenda;
             }
 
-            eventSelect.addEventListener('change', syncPreviewLink);
-            syncPreviewLink();
+            eventSelect.addEventListener('change', syncEventCapabilities);
+            syncEventCapabilities();
 
             Array.prototype.forEach.call(document.querySelectorAll('[data-image-input]'), function (input) {
                 input.addEventListener('change', function () {

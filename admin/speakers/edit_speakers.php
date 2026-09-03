@@ -183,14 +183,17 @@ if (isset($_POST['btn-update'])) {
                             <div class="image-preview" data-preview-for="image_modal">
                                 <?php if (!empty($fetched_row['image_modal'])) : ?>
                                     <img src="uploads/<?= htmlspecialchars($fetched_row['image_modal']) ?>" alt="Preview modal">
-                                <?php elseif (!empty($fetched_row['image'])) : ?>
-                                    <img src="uploads/<?= htmlspecialchars($fetched_row['image']) ?>" alt="Fallback de card">
-                                <?php else : ?><span>Usará la imagen de la card</span><?php endif; ?>
+                                <?php else : ?>
+                                    <span class="image-preview__empty-state">
+                                        <strong>Sin imagen específica</strong>
+                                        <small>El modal usa la imagen de la card.</small>
+                                    </span>
+                                <?php endif; ?>
                             </div>
                             <div>
-                                <div class="image-file-name" data-file-name-for="image_modal"><?= !empty($fetched_row['image_modal']) ? htmlspecialchars($fetched_row['image_modal']) : 'Usando imagen de la card' ?></div>
+                                <div class="image-file-name" data-file-name-for="image_modal"><?= !empty($fetched_row['image_modal']) ? htmlspecialchars($fetched_row['image_modal']) : 'Sin imagen específica' ?></div>
                                 <input type="file" class="form-control" id="image_modal" name="image_modal" accept="image/*" data-image-input>
-                                <span class="speaker-form-help">Si no cargás una imagen específica, se mantiene el fallback a la card.</span>
+                                <span class="speaker-form-help">Si no cargás una imagen específica, el modal utiliza la imagen de la card.</span>
                                 <?php if (!empty($fetched_row['image_modal'])) : ?>
                                     <label class="image-fallback-option" for="use_card_image">
                                         <input type="checkbox" id="use_card_image" name="use_card_image" value="1">

@@ -23,9 +23,15 @@ if (isset($_GET['edit_id'])) {
     $fetched_row = mysqli_fetch_array($result_set, MYSQLI_ASSOC);
 }
 
+$currentEvent = $_POST['event'] ?? ($fetched_row['event'] ?? '');
+
 if (isset($_POST['btn-update'])) {
     $orden = trim($_POST['orden'] ?? '');
-    if ($orden !== '' && !ctype_digit($orden)) {
+    $event = $_POST['event'] ?? '';
+
+    if (!in_array($event, ['ecommerce', 'digital-trends'], true)) {
+        $updateError = 'Seleccioná un evento válido.';
+    } elseif ($orden !== '' && !ctype_digit($orden)) {
         $updateError = 'El orden debe ser un número entero mayor o igual a 0.';
     }
 }
@@ -40,7 +46,9 @@ if (isset($_POST['btn-update']) && empty($updateError)) {
         move_uploaded_file($_FILES['image']['tmp_name'], 'uploads/' . $image);
     }
 
-    if (isset($_POST['use_card_image'])) {
+    if (!speakerSupportsModalImage($event)) {
+        $image_modal = null;
+    } elseif (isset($_POST['use_card_image'])) {
         $image_modal = null;
     } elseif ($_FILES['image_modal']['name'] == '') {
         $image_modal = $fetched_row['image_modal'];
@@ -77,7 +85,6 @@ if (isset($_POST['btn-update']) && empty($updateError)) {
     $time = $_POST['time'];
     $link_time = $_POST['link_time'];
     $day = $_POST['day'];
-    $event = $_POST['event'];
     $exposes = $_POST['exposes'];
     $slug = strtolower($_POST['slug']);
     $youtube = $_POST['youtube'];
@@ -120,7 +127,7 @@ if (isset($_POST['btn-update']) && empty($updateError)) {
                 <p><?= htmlspecialchars($fetched_row['name'] ?? '') ?></p>
             </div>
             <div class="speaker-form-header__actions">
-                <a class="btn btn-default" href="<?= htmlspecialchars(speakerSchedulePreviewUrl($token, $fetched_row['event'] ?? '')) ?>" target="_blank" rel="noopener">Ver agenda</a>
+                <a id="schedule-preview-link" class="btn btn-default" href="<?= htmlspecialchars(speakerSchedulePreviewUrl($token)) ?>" target="_blank" rel="noopener" <?= speakerSupportsSchedulePreview($currentEvent) ? '' : 'hidden' ?>>Ver agenda</a>
             </div>
         </header>
 
@@ -136,8 +143,8 @@ if (isset($_POST['btn-update']) && empty($updateError)) {
                     <div class="speaker-form-field">
                         <label for="event">Evento</label>
                         <select name="event" id="event" class="form-control" required>
-                            <option <?= ($fetched_row['event'] === 'ecommerce') ? 'selected' : '' ?> value="ecommerce">Ecommerce</option>
-                            <option <?= ($fetched_row['event'] === 'digital-trends') ? 'selected' : '' ?> value="digital-trends">Digital Trends</option>
+                            <option <?= ($currentEvent === 'ecommerce') ? 'selected' : '' ?> value="ecommerce">Ecommerce</option>
+                            <option <?= ($currentEvent === 'digital-trends') ? 'selected' : '' ?> value="digital-trends">Digital Trends</option>
                         </select>
                     </div>
                     <div class="speaker-form-field">
@@ -164,7 +171,7 @@ if (isset($_POST['btn-update']) && empty($updateError)) {
 
             <section class="speaker-form-section">
                 <h2>Imágenes</h2>
-                <p class="speaker-form-section__description">La imagen del modal es opcional. Si no existe, el modal utiliza la imagen de la card.</p>
+                <p class="speaker-form-section__description">Digital Trends permite cargar una imagen específica para el modal. Si no existe, utiliza la imagen de la card.</p>
                 <div class="speaker-form-grid">
                     <div class="speaker-form-field">
                         <label for="image">Imagen de la card</label>
@@ -183,7 +190,7 @@ if (isset($_POST['btn-update']) && empty($updateError)) {
                             </div>
                         </div>
                     </div>
-                    <div class="speaker-form-field">
+                    <div class="speaker-form-field" id="modal-image-field" <?= speakerSupportsModalImage($currentEvent) ? '' : 'hidden' ?>>
                         <label for="image_modal">Imagen del modal <span class="speaker-form-help">Opcional</span></label>
                         <div class="image-field">
                             <div class="image-preview" data-preview-for="image_modal">
@@ -198,7 +205,7 @@ if (isset($_POST['btn-update']) && empty($updateError)) {
                             </div>
                             <div>
                                 <div class="image-file-name" data-file-name-for="image_modal"><?= !empty($fetched_row['image_modal']) ? htmlspecialchars($fetched_row['image_modal']) : 'Sin imagen específica' ?></div>
-                                <input type="file" class="form-control" id="image_modal" name="image_modal" accept="image/*" data-image-input>
+                                <input type="file" class="form-control" id="image_modal" name="image_modal" accept="image/*" data-image-input <?= speakerSupportsModalImage($currentEvent) ? '' : 'disabled' ?>>
                                 <span class="speaker-form-help">Si no cargás una imagen específica, el modal utiliza la imagen de la card.</span>
                                 <?php if (!empty($fetched_row['image_modal'])) : ?>
                                     <label class="image-fallback-option" for="use_card_image">
@@ -309,14 +316,24 @@ if (isset($_POST['btn-update']) && empty($updateError)) {
 
     <script type="text/javascript">
         (function () {
-            var useCardImage = document.getElementById('use_card_image');
+            var eventSelect = document.getElementById('event');
+            var previewLink = document.getElementById('schedule-preview-link');
+            var modalImageField = document.getElementById('modal-image-field');
             var modalImageInput = document.getElementById('image_modal');
+            var useCardImage = document.getElementById('use_card_image');
 
-            if (useCardImage && modalImageInput) {
-                useCardImage.addEventListener('change', function () {
-                    modalImageInput.disabled = useCardImage.checked;
-                });
+            function syncEventCapabilities() {
+                var supportsDigitalTrendsAgenda = eventSelect.value === 'digital-trends';
+                previewLink.hidden = !supportsDigitalTrendsAgenda;
+                modalImageField.hidden = !supportsDigitalTrendsAgenda;
+                modalImageInput.disabled = !supportsDigitalTrendsAgenda || Boolean(useCardImage && useCardImage.checked);
             }
+
+            if (useCardImage) {
+                useCardImage.addEventListener('change', syncEventCapabilities);
+            }
+            eventSelect.addEventListener('change', syncEventCapabilities);
+            syncEventCapabilities();
 
             Array.prototype.forEach.call(document.querySelectorAll('[data-image-input]'), function (input) {
                 input.addEventListener('change', function () {

@@ -5,6 +5,14 @@ $ip = GeoIp::getIp();
 isIPAllow($ip, $ALLOW_IPS);
 
 $token = $_GET['token'] ?? '';
+$selectedEvent = $_GET['event'] ?? '';
+if (!in_array($selectedEvent, ['ecommerce', 'digital-trends'], true)) {
+    $selectedEvent = '';
+}
+$backUrl = 'index.php?token=' . urlencode($token);
+if ($selectedEvent !== '') {
+    $backUrl .= '&filter=' . urlencode($selectedEvent);
+}
 
 if (isset($_POST['btn-save'])) {
     $name = $_POST['name'];
@@ -55,12 +63,11 @@ if (isset($_POST['btn-save'])) {
     $sql_query = "INSERT INTO speakers (`name`,`image`,`image_modal`,`alt_image`,`job`,`sm_twitter`,`sm_linkedin`,`sm_instagram`,`sm_facebook`,`title`,`description`,`bio`,`image_company`,`alt_image_company`,`time`,`link_time`,`orden`,`day`,`event`,`exposes`,`slug`,`youtube`,`meta_title`,`meta_description`,`meta_twitter`,`meta_image`) VALUES('" . $name . "','" . $image . "','" . $image_modal . "','" . $alt_image . "','" . $job . "','" . $sm_twitter . "','" . $sm_linkedin . "','" . $sm_instagram . "','" . $sm_facebook . "','" . $title . "','" . $description . "','" . $bio . "','" . $image_company . "','" . $alt_image_company . "','" . $time . "','" . $link_time . "','" . $orden . "','" . $day . "','" . $event . "','" . $exposes . "','" . $slug . "','" . $youtube . "','" . $meta_title . "','" . $meta_description . "','" . $meta_twitter . "','" . $meta_image . "')";
 
     if (mysqli_query($con, $sql_query)) {
-        @header('Location: /admin/speakers/index.php?token=' . urlencode($token) . '&filter=' . urlencode($event));
-    } else {
-?>
-        <script type="text/javascript">alert('Ocurrió un error al guardar el speaker');</script>
-<?php
+        header('Location: /admin/speakers/index.php?token=' . urlencode($token) . '&filter=' . urlencode($event) . '&created=1');
+        exit;
     }
+
+    $saveError = 'Ocurrió un error al guardar el speaker';
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -71,20 +78,24 @@ if (isset($_POST['btn-save'])) {
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="style.css?v=2" type="text/css" />
+    <link rel="stylesheet" href="style.css?v=3" type="text/css" />
 </head>
 <body>
     <div class="speaker-form-page">
         <header class="speaker-form-header">
             <div>
-                <a class="speaker-form-header__back" href="index.php?token=<?= urlencode($token) ?>">← Volver a speakers</a>
+                <a class="speaker-form-header__back" href="<?= htmlspecialchars($backUrl) ?>">← Volver a speakers</a>
                 <h1>Agregar speaker</h1>
                 <p>Cargá la información que se mostrará en la agenda.</p>
             </div>
             <div class="speaker-form-header__actions">
-                <a class="btn btn-default" href="schedule-preview.php" target="_blank" rel="noopener">Ver agenda</a>
+                <a id="schedule-preview-link" class="btn btn-default<?= $selectedEvent === '' ? ' disabled' : '' ?>" href="<?= $selectedEvent !== '' ? 'schedule-preview.php?event=' . urlencode($selectedEvent) : '#' ?>" target="_blank" rel="noopener" aria-disabled="<?= $selectedEvent === '' ? 'true' : 'false' ?>">Ver agenda</a>
             </div>
         </header>
+
+        <?php if (!empty($saveError)) : ?>
+            <div class="alert alert-danger"><?= htmlspecialchars($saveError) ?></div>
+        <?php endif; ?>
 
         <form class="speaker-form" method="post" enctype="multipart/form-data">
             <section class="speaker-form-section">
@@ -94,9 +105,9 @@ if (isset($_POST['btn-save'])) {
                     <div class="speaker-form-field">
                         <label for="event">Evento</label>
                         <select name="event" id="event" class="form-control" required>
-                            <option value="" disabled selected>Seleccioná un evento</option>
-                            <option value="ecommerce">Ecommerce</option>
-                            <option value="digital-trends">Digital Trends</option>
+                            <option value="" disabled <?= $selectedEvent === '' ? 'selected' : '' ?>>Seleccioná un evento</option>
+                            <option value="ecommerce" <?= $selectedEvent === 'ecommerce' ? 'selected' : '' ?>>Ecommerce</option>
+                            <option value="digital-trends" <?= $selectedEvent === 'digital-trends' ? 'selected' : '' ?>>Digital Trends</option>
                         </select>
                     </div>
                     <div class="speaker-form-field">
@@ -238,9 +249,9 @@ if (isset($_POST['btn-save'])) {
             </section>
 
             <div class="speaker-form-actions">
-                <a href="index.php?token=<?= urlencode($token) ?>">← Volver a speakers</a>
+                <a href="<?= htmlspecialchars($backUrl) ?>">← Volver a speakers</a>
                 <div class="speaker-form-actions__buttons">
-                    <a class="btn btn-default" href="index.php?token=<?= urlencode($token) ?>">Cancelar</a>
+                    <a class="btn btn-default" href="<?= htmlspecialchars($backUrl) ?>">Cancelar</a>
                     <button class="btn btn-primary" type="submit" name="btn-save">Guardar speaker</button>
                 </div>
             </div>
@@ -249,13 +260,31 @@ if (isset($_POST['btn-save'])) {
 
     <script type="text/javascript">
         (function () {
+            var eventSelect = document.getElementById('event');
+            var previewLink = document.getElementById('schedule-preview-link');
+
+            function syncPreviewLink() {
+                if (!eventSelect.value) {
+                    previewLink.setAttribute('href', '#');
+                    previewLink.setAttribute('aria-disabled', 'true');
+                    previewLink.classList.add('disabled');
+                    return;
+                }
+                previewLink.setAttribute('href', 'schedule-preview.php?event=' + encodeURIComponent(eventSelect.value));
+                previewLink.setAttribute('aria-disabled', 'false');
+                previewLink.classList.remove('disabled');
+            }
+
+            eventSelect.addEventListener('change', syncPreviewLink);
+            syncPreviewLink();
+
             Array.prototype.forEach.call(document.querySelectorAll('[data-image-input]'), function (input) {
                 input.addEventListener('change', function () {
                     var file = input.files && input.files[0];
                     var preview = document.querySelector('[data-preview-for="' + input.id + '"]');
                     var name = document.querySelector('[data-file-name-for="' + input.id + '"]');
                     if (!file || !preview) return;
-                    name.textContent = file.name;
+                    if (name) name.textContent = file.name;
                     var reader = new FileReader();
                     reader.onload = function (event) {
                         preview.innerHTML = '<img src="' + event.target.result + '" alt="Preview">';

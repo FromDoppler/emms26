@@ -1,6 +1,7 @@
 <?php
 include_once '../config.php';
 include_once '../../utils/GeoIp.php';
+require_once __DIR__ . '/speaker-admin-urls.php';
 $ip = GeoIp::getIp();
 isIPAllow($ip, $ALLOW_IPS);
 
@@ -106,7 +107,7 @@ function speakersAdminUrl($token, $event = '', $day = '')
             </div>
             <div class="speakers-admin__header-actions">
                 <?php if ($selectedEvent !== '') : ?>
-                    <a class="btn btn-default" href="schedule-preview.php?event=<?= urlencode($selectedEvent) ?>" target="_blank" rel="noopener">Ver agenda</a>
+                    <a class="btn btn-default" href="<?= htmlspecialchars(speakerSchedulePreviewUrl($token, $selectedEvent)) ?>" target="_blank" rel="noopener">Ver agenda</a>
                 <?php else : ?>
                     <span class="btn btn-default disabled" title="Seleccioná un evento para previsualizar su agenda">Ver agenda</span>
                 <?php endif; ?>
@@ -172,7 +173,7 @@ function speakersAdminUrl($token, $event = '', $day = '')
                         <?php endif; ?>
 
                         <?php while ($row = mysqli_fetch_assoc($result_set)) :
-                            $searchText = strtolower(trim(($row['name'] ?? '') . ' ' . ($row['job'] ?? '') . ' ' . ($row['title'] ?? '')));
+                            $searchText = trim(($row['name'] ?? '') . ' ' . ($row['job'] ?? '') . ' ' . ($row['title'] ?? ''));
                             $editParams = [
                                 'edit_id' => $row['id'],
                                 'token' => $token,
@@ -253,7 +254,8 @@ function speakersAdminUrl($token, $event = '', $day = '')
                 var visible = 0;
 
                 rows.forEach(function (row) {
-                    var match = row.getAttribute('data-search').indexOf(query) !== -1;
+                    var searchText = row.getAttribute('data-search').toLowerCase();
+                    var match = searchText.indexOf(query) !== -1;
                     row.style.display = match ? '' : 'none';
                     if (match) visible++;
                 });

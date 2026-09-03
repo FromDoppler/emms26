@@ -80,6 +80,7 @@ function getButtonConfig(): array
 
   $config = [
     'conference' => $conference,
+    'debate' => $conference,
     'successStory' => $successStory,
     'workshop' => $workshop,
   ];

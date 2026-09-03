@@ -454,9 +454,12 @@ class DB
         return $result;
     }
 
-    public function getSpeakersByDay($day)
+    public function getSpeakersByDay($day, $event)
     {
-        $sql = $this->query("SELECT * FROM speakers WHERE day = " . $day . " ORDER BY CAST(orden AS UNSIGNED)");
+        $sql = $this->query(
+            "SELECT * FROM speakers WHERE day = ? AND event = ? ORDER BY CAST(orden AS UNSIGNED)",
+            [(string) $day, $event]
+        );
         $result = $sql->fetchAll();
         return $result;
     }

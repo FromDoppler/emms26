@@ -32,7 +32,9 @@ if (isset($_POST['btn-update'])) {
         move_uploaded_file($_FILES['image']['tmp_name'], 'uploads/' . $image);
     }
 
-    if ($_FILES['image_modal']['name'] == '') {
+    if (isset($_POST['use_card_image'])) {
+        $image_modal = null;
+    } elseif ($_FILES['image_modal']['name'] == '') {
         $image_modal = $fetched_row['image_modal'];
     } else {
         $image_modal = $_FILES['image_modal']['name'];
@@ -76,20 +78,20 @@ if (isset($_POST['btn-update'])) {
     $meta_description = $_POST['meta_description'];
     $meta_twitter = $_POST['meta_twitter'];
 
-    $sql_query = "UPDATE speakers SET `name`='$name', `image`='$image', `image_modal`='$image_modal', `alt_image`='$alt_image', `job`='$job', `sm_twitter`='$sm_twitter', `sm_linkedin`='$sm_linkedin', `sm_instagram`='$sm_instagram', `sm_facebook`='$sm_facebook', `title`='$title', `description`='$description', `bio`='$bio', `image_company`='$image_company', `alt_image_company`='$alt_image_company', `time`='$time', `link_time`='$link_time', `orden`='$orden', `day`='$day', `event`='$event', `exposes`='$exposes', `slug`='$slug', `youtube`='$youtube', `meta_title`='$meta_title', `meta_description`='$meta_description', `meta_twitter`='$meta_twitter', `meta_image`='$meta_image' WHERE id=" . $_GET['edit_id'];
+    $imageModalValue = $image_modal === null
+        ? 'NULL'
+        : "'" . mysqli_real_escape_string($con, $image_modal) . "'";
+
+    $sql_query = "UPDATE speakers SET `name`='$name', `image`='$image', `image_modal`=$imageModalValue, `alt_image`='$alt_image', `job`='$job', `sm_twitter`='$sm_twitter', `sm_linkedin`='$sm_linkedin', `sm_instagram`='$sm_instagram', `sm_facebook`='$sm_facebook', `title`='$title', `description`='$description', `bio`='$bio', `image_company`='$image_company', `alt_image_company`='$alt_image_company', `time`='$time', `link_time`='$link_time', `orden`='$orden', `day`='$day', `event`='$event', `exposes`='$exposes', `slug`='$slug', `youtube`='$youtube', `meta_title`='$meta_title', `meta_description`='$meta_description', `meta_twitter`='$meta_twitter', `meta_image`='$meta_image' WHERE id=" . $_GET['edit_id'];
 
     if (mysqli_query($con, $sql_query)) {
-?>
-        <script type="text/javascript">
-            alert('Speaker actualizado correctamente');
-            window.location.href = '<?= htmlspecialchars($backUrl, ENT_QUOTES) ?>';
-        </script>
-    <?php
-    } else {
-    ?>
-        <script type="text/javascript">alert('Ocurrió un error al actualizar el speaker');</script>
-<?php
+        $redirectParams = $backParams;
+        $redirectParams['updated'] = '1';
+        header('Location: index.php?' . http_build_query($redirectParams));
+        exit;
     }
+
+    $updateError = 'Ocurrió un error al actualizar el speaker';
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -100,7 +102,7 @@ if (isset($_POST['btn-update'])) {
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="style.css?v=2" type="text/css" />
+    <link rel="stylesheet" href="style.css?v=3" type="text/css" />
 </head>
 <body>
     <div class="speaker-form-page">
@@ -111,9 +113,13 @@ if (isset($_POST['btn-update'])) {
                 <p><?= htmlspecialchars($fetched_row['name'] ?? '') ?></p>
             </div>
             <div class="speaker-form-header__actions">
-                <a class="btn btn-default" href="schedule-preview.php" target="_blank" rel="noopener">Ver agenda</a>
+                <a class="btn btn-default" href="schedule-preview.php?event=<?= urlencode($fetched_row['event'] ?? '') ?>" target="_blank" rel="noopener">Ver agenda</a>
             </div>
         </header>
+
+        <?php if (!empty($updateError)) : ?>
+            <div class="alert alert-danger"><?= htmlspecialchars($updateError) ?></div>
+        <?php endif; ?>
 
         <form class="speaker-form" method="post" enctype="multipart/form-data">
             <section class="speaker-form-section">
@@ -184,6 +190,12 @@ if (isset($_POST['btn-update'])) {
                                 <div class="image-file-name" data-file-name-for="image_modal"><?= !empty($fetched_row['image_modal']) ? htmlspecialchars($fetched_row['image_modal']) : 'Usando imagen de la card' ?></div>
                                 <input type="file" class="form-control" id="image_modal" name="image_modal" accept="image/*" data-image-input>
                                 <span class="speaker-form-help">Si no cargás una imagen específica, se mantiene el fallback a la card.</span>
+                                <?php if (!empty($fetched_row['image_modal'])) : ?>
+                                    <label class="image-fallback-option" for="use_card_image">
+                                        <input type="checkbox" id="use_card_image" name="use_card_image" value="1">
+                                        Usar imagen de la card
+                                    </label>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -287,6 +299,15 @@ if (isset($_POST['btn-update'])) {
 
     <script type="text/javascript">
         (function () {
+            var useCardImage = document.getElementById('use_card_image');
+            var modalImageInput = document.getElementById('image_modal');
+
+            if (useCardImage && modalImageInput) {
+                useCardImage.addEventListener('change', function () {
+                    modalImageInput.disabled = useCardImage.checked;
+                });
+            }
+
             Array.prototype.forEach.call(document.querySelectorAll('[data-image-input]'), function (input) {
                 input.addEventListener('change', function () {
                     var file = input.files && input.files[0];

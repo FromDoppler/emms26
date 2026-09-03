@@ -45,7 +45,7 @@
 .speaker-card.speaker-card--debate {
   border: 5px solid transparent;
   background:
-    linear-gradient(180deg, rgba(57, 5, 85, 0) 8%, rgba(57, 5, 85, 0.34) 51%, rgba(72, 1, 111, 0.8) 75%, #000000 100%) padding-box,
+    linear-gradient(180deg, #390555 0%, #390555 34%, #48016f 80%, #000000 100%) padding-box,
     linear-gradient(135deg, #6bb3ff, #6716f3) border-box;
 }
 

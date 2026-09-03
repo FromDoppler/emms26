@@ -32,7 +32,7 @@ $db->close();
 
 $speakersByDay = [];
 foreach ($speakers as $speaker) {
-    $day = $speaker['day'] !== '' ? $speaker['day'] : '-';
+    $day = !empty($speaker['day']) ? $speaker['day'] : '-';
     if (!isset($speakersByDay[$day])) {
         $speakersByDay[$day] = [];
     }

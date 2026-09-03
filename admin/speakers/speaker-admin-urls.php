@@ -1,12 +1,18 @@
 <?php
 
-function speakerSchedulePreviewUrl($token, $event = '')
+const SPEAKER_EVENT_DIGITAL_TRENDS = 'digital-trends';
+
+function speakerSupportsSchedulePreview($event)
 {
-    $params = ['token' => $token];
+    return $event === SPEAKER_EVENT_DIGITAL_TRENDS;
+}
 
-    if ($event !== '') {
-        $params['event'] = $event;
-    }
+function speakerSupportsModalImage($event)
+{
+    return $event === SPEAKER_EVENT_DIGITAL_TRENDS;
+}
 
-    return 'schedule-preview.php?' . http_build_query($params);
+function speakerSchedulePreviewUrl($token)
+{
+    return 'schedule-preview.php?' . http_build_query(['token' => $token]);
 }

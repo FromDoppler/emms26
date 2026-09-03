@@ -1,9 +1,4 @@
-/**
- * Autocompleta los formularios de registro y captación con datos recibidos por URL.
- *
- * Los parámetros soportados son `email`, `name` y `phone`. La URL puede contener
- * caracteres percent-encoded y también entidades HTML heredadas.
- */
+import { initPhoneInputs, setPhoneNumber } from "./intell-input/intell-input.js";
 
 function decodeHtmlEntitiesInUrl(url) {
   const textarea = document.createElement("textarea");
@@ -13,50 +8,48 @@ function decodeHtmlEntitiesInUrl(url) {
 
 function searchUrlParam(param) {
   const decodedUrl = decodeHtmlEntitiesInUrl(window.location.href);
-  const urlParams = new URL(decodedUrl).searchParams;
-
-  return urlParams.get(param);
+  return new URL(decodedUrl).searchParams.get(param);
 }
 
 const FormAutoComplete = {
   getUserValues() {
-    return {
-      email: searchUrlParam("email"),
-      name: searchUrlParam("name"),
-      phone: searchUrlParam("phone"),
-    };
+    return { email: searchUrlParam("email"), name: searchUrlParam("name"), phone: searchUrlParam("phone") };
   },
 
-  completeForms() {
+  async completeForms() {
     const { email, phone, name } = this.getUserValues();
     const forms = document.querySelectorAll("#commonForm, #modalForm");
-
-    if (!forms.length) {
-      console.warn("No se encontraron formularios de registro o captación en la página.");
-      return;
-    }
+    if (!forms.length) return;
 
     forms.forEach((form) => {
       form.querySelectorAll("input").forEach((input) => {
-        switch (input.name) {
-          case "email":
-            input.value = email || "";
-            break;
-          case "name":
-            input.value = name || "";
-            break;
-          case "phone":
-            input.value = phone || "";
-            break;
-        }
+        if (input.name === "email") input.value = email || "";
+        if (input.name === "name") input.value = name || "";
       });
+    });
+
+    if (phone === null) return;
+
+    const phoneInputs = Array.from(forms)
+      .map((form) => form.querySelector('input[name="phone"]'))
+      .filter(Boolean);
+    const initialPhoneValues = new Map(phoneInputs.map((input) => [input, input.value]));
+
+    try {
+      await initPhoneInputs(document);
+    } catch (error) {
+      console.warn("No se pudo inicializar el teléfono para autocompletar", error);
+      return;
+    }
+
+    phoneInputs.forEach((phoneInput) => {
+      if (phoneInput.value === initialPhoneValues.get(phoneInput)) setPhoneNumber(phoneInput, phone);
     });
   },
 
   init() {
-    document.addEventListener("DOMContentLoaded", () => {
-      this.completeForms();
-    });
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => this.completeForms(), { once: true });
+    else this.completeForms();
   },
 };
 

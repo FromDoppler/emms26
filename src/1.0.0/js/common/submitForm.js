@@ -3,6 +3,7 @@
 import { validateForm } from "./formsValidators.js";
 import { toHex, fromHex } from "./decodeEmail.js";
 import { buildUserData, getEventsWithEvent, setEventInLocalStorage, extractFormData, toggleButtonLoading, trackMetaPixel } from "./submitHelpers.js";
+import { initPhoneInputs } from "../intell-input/intell-input.js";
 
 const redirectToRegisteredPage = () => {
   const currentPath = window.location.pathname.replace(/^\//, "");
@@ -81,6 +82,7 @@ const assertRegistrationConfirmed = (result) => {
  *   - null when the network request throws
  */
 const submitFormFetch = async (form, fetchType) => {
+  await initPhoneInputs(form);
   if (!validateForm(form)) return;
 
   const { name, email, phone, acceptPolicies, acceptPromotions } = extractFormData(form);

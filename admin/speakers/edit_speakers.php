@@ -24,6 +24,13 @@ if (isset($_GET['edit_id'])) {
 }
 
 if (isset($_POST['btn-update'])) {
+    $orden = trim($_POST['orden'] ?? '');
+    if ($orden !== '' && !ctype_digit($orden)) {
+        $updateError = 'El orden debe ser un número entero mayor o igual a 0.';
+    }
+}
+
+if (isset($_POST['btn-update']) && empty($updateError)) {
     $name = $_POST['name'];
 
     if ($_FILES['image']['name'] == '') {
@@ -69,7 +76,6 @@ if (isset($_POST['btn-update'])) {
     $alt_image_company = $_POST['alt_image_company'];
     $time = $_POST['time'];
     $link_time = $_POST['link_time'];
-    $orden = $_POST['orden'];
     $day = $_POST['day'];
     $event = $_POST['event'];
     $exposes = $_POST['exposes'];
@@ -252,7 +258,7 @@ if (isset($_POST['btn-update'])) {
                         </select>
                     </div>
                     <div class="speaker-form-field"><label for="time">Hora</label><input type="text" value="<?= htmlspecialchars($fetched_row['time'] ?? '') ?>" class="form-control" id="time" name="time"></div>
-                    <div class="speaker-form-field"><label for="orden">Orden</label><input type="text" value="<?= htmlspecialchars($fetched_row['orden'] ?? '') ?>" class="form-control" id="orden" name="orden"></div>
+                    <div class="speaker-form-field"><label for="orden">Orden</label><input type="number" value="<?= htmlspecialchars($_POST['orden'] ?? ($fetched_row['orden'] ?? '')) ?>" class="form-control" id="orden" name="orden" min="0" step="1"></div>
                     <div class="speaker-form-field"><label for="link_time">URL zona horaria</label><input type="text" value="<?= htmlspecialchars($fetched_row['link_time'] ?? '') ?>" class="form-control" id="link_time" name="link_time"></div>
                     <div class="speaker-form-field speaker-form-field--full"><label for="slug">Slug</label><input type="text" value="<?= htmlspecialchars($fetched_row['slug'] ?? '') ?>" class="form-control" id="slug" name="slug"></div>
                 </div>

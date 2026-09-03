@@ -288,6 +288,7 @@ function speakerUpdatedLabel($value)
                 preview.setAttribute('aria-hidden', 'true');
                 previewImage.setAttribute('src', '');
                 previewImage.setAttribute('alt', '');
+                previewImage.classList.remove('media-preview__image--company');
             }
 
             Array.prototype.forEach.call(document.querySelectorAll('.media-preview-trigger'), function (trigger) {
@@ -295,6 +296,7 @@ function speakerUpdatedLabel($value)
                     event.preventDefault();
                     previewImage.setAttribute('src', trigger.getAttribute('data-preview-src'));
                     previewImage.setAttribute('alt', trigger.getAttribute('data-preview-alt') || 'Preview');
+                    previewImage.classList.toggle('media-preview__image--company', trigger.classList.contains('media-thumb--company'));
                     preview.hidden = false;
                     preview.setAttribute('aria-hidden', 'false');
                 });

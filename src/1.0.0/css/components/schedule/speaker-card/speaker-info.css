@@ -57,6 +57,10 @@
   color: #efbf04;
 }
 
+.speaker-card.speaker-card--debate .speaker-card__type {
+  color: #146df6;
+}
+
 /* MoreInfo color */
 
 .speaker-card.speaker-card--networking .speaker-card__more-info,

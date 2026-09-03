@@ -84,6 +84,16 @@ function speakersAdminUrl($token, $event = '', $day = '')
     }
     return 'index.php?' . http_build_query($params);
 }
+
+function speakerUpdatedLabel($value)
+{
+    if (empty($value)) {
+        return '';
+    }
+
+    $timestamp = strtotime($value);
+    return $timestamp ? date('d/m/Y H:i', $timestamp) : '';
+}
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -161,14 +171,13 @@ function speakersAdminUrl($token, $event = '', $day = '')
                             <th>Día / Hora</th>
                             <th>Orden</th>
                             <th>Empresa</th>
-                            <th>Media</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="speakers-list-body">
                         <?php if (!$hasSpeakers) : ?>
                             <tr class="speaker-search-empty">
-                                <td colspan="8">No hay speakers para el evento o día seleccionado.</td>
+                                <td colspan="7">No hay speakers para el evento o día seleccionado.</td>
                             </tr>
                         <?php endif; ?>
 
@@ -187,21 +196,25 @@ function speakersAdminUrl($token, $event = '', $day = '')
                             $deleteUrl = speakersAdminUrl($token, $selectedEvent, $selectedDay) . '&delete_id=' . urlencode($row['id']);
                             $hasCardImage = !empty($row['image']);
                             $hasModalImage = !empty($row['image_modal']);
+                            $updatedLabel = speakerUpdatedLabel($row['updated_at'] ?? '');
                         ?>
                             <tr class="speaker-row" data-search="<?= htmlspecialchars($searchText) ?>">
                                 <td>
                                     <div class="speaker-summary">
-                                        <div class="media-thumb media-thumb--speaker">
-                                            <?php if ($hasCardImage) : ?>
+                                        <?php if ($hasCardImage) : ?>
+                                            <a class="media-thumb media-thumb--speaker media-preview-trigger" href="uploads/<?= htmlspecialchars($row['image']) ?>" data-preview-src="uploads/<?= htmlspecialchars($row['image']) ?>" data-preview-alt="<?= htmlspecialchars($row['alt_image'] ?? $row['name'] ?? '') ?>" title="Ver imagen">
                                                 <img src="uploads/<?= htmlspecialchars($row['image']) ?>" alt="<?= htmlspecialchars($row['alt_image'] ?? '') ?>">
-                                            <?php else : ?>
-                                                <span>Sin imagen</span>
-                                            <?php endif; ?>
-                                        </div>
+                                            </a>
+                                        <?php else : ?>
+                                            <div class="media-thumb media-thumb--speaker"><span>Sin imagen</span></div>
+                                        <?php endif; ?>
                                         <div>
                                             <strong><?= htmlspecialchars($row['name'] ?? '') ?></strong>
                                             <?php if (!empty($row['job'])) : ?>
                                                 <small title="<?= htmlspecialchars($row['job']) ?>"><?= htmlspecialchars($row['job']) ?></small>
+                                            <?php endif; ?>
+                                            <?php if ($hasModalImage) : ?>
+                                                <span class="speaker-modal-badge">Modal propia</span>
                                             <?php endif; ?>
                                         </div>
                                     </div>
@@ -214,28 +227,27 @@ function speakersAdminUrl($token, $event = '', $day = '')
                                 </td>
                                 <td><span class="speaker-order"><?= !empty($row['orden']) ? htmlspecialchars($row['orden']) : '-' ?></span></td>
                                 <td>
-                                    <div class="media-thumb media-thumb--company">
-                                        <?php if (!empty($row['image_company'])) : ?>
+                                    <?php if (!empty($row['image_company'])) : ?>
+                                        <a class="media-thumb media-thumb--company media-preview-trigger" href="uploads/<?= htmlspecialchars($row['image_company']) ?>" data-preview-src="uploads/<?= htmlspecialchars($row['image_company']) ?>" data-preview-alt="<?= htmlspecialchars($row['alt_image_company'] ?? '') ?>" title="Ver logo">
                                             <img src="uploads/<?= htmlspecialchars($row['image_company']) ?>" alt="<?= htmlspecialchars($row['alt_image_company'] ?? '') ?>">
-                                        <?php else : ?>
-                                            <span>Sin logo</span>
-                                        <?php endif; ?>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="media-status">
-                                        <span class="<?= $hasCardImage ? 'is-ready' : 'is-fallback' ?>">Card <?= $hasCardImage ? '✓' : '—' ?></span>
-                                        <span class="<?= $hasModalImage ? 'is-ready' : 'is-fallback' ?>">Modal <?= $hasModalImage ? '✓' : ($hasCardImage ? '↩ card' : '—') ?></span>
-                                    </div>
+                                        </a>
+                                    <?php else : ?>
+                                        <div class="media-thumb media-thumb--company"><span>Sin logo</span></div>
+                                    <?php endif; ?>
                                 </td>
                                 <td class="speaker-actions">
-                                    <a class="btn btn-sm btn-primary" href="edit_speakers.php?<?= htmlspecialchars(http_build_query($editParams)) ?>">Editar</a>
-                                    <a class="speaker-delete" href="<?= htmlspecialchars($deleteUrl) ?>" onclick="return confirm('¿Seguro que querés eliminar este speaker?');">Eliminar</a>
+                                    <div class="speaker-actions__links">
+                                        <a class="btn btn-sm btn-primary" href="edit_speakers.php?<?= htmlspecialchars(http_build_query($editParams)) ?>">Editar</a>
+                                        <a class="speaker-delete" href="<?= htmlspecialchars($deleteUrl) ?>" onclick="return confirm('¿Seguro que querés eliminar este speaker?');">Eliminar</a>
+                                    </div>
+                                    <?php if ($updatedLabel !== '') : ?>
+                                        <small class="speaker-updated">Actualizado <?= htmlspecialchars($updatedLabel) ?></small>
+                                    <?php endif; ?>
                                 </td>
                             </tr>
                         <?php endwhile; ?>
                         <tr id="speaker-search-empty" class="speaker-search-empty" hidden>
-                            <td colspan="8">No encontramos speakers para esa búsqueda.</td>
+                            <td colspan="7">No encontramos speakers para esa búsqueda.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -243,11 +255,19 @@ function speakersAdminUrl($token, $event = '', $day = '')
         </section>
     </div>
 
+    <div id="media-preview" class="media-preview" hidden aria-hidden="true">
+        <button type="button" class="media-preview__close" aria-label="Cerrar preview">×</button>
+        <img class="media-preview__image" src="" alt="">
+    </div>
+
     <script type="text/javascript">
         (function () {
             var input = document.getElementById('speaker-search');
             var rows = Array.prototype.slice.call(document.querySelectorAll('.speaker-row'));
             var empty = document.getElementById('speaker-search-empty');
+            var preview = document.getElementById('media-preview');
+            var previewImage = preview.querySelector('.media-preview__image');
+            var previewClose = preview.querySelector('.media-preview__close');
 
             input.addEventListener('input', function () {
                 var query = input.value.trim().toLowerCase();
@@ -261,6 +281,31 @@ function speakersAdminUrl($token, $event = '', $day = '')
                 });
 
                 empty.hidden = visible !== 0;
+            });
+
+            function closePreview() {
+                preview.hidden = true;
+                preview.setAttribute('aria-hidden', 'true');
+                previewImage.setAttribute('src', '');
+                previewImage.setAttribute('alt', '');
+            }
+
+            Array.prototype.forEach.call(document.querySelectorAll('.media-preview-trigger'), function (trigger) {
+                trigger.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    previewImage.setAttribute('src', trigger.getAttribute('data-preview-src'));
+                    previewImage.setAttribute('alt', trigger.getAttribute('data-preview-alt') || 'Preview');
+                    preview.hidden = false;
+                    preview.setAttribute('aria-hidden', 'false');
+                });
+            });
+
+            previewClose.addEventListener('click', closePreview);
+            preview.addEventListener('click', function (event) {
+                if (event.target === preview) closePreview();
+            });
+            document.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape' && !preview.hidden) closePreview();
             });
         })();
     </script>

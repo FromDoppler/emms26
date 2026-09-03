@@ -563,7 +563,7 @@ CREATE TABLE IF NOT EXISTS `subscriptions_doppler` (
 CREATE TABLE IF NOT EXISTS `subscription_doppler_list_errors` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `email` varchar(255) DEFAULT NULL,
-  `list` varchar(255) NOT NULL,
+  `list` varchar(255) DEFAULT NULL,
   `reason` varchar(255) DEFAULT NULL,
   `error_code` int(11) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),

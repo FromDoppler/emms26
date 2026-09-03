@@ -302,25 +302,27 @@ class DB
             ];
 
             foreach ($dbFields as $field) {
-                // Saltar si el campo no vino en el payload
-                if (!array_key_exists($field, $subscription) && !($field === 'phase' && isset($subscription['form_id']))) {
+                $sourceField = $field === 'phase'
+                    ? 'form_id'
+                    : ($field === 'digital-trends' ? 'digital_trends' : $field);
+
+                if (!array_key_exists($sourceField, $subscription)) {
                     continue;
                 }
 
-                $value = $field === 'phase'
-                    ? $subscription['form_id']
-                    : $subscription[$field] ?? null;
-
+                $value = $subscription[$sourceField];
                 if ($value === '' || $value === null) {
                     continue;
                 }
 
-                if ($field === 'digital-trends') {
-                    $updateFields[] = "`$field` = ?";
-                } else {
-                    $updateFields[] = "$field = ?";
+                $column = $field === 'digital-trends' ? "`$field`" : $field;
+                if ($field === 'ecommerce' || $field === 'digital-trends') {
+                    $updateFields[] = "$column = GREATEST($column, ?)";
+                    $updateValues[] = (int) $value;
+                    continue;
                 }
 
+                $updateFields[] = "$column = ?";
                 $updateValues[] = $this->connection->real_escape_string($value);
             }
 

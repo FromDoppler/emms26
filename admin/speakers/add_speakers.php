@@ -4,15 +4,21 @@ include_once '../../utils/GeoIp.php';
 $ip = GeoIp::getIp();
 isIPAllow($ip, $ALLOW_IPS);
 
+$token = $_GET['token'] ?? '';
+
 if (isset($_POST['btn-save'])) {
-    // variables for input data
     $name = $_POST['name'];
-    $image =  $_FILES["image"]["name"];
-    $file_name = $_FILES["image"]["name"];
-    $file_tmp = $_FILES["image"]["tmp_name"];
-    if ($file_name != '') {
-        move_uploaded_file($file_tmp, "uploads/" . $file_name);
+
+    $image = $_FILES['image']['name'];
+    if ($image != '') {
+        move_uploaded_file($_FILES['image']['tmp_name'], 'uploads/' . $image);
     }
+
+    $image_modal = $_FILES['image_modal']['name'];
+    if ($image_modal != '') {
+        move_uploaded_file($_FILES['image_modal']['tmp_name'], 'uploads/' . $image_modal);
+    }
+
     $alt_image = $_POST['alt_image'];
     $job = $_POST['job'];
     $sm_twitter = $_POST['sm_twitter'];
@@ -22,12 +28,12 @@ if (isset($_POST['btn-save'])) {
     $title = $_POST['title'];
     $description = $_POST['description'];
     $bio = $_POST['bio'];
-    $image_company =  $_FILES["image_company"]["name"];
-    $file_name = $_FILES["image_company"]["name"];
-    $file_tmp = $_FILES["image_company"]["tmp_name"];
-    if ($file_name != '') {
-        move_uploaded_file($file_tmp, "uploads/" . $file_name);
+
+    $image_company = $_FILES['image_company']['name'];
+    if ($image_company != '') {
+        move_uploaded_file($_FILES['image_company']['tmp_name'], 'uploads/' . $image_company);
     }
+
     $alt_image_company = $_POST['alt_image_company'];
     $time = $_POST['time'];
     $link_time = $_POST['link_time'];
@@ -40,288 +46,224 @@ if (isset($_POST['btn-save'])) {
     $meta_title = $_POST['meta_title'];
     $meta_description = $_POST['meta_description'];
     $meta_twitter = $_POST['meta_twitter'];
-    $meta_image =  $_FILES["meta_image"]["name"];
-    $file_name = $_FILES["meta_image"]["name"];
-    $file_tmp = $_FILES["meta_image"]["tmp_name"];
-    if ($file_name != '') {
-        move_uploaded_file($file_tmp, "uploads/" . $file_name);
+
+    $meta_image = $_FILES['meta_image']['name'];
+    if ($meta_image != '') {
+        move_uploaded_file($_FILES['meta_image']['tmp_name'], 'uploads/' . $meta_image);
     }
 
-    // variables for input data
+    $sql_query = "INSERT INTO speakers (`name`,`image`,`image_modal`,`alt_image`,`job`,`sm_twitter`,`sm_linkedin`,`sm_instagram`,`sm_facebook`,`title`,`description`,`bio`,`image_company`,`alt_image_company`,`time`,`link_time`,`orden`,`day`,`event`,`exposes`,`slug`,`youtube`,`meta_title`,`meta_description`,`meta_twitter`,`meta_image`) VALUES('" . $name . "','" . $image . "','" . $image_modal . "','" . $alt_image . "','" . $job . "','" . $sm_twitter . "','" . $sm_linkedin . "','" . $sm_instagram . "','" . $sm_facebook . "','" . $title . "','" . $description . "','" . $bio . "','" . $image_company . "','" . $alt_image_company . "','" . $time . "','" . $link_time . "','" . $orden . "','" . $day . "','" . $event . "','" . $exposes . "','" . $slug . "','" . $youtube . "','" . $meta_title . "','" . $meta_description . "','" . $meta_twitter . "','" . $meta_image . "')";
 
-    // sql query for inserting data into database
-
-    $sql_query = "INSERT INTO speakers (`name`,`image`,`alt_image`,`job`,`sm_twitter`,`sm_linkedin`,`sm_instagram`,`sm_facebook`,`title`,`description`,`bio`,`image_company`,`alt_image_company`,`time`,`link_time`,`orden`,`day`,`event`,`exposes`,`slug`,`youtube`,`meta_title`,`meta_description`,`meta_twitter`,`meta_image`) VALUES('" . $name . "','" . $image . "','" . $alt_image . "','" . $job . "','" . $sm_twitter . "','" . $sm_linkedin . "','" . $sm_instagram . "','" . $sm_facebook . "','" . $title . "','" . $description . "','" . $bio . "','" . $image_company . "','" . $alt_image_company . "','" . $time . "','" . $link_time . "','" . $orden . "','" . $day . "' ,'" . $event . "' ,'" . $exposes . "' ,'" . $slug . "','" . $youtube . "','" . $meta_title . "','" . $meta_description . "','" . $meta_twitter . "','" . $meta_image . "')";
-    // sql query for inserting data into database
-
-    // sql query execution function
     if (mysqli_query($con, $sql_query)) {
-        @header("Location: /admin/speakers/index.php?token=" . $_GET['token']);
+        @header('Location: /admin/speakers/index.php?token=' . urlencode($token) . '&filter=' . urlencode($event));
     } else {
 ?>
-        <script type="text/javascript">
-            alert('error occured while inserting your data');
-        </script>
+        <script type="text/javascript">alert('Ocurrió un error al guardar el speaker');</script>
 <?php
     }
-    // sql query execution function
 }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>ABM Speakers</title>
+    <title>Agregar speaker</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="style.css?v=1" type="text/css" />
+    <link rel="stylesheet" href="style.css?v=2" type="text/css" />
 </head>
-
 <body>
-    <center>
-
-        <div id="container">
-            <div id="table-responsive">
-                <h3>Alta Speakers</h3>
+    <div class="speaker-form-page">
+        <header class="speaker-form-header">
+            <div>
+                <a class="speaker-form-header__back" href="index.php?token=<?= urlencode($token) ?>">← Volver a speakers</a>
+                <h1>Agregar speaker</h1>
+                <p>Cargá la información que se mostrará en la agenda.</p>
             </div>
-        </div>
-        <div id="container">
-            <div id="table-responsive">
-                <form method="post" enctype="multipart/form-data">
-                    <table class="table table-striped">
-                        <tr>
-                            <td align="center"><a href="index.php?token=<?= $_GET['token'] ?>">back to main page</a></td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="event" class="form-label">Evento:</label>
-                            </td>
-                            <td>
-                                <select name="event" class="form-select" required>
-                                    <option value="" disabled selected>Seleccione un tipo de evento</option>
-                                    <option value="ecommerce">Ecommerce</option>
-                                    <option value="digital-trends">Digital Trends</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="exposes" class="form-label">Tipo de Exposición:</label>
-                            </td>
-                            <td>
-                                <select name="exposes" class="form-select" required>
-                                    <option value="" disabled selected>Seleccione el tipo de speaker</option>
-                                    <option value="conference">Conferencia</option>
-                                    <option value="workshop">Workshop</option>
-                                    <option value="networking">Networking</option>
-                                    <option value="debate">Mesa de debate</option>
-                                    <option value="successStory">Caso de éxito</option>
-                                    <option value="interview">Entrevista</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="name" class="form-label">Name:</label>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" id="name" name="name" required placeholder="Name">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="image" class="form-label">Image:</label>
-                            </td>
-                            <td>
-                                <input type="file" class="form-control" id="image" name="image" placeholder="Image">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="alt_image" class="form-label">Alt_image:</label>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" id="alt_image" name="alt_image" placeholder="Alt_image">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="job" class="form-label">Job:</label>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" id="job" name="job" placeholder="Job">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="sm_twitter" class="form-label">Sm_twitter: <br><small><em>ej: https://twitter.com/fromDoppler</em></small></label>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" id="sm_twitter" name="sm_twitter" placeholder="Sm_twitter">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="sm_linkedin" class="form-label">Sm_linkedin: <br><small><em>ej: https://www.linkedin.com/company/doppler/mycompany/</em></small></label>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" id="sm_linkedin" name="sm_linkedin" placeholder="Sm_linkedin">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="sm_instagram" class="form-label">Sm_instagram: <br><small><em>ej: https://www.instagram.com/fromdoppler/</em></small></label>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" id="sm_instagram" name="sm_instagram" placeholder="Sm_instagram">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="sm_facebook" class="form-label">Sm_facebook: <br><small><em>ej: https://www.facebook.com/DopplerEmailMarketing</em></small></label>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" id="sm_facebook" name="sm_facebook" placeholder="Sm_facebook">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="title" class="form-label">Title:</label>
-                            </td>
-                            <td>
-                            <input type="text" class="form-control" id="title" name="title" placeholder="Titulo" required>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="description" class="form-label">Description:</label>
-                            </td>
-                            <td>
-                                <textarea rows="5" id="description" name="description"></textarea>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="bio" class="form-label">Bio:</label>
-                            </td>
-                            <td>
-                                <textarea rows="5" id="bio" name="bio"></textarea>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="image_company" class="form-label">Image_company:</label>
-                            </td>
-                            <td>
-                                <input type="file" class="form-control" id="image_company" name="image_company" placeholder="Image_company">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="alt_image_company" class="form-label">Alt_image_company:</label>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" id="alt_image_company" name="alt_image_company" placeholder="Alt_image_company">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="time" class="form-label">Time:</label>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" id="time" name="time" placeholder="Time">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="link_time" class="form-label">URL Time Zona Horaria:</label>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" id="link_time" name="link_time" placeholder="URL Time Zona Horaria">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="day" class="form-label">Day:</label>
-                            </td>
-                            <td>
-                                <select name="day" class="form-select">
-                                    <option value="1" selected>Día 1</option>
-                                    <option value="2">Día 2</option>
-                                    <option value="3">Día 3</option>
-                                    <option value="4">Día 4</option>
-                                    <option value="5">Día 5</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="orden" class="form-label">Orden:</label>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" id="orden" name="orden" placeholder="Orden">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="slug" class="form-label">Slug:</label>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" id="slug" name="slug" placeholder="Slug">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="youtube" class="form-label">ZOOM (DURING) / Youtube(POST):</label>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" id="youtube" name="youtube" placeholder="Youtube">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="meta_title" class="form-label">SEO Title:</label>
-                            </td>
-                            <td>
-                                <input type="text" class="form-control" id="meta_title" name="meta_title" placeholder="SEO Title">
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="meta_description" class="form-label">SEO Description:</label>
-                            </td>
-                            <td>
-                                <textarea rows="5" id="meta_description" name="meta_description"></textarea>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="meta_twitter" class="form-label">SEO Twitter:</label>
-                            </td>
-                            <td>
-                                <textarea rows="5" id="meta_twitter" name="meta_twitter"></textarea>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <label for="meta_image" class="form-label">Image Share:</label>
-                            </td>
-                            <td>
-                                <input type="file" class="form-control" id="meta_image" name="meta_image" placeholder="Image Share">
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td><button type="submit" name="btn-save"><strong>SAVE</strong></button></td>
-                        </tr>
-                    </table>
-                </form>
+            <div class="speaker-form-header__actions">
+                <a class="btn btn-default" href="schedule-preview.php" target="_blank" rel="noopener">Ver agenda</a>
             </div>
-        </div>
+        </header>
 
-    </center>
+        <form class="speaker-form" method="post" enctype="multipart/form-data">
+            <section class="speaker-form-section">
+                <h2>Información</h2>
+                <p class="speaker-form-section__description">Datos principales del speaker y el tipo de participación.</p>
+                <div class="speaker-form-grid">
+                    <div class="speaker-form-field">
+                        <label for="event">Evento</label>
+                        <select name="event" id="event" class="form-control" required>
+                            <option value="" disabled selected>Seleccioná un evento</option>
+                            <option value="ecommerce">Ecommerce</option>
+                            <option value="digital-trends">Digital Trends</option>
+                        </select>
+                    </div>
+                    <div class="speaker-form-field">
+                        <label for="exposes">Tipo de exposición</label>
+                        <select name="exposes" id="exposes" class="form-control" required>
+                            <option value="" disabled selected>Seleccioná un tipo</option>
+                            <option value="conference">Conferencia</option>
+                            <option value="workshop">Workshop</option>
+                            <option value="networking">Networking</option>
+                            <option value="debate">Mesa de Debate</option>
+                            <option value="successStory">Caso de éxito</option>
+                            <option value="interview">Entrevista</option>
+                        </select>
+                    </div>
+                    <div class="speaker-form-field">
+                        <label for="name">Nombre</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="speaker-form-field">
+                        <label for="job">Cargo</label>
+                        <input type="text" class="form-control" id="job" name="job">
+                    </div>
+                </div>
+            </section>
+
+            <section class="speaker-form-section">
+                <h2>Imágenes</h2>
+                <p class="speaker-form-section__description">La imagen del modal es opcional. Si no se carga, el modal utilizará la imagen de la card.</p>
+                <div class="speaker-form-grid">
+                    <div class="speaker-form-field">
+                        <label for="image">Imagen de la card</label>
+                        <div class="image-field">
+                            <div class="image-preview" data-preview-for="image"><span>Sin imagen seleccionada</span></div>
+                            <div>
+                                <input type="file" class="form-control" id="image" name="image" accept="image/*" data-image-input>
+                                <div class="image-file-name" data-file-name-for="image"></div>
+                                <label for="alt_image">Texto alternativo</label>
+                                <input type="text" class="form-control" id="alt_image" name="alt_image">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="speaker-form-field">
+                        <label for="image_modal">Imagen del modal <span class="speaker-form-help">Opcional</span></label>
+                        <div class="image-field">
+                            <div class="image-preview" data-preview-for="image_modal"><span>Usará la imagen de la card</span></div>
+                            <div>
+                                <input type="file" class="form-control" id="image_modal" name="image_modal" accept="image/*" data-image-input>
+                                <div class="image-file-name" data-file-name-for="image_modal"></div>
+                                <span class="speaker-form-help">Si queda vacío, se mantiene el fallback a la imagen de la card.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="speaker-form-field speaker-form-field--full">
+                        <label for="image_company">Logo de empresa</label>
+                        <div class="image-field">
+                            <div class="image-preview" data-preview-for="image_company"><span>Sin logo seleccionado</span></div>
+                            <div>
+                                <input type="file" class="form-control" id="image_company" name="image_company" accept="image/*" data-image-input>
+                                <div class="image-file-name" data-file-name-for="image_company"></div>
+                                <label for="alt_image_company">Texto alternativo del logo</label>
+                                <input type="text" class="form-control" id="alt_image_company" name="alt_image_company">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="speaker-form-section">
+                <h2>Conferencia</h2>
+                <div class="speaker-form-grid">
+                    <div class="speaker-form-field speaker-form-field--full">
+                        <label for="title">Título de la charla</label>
+                        <input type="text" class="form-control" id="title" name="title" required>
+                    </div>
+                    <div class="speaker-form-field speaker-form-field--full">
+                        <label for="description">Descripción</label>
+                        <textarea id="description" name="description"></textarea>
+                    </div>
+                    <div class="speaker-form-field speaker-form-field--full">
+                        <label for="bio">Bio</label>
+                        <textarea id="bio" name="bio"></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <section class="speaker-form-section">
+                <h2>Agenda</h2>
+                <div class="speaker-form-grid">
+                    <div class="speaker-form-field">
+                        <label for="day">Día</label>
+                        <select name="day" id="day" class="form-control">
+                            <option value="1" selected>Día 1</option>
+                            <option value="2">Día 2</option>
+                            <option value="3">Día 3</option>
+                            <option value="4">Día 4</option>
+                            <option value="5">Día 5</option>
+                        </select>
+                    </div>
+                    <div class="speaker-form-field">
+                        <label for="time">Hora</label>
+                        <input type="text" class="form-control" id="time" name="time" placeholder="Ej. 14:45">
+                    </div>
+                    <div class="speaker-form-field">
+                        <label for="orden">Orden</label>
+                        <input type="text" class="form-control" id="orden" name="orden">
+                    </div>
+                    <div class="speaker-form-field">
+                        <label for="link_time">URL zona horaria</label>
+                        <input type="text" class="form-control" id="link_time" name="link_time">
+                    </div>
+                    <div class="speaker-form-field speaker-form-field--full">
+                        <label for="slug">Slug</label>
+                        <input type="text" class="form-control" id="slug" name="slug">
+                    </div>
+                </div>
+            </section>
+
+            <section class="speaker-form-section">
+                <h2>Redes</h2>
+                <div class="speaker-form-grid">
+                    <div class="speaker-form-field"><label for="sm_linkedin">LinkedIn</label><input type="text" class="form-control" id="sm_linkedin" name="sm_linkedin"></div>
+                    <div class="speaker-form-field"><label for="sm_instagram">Instagram</label><input type="text" class="form-control" id="sm_instagram" name="sm_instagram"></div>
+                    <div class="speaker-form-field"><label for="sm_facebook">Facebook</label><input type="text" class="form-control" id="sm_facebook" name="sm_facebook"></div>
+                    <div class="speaker-form-field"><label for="sm_twitter">X / Twitter</label><input type="text" class="form-control" id="sm_twitter" name="sm_twitter"></div>
+                </div>
+            </section>
+
+            <section class="speaker-form-section">
+                <details class="speaker-form-details">
+                    <summary>SEO / Video</summary>
+                    <div class="speaker-form-grid">
+                        <div class="speaker-form-field speaker-form-field--full"><label for="youtube">Zoom (durante) / YouTube (post)</label><input type="text" class="form-control" id="youtube" name="youtube"></div>
+                        <div class="speaker-form-field"><label for="meta_title">Título SEO</label><input type="text" class="form-control" id="meta_title" name="meta_title"></div>
+                        <div class="speaker-form-field"><label for="meta_image">Imagen SEO / Share</label><input type="file" class="form-control" id="meta_image" name="meta_image" accept="image/*"></div>
+                        <div class="speaker-form-field speaker-form-field--full"><label for="meta_description">Descripción SEO</label><textarea id="meta_description" name="meta_description"></textarea></div>
+                        <div class="speaker-form-field speaker-form-field--full"><label for="meta_twitter">Twitter SEO</label><textarea id="meta_twitter" name="meta_twitter"></textarea></div>
+                    </div>
+                </details>
+            </section>
+
+            <div class="speaker-form-actions">
+                <a href="index.php?token=<?= urlencode($token) ?>">← Volver a speakers</a>
+                <div class="speaker-form-actions__buttons">
+                    <a class="btn btn-default" href="index.php?token=<?= urlencode($token) ?>">Cancelar</a>
+                    <button class="btn btn-primary" type="submit" name="btn-save">Guardar speaker</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script type="text/javascript">
+        (function () {
+            Array.prototype.forEach.call(document.querySelectorAll('[data-image-input]'), function (input) {
+                input.addEventListener('change', function () {
+                    var file = input.files && input.files[0];
+                    var preview = document.querySelector('[data-preview-for="' + input.id + '"]');
+                    var name = document.querySelector('[data-file-name-for="' + input.id + '"]');
+                    if (!file || !preview) return;
+                    name.textContent = file.name;
+                    var reader = new FileReader();
+                    reader.onload = function (event) {
+                        preview.innerHTML = '<img src="' + event.target.result + '" alt="Preview">';
+                    };
+                    reader.readAsDataURL(file);
+                });
+            });
+        })();
+    </script>
 </body>
-
 </html>

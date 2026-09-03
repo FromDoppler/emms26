@@ -394,6 +394,11 @@ a {
   box-shadow: 0 20px 50px rgba(16, 24, 40, 0.35);
 }
 
+.media-preview__image--company {
+  padding: 20px;
+  background: var(--speaker-logo-preview-bg);
+}
+
 .media-preview__close {
   position: absolute;
   top: 22px;

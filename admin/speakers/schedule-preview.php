@@ -9,18 +9,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/components/schedule/speaker-card/spea
 $ip = GeoIp::getIp();
 isIPAllow($ip, $ALLOW_IPS);
 
-$eventLabels = [
-    'ecommerce' => 'Ecommerce',
-    'digital-trends' => 'Digital Trends',
-];
-$previewEvent = $_GET['event'] ?? '';
-
-if (!isset($eventLabels[$previewEvent])) {
-    http_response_code(400);
-    exit('Seleccioná un evento válido para previsualizar la agenda.');
-}
-
-$eventStates = $previewEvent === 'ecommerce' ? $ecommerceStates : $digitalTrendsStates;
+$previewEvent = 'digital-trends';
 $db = new DB(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 $dayRows = $db
     ->query(
@@ -42,21 +31,21 @@ $db->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Preview agenda — <?= htmlspecialchars($eventLabels[$previewEvent]) ?></title>
+    <title>Preview agenda — Digital Trends</title>
     <link rel="stylesheet" href="/src/<?= VERSION ?>/css/styles.css">
 </head>
 
-<body class="<?= htmlspecialchars($previewEvent) ?>">
+<body class="digital-trends">
     <main>
         <section class="emms__calendar" id="agenda">
             <div class="emms__container--lg">
                 <div class="emms__calendar__title">
-                    <h2>AGENDA <?= htmlspecialchars(strtoupper($eventLabels[$previewEvent])) ?></h2>
-                    <p>Preview interno de los speakers cargados para este evento.</p>
+                    <h2>AGENDA DIGITAL TRENDS</h2>
+                    <p>Preview interno de los speakers cargados para Digital Trends.</p>
                 </div>
 
                 <?php if (!$speakersByDay) : ?>
-                    <p>No hay speakers cargados para este evento.</p>
+                    <p>No hay speakers cargados para Digital Trends.</p>
                 <?php endif; ?>
 
                 <?php foreach ($speakersByDay as $day => $daySpeakers) : ?>
@@ -65,7 +54,7 @@ $db->close();
                         <div class="speaker-grid">
                             <?php foreach ($daySpeakers as $speaker) : ?>
                                 <div class="speaker-grid__item">
-                                    <?php render_speaker_card($speaker, true, false, $eventStates); ?>
+                                    <?php render_speaker_card($speaker, true, false, $digitalTrendsStates); ?>
                                 </div>
                                 <?php render_speaker_modal($speaker, false); ?>
                             <?php endforeach; ?>

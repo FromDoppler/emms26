@@ -5,7 +5,7 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/utils/DB.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/utils/Logger.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/checkout/domain/CheckoutTransactionStatus.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/sales-report/SalesReportRepository.php');
-require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/sales-report/SlackWebhookClient.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/sales-report/SlackChatClient.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/sales-report/SalesReportService.php');
 
 header('Content-Type: application/json; charset=utf-8');
@@ -17,9 +17,10 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 $expectedToken = trim((string) SALES_REPORT_TRIGGER_TOKEN);
-$webhookUrl = trim((string) SLACK_SALES_WEBHOOK_URL);
+$slackBotToken = trim((string) SLACK_SALES_BOT_TOKEN);
+$slackChannelId = trim((string) SLACK_SALES_CHANNEL_ID);
 
-if ($expectedToken === '' || $webhookUrl === '') {
+if ($expectedToken === '' || $slackBotToken === '' || $slackChannelId === '') {
     Logger::event('sales_report_config_missing', [], 'SALES_REPORT', Logger::ERROR);
     http_response_code(503);
     echo json_encode(['success' => false, 'error' => 'sales_report_unavailable']);
@@ -51,7 +52,7 @@ try {
     $db = new DB(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
     $service = new SalesReportService(
         new SalesReportRepository($db),
-        new SlackWebhookClient($webhookUrl)
+        new SlackChatClient($slackBotToken, $slackChannelId)
     );
 
     $result = $service->publish();

@@ -24,25 +24,28 @@ class SalesReportService
 
         [$startLocal, $endLocal] = $this->resolvePeriod($nowLocal);
         $utc = new DateTimeZone('UTC');
-        $sales = $this->repository->findPaidSales(
-            $startLocal->setTimezone($utc),
-            $endLocal->setTimezone($utc)
-        );
+        $startUtc = $startLocal->setTimezone($utc);
+        $endUtc = $endLocal->setTimezone($utc);
+        $sales = $this->repository->findPaidSales($startUtc, $endUtc);
+        $couponVipCount = $this->repository->countCouponVipUsers($startUtc, $endUtc);
 
         $result = [
             'period_start' => $startLocal->format(DateTimeInterface::ATOM),
             'period_end' => $endLocal->format(DateTimeInterface::ATOM),
             'sales_count' => count($sales),
+            'coupon_vip_count' => $couponVipCount,
             'status' => 'no_sales',
         ];
 
-        if ($sales === []) {
+        if ($sales === [] && $couponVipCount === 0) {
             return $result;
         }
 
-        $payload = $this->buildSlackPayload($sales, $startLocal, $endLocal);
+        $payload = $this->buildSlackPayload($sales, $couponVipCount, $startLocal, $endLocal);
         $parentTs = $this->slack->postMessage($payload['summary_message']);
-        $this->slack->postMessage($payload['detail_message'], $parentTs);
+        if ($sales !== []) {
+            $this->slack->postMessage($payload['detail_message'], $parentTs);
+        }
 
         $result['status'] = 'sent';
         $result['displayed_sales_count'] = $payload['displayed_sales_count'];
@@ -61,8 +64,12 @@ class SalesReportService
         return [$end->modify('-1 day'), $end];
     }
 
-    private function buildSlackPayload(array $sales, DateTimeImmutable $startLocal, DateTimeImmutable $endLocal): array
-    {
+    private function buildSlackPayload(
+        array $sales,
+        int $couponVipCount,
+        DateTimeImmutable $startLocal,
+        DateTimeImmutable $endLocal
+    ): array {
         $totalAmount = '0.00';
         foreach ($sales as $sale) {
             $totalAmount = $this->addDecimal($totalAmount, (string) $sale['final_amount']);
@@ -79,9 +86,11 @@ class SalesReportService
             . ' (Argentina)';
         $salesLabel = $count === 1 ? '1 venta' : $count . ' ventas';
         $reportDate = $endLocal->format('d/m');
-        $summaryText = '💰 EMMS · Ventas ' . $reportDate
-            . ' — ' . $salesLabel
-            . ' · USD ' . $totalAmount;
+        $summaryTitle = '💰 EMMS · Ventas ' . $reportDate;
+        $summaryText = $summaryTitle
+            . ' — VIP pagos: ' . $count
+            . ' · Facturación: USD ' . $totalAmount
+            . ' · VIP con cupón 100%: ' . $couponVipCount;
 
         $detailBlocks = [
             [
@@ -135,7 +144,10 @@ class SalesReportService
                     'type' => 'section',
                     'text' => [
                         'type' => 'mrkdwn',
-                        'text' => '*' . $summaryText . '*',
+                        'text' => '*' . $summaryTitle . '*'
+                            . "\n*VIP pagos:* " . $count
+                            . ' · *Facturación:* USD ' . $totalAmount
+                            . "\n*VIP con cupón 100%:* " . $couponVipCount,
                         'verbatim' => true,
                     ],
                 ]],

@@ -449,14 +449,14 @@ class DB
 
     public function getAllSpeakers()
     {
-        $sql = $this->query("SELECT * FROM speakers  order by orden");
+        $sql = $this->query("SELECT * FROM speakers ORDER BY CAST(orden AS UNSIGNED)");
         $result = $sql->fetchAll();
         return $result;
     }
 
     public function getSpeakersByDay($day)
     {
-        $sql = $this->query("SELECT * FROM speakers WHERE day = " . $day . " order by orden");
+        $sql = $this->query("SELECT * FROM speakers WHERE day = " . $day . " ORDER BY CAST(orden AS UNSIGNED)");
         $result = $sql->fetchAll();
         return $result;
     }

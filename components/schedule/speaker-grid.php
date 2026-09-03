@@ -36,7 +36,7 @@ include_once($_SERVER['DOCUMENT_ROOT'] . '/components/schedule/speaker-card/spea
   $db = new DB(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
 
   foreach ($days as $dayIndex => $dayInfo):
-    $speakers = $db->getSpeakersByDay($dayIndex);
+    $speakers = $db->getSpeakersByDay($dayIndex, 'digital-trends');
   ?>
     <div class="emms__container--lg" role="tabpanel" aria-labelledby="day<?= $dayIndex ?>">
       <?php

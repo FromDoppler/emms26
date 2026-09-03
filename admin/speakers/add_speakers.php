@@ -60,7 +60,11 @@ if (isset($_POST['btn-save'])) {
         move_uploaded_file($_FILES['meta_image']['tmp_name'], 'uploads/' . $meta_image);
     }
 
-    $sql_query = "INSERT INTO speakers (`name`,`image`,`image_modal`,`alt_image`,`job`,`sm_twitter`,`sm_linkedin`,`sm_instagram`,`sm_facebook`,`title`,`description`,`bio`,`image_company`,`alt_image_company`,`time`,`link_time`,`orden`,`day`,`event`,`exposes`,`slug`,`youtube`,`meta_title`,`meta_description`,`meta_twitter`,`meta_image`) VALUES('" . $name . "','" . $image . "','" . $image_modal . "','" . $alt_image . "','" . $job . "','" . $sm_twitter . "','" . $sm_linkedin . "','" . $sm_instagram . "','" . $sm_facebook . "','" . $title . "','" . $description . "','" . $bio . "','" . $image_company . "','" . $alt_image_company . "','" . $time . "','" . $link_time . "','" . $orden . "','" . $day . "','" . $event . "','" . $exposes . "','" . $slug . "','" . $youtube . "','" . $meta_title . "','" . $meta_description . "','" . $meta_twitter . "','" . $meta_image . "')";
+    $imageModalValue = $image_modal === ''
+        ? 'NULL'
+        : "'" . mysqli_real_escape_string($con, $image_modal) . "'";
+
+    $sql_query = "INSERT INTO speakers (`name`,`image`,`image_modal`,`alt_image`,`job`,`sm_twitter`,`sm_linkedin`,`sm_instagram`,`sm_facebook`,`title`,`description`,`bio`,`image_company`,`alt_image_company`,`time`,`link_time`,`orden`,`day`,`event`,`exposes`,`slug`,`youtube`,`meta_title`,`meta_description`,`meta_twitter`,`meta_image`) VALUES('" . $name . "','" . $image . "'," . $imageModalValue . ",'" . $alt_image . "','" . $job . "','" . $sm_twitter . "','" . $sm_linkedin . "','" . $sm_instagram . "','" . $sm_facebook . "','" . $title . "','" . $description . "','" . $bio . "','" . $image_company . "','" . $alt_image_company . "','" . $time . "','" . $link_time . "','" . $orden . "','" . $day . "','" . $event . "','" . $exposes . "','" . $slug . "','" . $youtube . "','" . $meta_title . "','" . $meta_description . "','" . $meta_twitter . "','" . $meta_image . "')";
 
     if (mysqli_query($con, $sql_query)) {
         header('Location: /admin/speakers/index.php?token=' . urlencode($token) . '&filter=' . urlencode($event) . '&created=1');

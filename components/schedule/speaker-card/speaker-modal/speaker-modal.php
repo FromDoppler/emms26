@@ -8,13 +8,13 @@ $modalImage = !empty($speaker['image_modal']) ? $speaker['image_modal'] : $speak
             <?php if ($speaker['exposes'] === 'networking'): ?>
                 <img src="/src/img/networking-template-image.png" alt="networking" class="speaker-card__photo">
             <?php else: ?>
-                <img src="./admin/speakers/uploads/<?= $modalImage ?>" alt="<?= $speaker['alt_image'] ?>" class="speaker-card__photo">
+                <img src="/admin/speakers/uploads/<?= $modalImage ?>" alt="<?= $speaker['alt_image'] ?>" class="speaker-card__photo">
             <?php endif; ?>
         </div>
 
         <div class="modal__content">
             <span class="modal__close-btn">&times;</span>
-            <p class="modal__label">Speaker</p>
+            <p class="modal__label">SPEAKER/S</p>
             <p class="modal__name"><?= $speaker['name'] ?></p>
 
             <?php include('speaker-modal-social.php'); ?>

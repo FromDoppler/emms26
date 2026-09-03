@@ -66,7 +66,7 @@ function showEventDatetimeByDay($day, $digitalTrendsStates)
 function showSpeakersByDay($day, $digitalTrendsStates)
 {
   $db = new DB(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME);
-  $speakers = $db->getSpeakersByDay($day); ?>
+  $speakers = $db->getSpeakersByDay($day, 'ecommerce'); ?>
 
   <div class="emms__container--lg" role="tabpanel" aria-labelledby="day<?= $day ?>">
     <?php

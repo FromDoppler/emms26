@@ -168,6 +168,21 @@
   background: linear-gradient(0deg, #000000, #000000);
 }
 
+.modal.modal--debate .modal__image {
+  padding: 0;
+  overflow: hidden;
+  max-height: none;
+  background: transparent;
+}
+
+.modal.modal--debate .modal__image img {
+  width: 100%;
+  height: auto;
+  max-width: 360px;
+  min-width: 0;
+  border-radius: 25px;
+}
+
 /* Modal title name color */
 
 .modal.modal--conference .modal__name {
@@ -176,6 +191,19 @@
 
 .modal.modal--successStory .modal__name {
   color: #1dffdd;
+}
+
+.modal.modal--debate .modal__content {
+  gap: 10px;
+}
+
+.modal.modal--debate .modal__name {
+  margin: 0;
+  line-height: 28px;
+}
+
+.modal.modal--debate .modal__description {
+  margin-top: 0;
 }
 
 /* Modal vip texts */
@@ -250,6 +278,10 @@
     max-height: 199px;
   }
 
+  .modal.modal--debate .modal__image {
+    padding: 0;
+  }
+
   .modal__image img {
     max-width: 211px;
     min-width: unset;
@@ -265,6 +297,10 @@
 
   .modal__name {
     font-size: 18px;
+  }
+
+  .modal.modal--debate .modal__name {
+    line-height: 24px;
   }
 
   .modal__description {

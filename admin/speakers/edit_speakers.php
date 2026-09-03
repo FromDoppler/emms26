@@ -1,6 +1,7 @@
 <?php
 include_once '../config.php';
 include_once '../../utils/GeoIp.php';
+require_once __DIR__ . '/speaker-admin-urls.php';
 $ip = GeoIp::getIp();
 isIPAllow($ip, $ALLOW_IPS);
 
@@ -113,7 +114,7 @@ if (isset($_POST['btn-update'])) {
                 <p><?= htmlspecialchars($fetched_row['name'] ?? '') ?></p>
             </div>
             <div class="speaker-form-header__actions">
-                <a class="btn btn-default" href="schedule-preview.php?event=<?= urlencode($fetched_row['event'] ?? '') ?>" target="_blank" rel="noopener">Ver agenda</a>
+                <a class="btn btn-default" href="<?= htmlspecialchars(speakerSchedulePreviewUrl($token, $fetched_row['event'] ?? '')) ?>" target="_blank" rel="noopener">Ver agenda</a>
             </div>
         </header>
 

@@ -10,7 +10,6 @@ require_once($_SERVER['DOCUMENT_ROOT'] . '/utils/SubscriptionErrors.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/config.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/services/functions.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/services/EmailService.php');
-require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/registration/RegisteredProfileWriter.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/user-events/repositories/UserEventJobsRepository.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/user-events/UserEventJobCreator.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/user-events/UserEventJobHandlerRegistry.php');
@@ -222,7 +221,7 @@ function saveSubscriptionDopplerTable($user, $db)
 {
   try {
     $db->insertSubscriptionDoppler($user);
-    (new RegisteredProfileWriter($db))->save($user);
+    $db->saveRegistered($user);
   } catch (Exception $e) {
     processError("saveSubscriptionDopplerTable (Guarda en la BD subscriptions_doppler and registered)", $e->getMessage(), ['user' => $user]);
   }
@@ -349,7 +348,7 @@ function processFreeRegistration($user, $db)
     $transactionStarted = true;
 
     $db->insertSubscriptionDoppler($user);
-    (new RegisteredProfileWriter($db))->save($user);
+    $db->saveRegistered($user);
 
     $registeredId = getRegisteredId($user, $db);
     $jobCreator = new UserEventJobCreator(new UserEventJobsRepository($db));

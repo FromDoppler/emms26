@@ -1,4 +1,5 @@
 .speaker-card {
+  /* Fondo común para todas las cards; cada tipo conserva sus propios acentos. */
   --speaker-card-background: linear-gradient(180deg, #390555 0%, #390555 34%, #48016f 80%, #000000 100%);
 
   display: flex;

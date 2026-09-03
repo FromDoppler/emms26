@@ -38,4 +38,28 @@ class SalesReportRepository
             ]
         )->fetchAll();
     }
+
+    public function countCouponVipUsers(DateTimeImmutable $startUtc, DateTimeImmutable $endUtc): int
+    {
+        $rows = $this->db->query(
+            "SELECT COUNT(DISTINCT registered_id) AS total
+             FROM payment_transactions
+             WHERE status = ?
+               AND payment_method = ?
+               AND final_amount = 0
+               AND registered_id IS NOT NULL
+               AND currency = ?
+               AND updated_at >= ?
+               AND updated_at < ?",
+            [
+                CheckoutTransactionStatus::APPROVED,
+                'coupon',
+                'USD',
+                $startUtc->format('Y-m-d H:i:s'),
+                $endUtc->format('Y-m-d H:i:s'),
+            ]
+        )->fetchAll();
+
+        return isset($rows[0]['total']) ? (int) $rows[0]['total'] : 0;
+    }
 }

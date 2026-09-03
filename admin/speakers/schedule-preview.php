@@ -43,7 +43,10 @@ foreach ($speakers as $speaker) {
 <html lang="es">
 
 <head>
-    <?php include($_SERVER['DOCUMENT_ROOT'] . '/components/head.php'); ?>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preview agenda — <?= htmlspecialchars($eventLabels[$previewEvent]) ?></title>
+    <link rel="stylesheet" href="/src/<?= VERSION ?>/css/styles.css">
 </head>
 
 <body class="<?= htmlspecialchars($previewEvent) ?>">

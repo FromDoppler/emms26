@@ -30,9 +30,7 @@ class SlackChatClient
             throw new RuntimeException('slack_sales_payload_encode_failed');
         }
 
-        $rateLimitRetries = 0;
-
-        while (true) {
+        for ($attempt = 0; $attempt <= self::MAX_RATE_LIMIT_RETRIES; $attempt++) {
             $result = $this->sendRequest($json);
 
             if ($result['status'] !== 429) {
@@ -40,13 +38,14 @@ class SlackChatClient
             }
 
             $retryAfter = $result['retry_after'];
-            if ($rateLimitRetries >= self::MAX_RATE_LIMIT_RETRIES || $retryAfter === null) {
+            if ($attempt === self::MAX_RATE_LIMIT_RETRIES || $retryAfter === null) {
                 throw new RuntimeException('slack_sales_http_error_429');
             }
 
             sleep($retryAfter);
-            $rateLimitRetries++;
         }
+
+        throw new RuntimeException('slack_sales_http_error_429');
     }
 
     private function sendRequest(string $json): array

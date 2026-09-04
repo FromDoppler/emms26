@@ -82,10 +82,7 @@ const setEmailValidationError = (inputEmail, suggestion = null) => {
   correctionButton.type = "button";
   correctionButton.className = "email-domain-suggestion__button";
   correctionButton.textContent = "Corregir";
-  correctionButton.setAttribute(
-    "aria-label",
-    `Corregir email a ${suggestion}`,
-  );
+  correctionButton.setAttribute("aria-label", `Corregir email a ${suggestion}`);
   correctionButton.addEventListener("click", () => {
     inputEmail.value = suggestion;
     clearEmailValidationState(inputEmail);

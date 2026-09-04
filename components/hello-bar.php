@@ -1,7 +1,7 @@
 <?php
 $contentsPre = [
   '/' => [
-    'helloBarText' => 'Cuenta regresiva. Accede a conferencias con grandes referentes del Marketing',
+    'helloBarText' => 'Cuenta regresiva. Accede a conferencias de grandes referentes del Marketing',
     'helloBarCtaTxt' => 'REGÍSTRATE GRATIS',
     'helloBarCtaLink' => '#registro',
   ],
@@ -11,7 +11,7 @@ $contentsPre = [
     'helloBarCtaLink' => '/digital-trends-registrado',
   ],
   '/digital-trends' => [
-    'helloBarText' => 'Cuenta regresiva. Accede a conferencias con grandes referentes del Marketing',
+    'helloBarText' => 'Cuenta regresiva. Accede a conferencias de grandes referentes del Marketing',
     'helloBarCtaTxt' => 'REGÍSTRATE GRATIS',
     'helloBarCtaLink' => '#registro',
   ],
@@ -21,7 +21,7 @@ $contentsPre = [
     'helloBarCtaLink' => '#entradas',
   ],
   '/sponsors' => [
-    'helloBarText' => 'Cuenta regresiva. Accede a conferencias con grandes referentes del Marketing',
+    'helloBarText' => 'Cuenta regresiva. Accede a conferencias de grandes referentes del Marketing',
     'helloBarCtaTxt' => 'REGÍSTRATE GRATIS',
     'helloBarCtaLink' => '#registro',
   ],

@@ -34,6 +34,10 @@ final class EmailAddressValidator
         'live.com',
     ];
 
+    private const KNOWN_TLD_TYPOS = [
+        'con' => 'com',
+    ];
+
     public static function isValid($email): bool
     {
         try {
@@ -70,16 +74,36 @@ final class EmailAddressValidator
             return null;
         }
 
+        $candidateParts = explode('.', $domain);
+        if (count($candidateParts) !== 2) {
+            return null;
+        }
+
+        [$candidateName, $candidateTld] = $candidateParts;
+        if ($candidateName === '' || $candidateTld === '') {
+            return null;
+        }
+
         $suggestions = [];
         foreach (self::COMMON_EMAIL_DOMAINS as $knownDomain) {
-            // Keep the heuristic deliberately conservative. Different first
-            // characters are common across legitimate domains (for example
-            // mail.com vs gmail.com) and should not be treated as typos.
-            if ($domain[0] !== $knownDomain[0]) {
+            [$knownName, $knownTld] = explode('.', $knownDomain, 2);
+
+            if ($candidateName === $knownName) {
+                if (isset(self::KNOWN_TLD_TYPOS[$candidateTld])
+                    && self::KNOWN_TLD_TYPOS[$candidateTld] === $knownTld) {
+                    $suggestions[] = $knownDomain;
+                }
                 continue;
             }
 
-            if (self::isSingleEditOrAdjacentTransposition($domain, $knownDomain)) {
+            // Fuzzy matching is limited to the provider name while keeping the
+            // TLD exact. This avoids rejecting legitimate domains such as
+            // yahoo.co just because they are close to a common provider.
+            if ($candidateTld !== $knownTld || $candidateName[0] !== $knownName[0]) {
+                continue;
+            }
+
+            if (self::isSingleEditOrAdjacentTransposition($candidateName, $knownName)) {
                 $suggestions[] = $knownDomain;
             }
         }
@@ -126,11 +150,13 @@ final class EmailAddressValidator
 
         $shorter = $lengthDifference < 0 ? $candidate : $expected;
         $longer = $lengthDifference < 0 ? $expected : $candidate;
+        $shorterLength = strlen($shorter);
+        $longerLength = strlen($longer);
         $shorterIndex = 0;
         $longerIndex = 0;
         $skippedCharacter = false;
 
-        while ($shorterIndex < strlen($shorter) && $longerIndex < strlen($longer)) {
+        while ($shorterIndex < $shorterLength && $longerIndex < $longerLength) {
             if ($shorter[$shorterIndex] === $longer[$longerIndex]) {
                 $shorterIndex++;
                 $longerIndex++;

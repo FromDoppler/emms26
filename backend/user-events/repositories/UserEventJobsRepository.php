@@ -273,4 +273,17 @@ class UserEventJobsRepository
         return $this->db->affectedRows() === 1;
     }
 
+    public function markFailedTerminal(int $jobId, string $error): bool
+    {
+        $this->db->query(
+            "UPDATE user_event_jobs
+             SET status = ?,
+                 processed_at = NOW(),
+                 last_error = ?
+             WHERE id = ? AND status = ?",
+            ['failed_terminal', $error, $jobId, 'processing']
+        );
+
+        return $this->db->affectedRows() === 1;
+    }
 }

@@ -20,7 +20,7 @@
   outline: none;
   appearance: none;
   font-weight: bold;
-  transition: background 0.2s - 0.1s;
+  transition: background 0.2s -0.1s;
   cursor: pointer;
 }
 
@@ -163,7 +163,8 @@
   margin: 0 0 5px 0;
 }
 
-.emms__form__field-item input,
+.emms__form__field-item > .holder > input,
+.emms__form__field-item > .holder > .iti > input,
 select {
   height: 33px;
   width: 100%;
@@ -176,11 +177,13 @@ select {
   outline: none;
 }
 
-.emms__form__field-item input:focus {
+.emms__form__field-item > .holder > input:focus,
+.emms__form__field-item > .holder > .iti > input:focus {
   border: solid 2px #fab221;
 }
 
-.emms__form__field-item input::placeholder {
+.emms__form__field-item > .holder > input::placeholder,
+.emms__form__field-item > .holder > .iti > input::placeholder {
   color: #afafaf;
 }
 
@@ -188,8 +191,8 @@ select {
   margin: 0 0 30px 0;
 }
 
-.emms__form__field-group li {
-  margin: 0px 0px 20px 0px;
+.emms__form__field-group > li {
+  margin: 0 0 20px 0;
 }
 
 .emms__form__field-item__checkbox {

@@ -43,7 +43,9 @@ const setEmailValidationError = (inputEmail, suggestion = null) => {
     return;
   }
 
-  const currentDomain = String(inputEmail.value || "").split("@").pop();
+  const currentDomain = String(inputEmail.value || "")
+    .split("@")
+    .pop();
   const suggestedDomain = String(suggestion).split("@").pop();
 
   if (!currentDomain || !suggestedDomain) {

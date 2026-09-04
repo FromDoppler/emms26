@@ -565,7 +565,7 @@ class CheckoutPaymentProcessor
         $code = $result->purchaseResponseCode
             ?: ($result->authorizationResponseCode ?: $result->responseCode);
 
-        return CheckoutProviderRejectionCatalog::categoryFor($code) ?? 'provider_rejected';
+        return CheckoutProviderRejectionCatalog::responseCodeFor($code);
     }
 
     private function classifyMarkerState(

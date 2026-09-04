@@ -141,7 +141,7 @@ class DopplerPaymentsApiClient implements PaymentProviderClient
         }
 
         if ($authorizationCode !== '000') {
-            $status = CheckoutProviderRejectionCatalog::isBusinessRejection($authorizationCode)
+            $status = CheckoutProviderRejectionCatalog::isTerminalRejection($authorizationCode)
                 ? ProviderPaymentResult::REJECTED
                 : ProviderPaymentResult::UNKNOWN;
             return $this->finish($request, $startedAt, new ProviderPaymentResult([
@@ -277,7 +277,7 @@ class DopplerPaymentsApiClient implements PaymentProviderClient
 
         $status = $purchaseCode === '000'
             ? ProviderPaymentResult::APPROVED
-            : (CheckoutProviderRejectionCatalog::isBusinessRejection($purchaseCode)
+            : (CheckoutProviderRejectionCatalog::isTerminalRejection($purchaseCode)
                 ? ProviderPaymentResult::REJECTED
                 : ProviderPaymentResult::UNKNOWN);
         $authorizationNumber = null;
@@ -622,11 +622,11 @@ class DopplerPaymentsApiClient implements PaymentProviderClient
         string $rawResponseKey
     ): ProviderPaymentResult {
         $extractedErrorCode = $this->extractPaymentErrorCode($paymentError);
-        $isBusinessRejection = CheckoutProviderRejectionCatalog::isBusinessRejection($extractedErrorCode);
-        $status = $isBusinessRejection ? ProviderPaymentResult::REJECTED : ProviderPaymentResult::UNKNOWN;
+        $isTerminalRejection = CheckoutProviderRejectionCatalog::isTerminalRejection($extractedErrorCode);
+        $status = $isTerminalRejection ? ProviderPaymentResult::REJECTED : ProviderPaymentResult::UNKNOWN;
         $errorCode = $extractedErrorCode ?: ($status === ProviderPaymentResult::REJECTED ? 'payment_rejected' : 'payment_error');
         $errorMessage = $this->extractPaymentErrorMessage($paymentError) ?: ($status === ProviderPaymentResult::REJECTED ? 'Payment rejected.' : 'Payment error.');
-        $responseCode = $isBusinessRejection
+        $responseCode = $isTerminalRejection
             ? $errorCode
             : ($this->isKnownTechnicalProviderError($errorCode) ? $errorCode : 'provider_payment_error_ambiguous');
 

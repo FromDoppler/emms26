@@ -132,8 +132,12 @@ class CheckoutTransactionStatus
         $authorizationCode = $transaction['authorization_response_code'] ?? null;
         $purchaseCode = $transaction['purchase_response_code'] ?? null;
         $providerCode = $purchaseCode ?? $authorizationCode;
-        $expectedCategory = CheckoutProviderRejectionCatalog::categoryFor($providerCode);
-        if ($expectedCategory === null || ($transaction['response_code'] ?? null) !== $expectedCategory) {
+        if (!CheckoutProviderRejectionCatalog::isTerminalRejection($providerCode)) {
+            return false;
+        }
+
+        $expectedResponseCode = CheckoutProviderRejectionCatalog::responseCodeFor($providerCode);
+        if (($transaction['response_code'] ?? null) !== $expectedResponseCode) {
             return false;
         }
 

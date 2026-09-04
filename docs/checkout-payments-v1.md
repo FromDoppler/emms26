@@ -468,7 +468,8 @@ Un rechazo del proveedor debe:
 
 - no tener marker;
 - conservar el código estructurado aplicable;
-- utilizar una categoría pública incluida en el catálogo contractual.
+- corresponder a un código incluido en el catálogo contractual de rechazos terminales;
+- utilizar la categoría pública específica cuando exista o `provider_rejected` cuando el rechazo terminal no tenga una UX específica.
 
 ### `error`
 
@@ -528,6 +529,8 @@ rejected
 → sin marker
 → authorization_number vacío
 → rechazo contractual consistente
+→ response_code = categoría específica o provider_rejected
+  según el catálogo contractual
    o response_code = already_vip sin evidencia del proveedor
 ```
 
@@ -706,7 +709,7 @@ Una respuesta HTTP `401` o `403` se clasifica como `ERROR`.
 
 Un `responseCode` distinto de `000`, o el `errorCode` de un `PaymentError`
 HTTP 400, sólo se considera `REJECTED` cuando está incluido en el catálogo
-contractual.
+contractual de rechazos terminales.
 
 Cualquier otro resultado es `UNKNOWN`.
 
@@ -721,6 +724,12 @@ Purchase se interpreta mediante:
 
 Un HTTP `401/403` de Purchase se clasifica como `ERROR` y conserva la evidencia
 durable de Authorization. La misma `paymentId` no vuelve a ejecutar Purchase.
+
+En la implementación vigente de Doppler Payments API, una respuesta RAFT de
+Purchase con `ResponseCode != 000` se transforma en `PaymentError` conservando
+ese código RAFT. EMMS utiliza ese código para clasificar el resultado, pero no
+asume que cualquier código distinto de `000` sea terminal: sólo los códigos
+incluidos explícitamente en su catálogo contractual se convierten en `REJECTED`.
 
 Una aprobación exige:
 
@@ -745,7 +754,7 @@ Se consideran `UNKNOWN`, entre otros casos:
 - HTTP no contractual distinto de `401/403`;
 - JSON inválido;
 - respuesta sin campos obligatorios;
-- código no incluido en el catálogo;
+- código no incluido en el catálogo contractual de rechazos terminales;
 - aprobación sin número de autorización.
 
 El cliente:
@@ -770,7 +779,15 @@ La frontera del transporte distingue entre fallas que demuestran que Authorizati
 
 ## 13. Catálogo de rechazos
 
-`CheckoutProviderRejectionCatalog` es la fuente de verdad para convertir un código remoto en una categoría pública.
+`CheckoutProviderRejectionCatalog` es la fuente de verdad para los códigos de
+rechazo financiero que EMMS considera terminales y para su representación
+pública opcional.
+
+Cada entrada del catálogo representa un rechazo terminal conocido:
+
+- clave existente + categoría pública → `REJECTED` con esa categoría;
+- clave existente + categoría `null` → `REJECTED` con `provider_rejected`;
+- clave inexistente → no se confirma terminalidad y el resultado permanece `UNKNOWN`.
 
 ```text
 004 → card_invalid_expiration_date
@@ -779,7 +796,9 @@ La frontera del transporte distingue entre fallas que demuestran que Authorizati
 016 → card_declined
 017 → card_suspected_fraud
 018 → card_invalid_number
+019 → card_suspected_fraud
 025 → card_suspected_fraud
+028 → provider_rejected (sin categoría UX específica)
 039 → card_insufficient_funds
 045 → card_invalid_expiration_date
 078 → card_invalid_number
@@ -789,11 +808,15 @@ DoNotHonorPaymentResponse → card_declined
 FraudPaymentTransaction → card_suspected_fraud
 ```
 
+En RAFT, `019` significa `SUSPECTED FRAUD - CALL CENTER` y `028` significa
+`SECURITY VIOLATION`. Ambos se consideran rechazos terminales conocidos por
+Checkout Payments V1. `019` reutiliza la categoría pública de fraude y `028`
+usa el fallback genérico porque no existe una UX específica para ese código.
+
 El código `078` conserva la categoría de producto utilizada por Doppler WebApp.
 
-No se deriva una categoría terminal a partir de cualquier código RAFT existente.
-
-Un código no incluido en el catálogo es `UNKNOWN`, aunque sea numérico.
+No se deriva terminalidad a partir de cualquier código RAFT existente ni de la
+mera existencia de un mensaje descriptivo del proveedor.
 
 Para resultados terminales aprobados o rechazados, los códigos originales aplicables se guardan en columnas estructuradas.
 
@@ -1442,20 +1465,24 @@ Antes de habilitar Checkout Payments V1 debe verificarse, como mínimo:
 
 - Authorization `401` o `403` terminan en `ERROR`;
 - Authorization aprobada permite Purchase;
-- Authorization HTTP 200 con código de rechazo catalogado y
+- Authorization HTTP 200 con código de rechazo terminal catalogado y
   `transactionLinkID` string termina en `rejected` y conserva el transaction
   link en observabilidad;
 - Authorization HTTP 200 con código no catalogado y `transactionLinkID` string
   termina en `UNKNOWN` y conserva el transaction link en observabilidad;
-- Authorization HTTP 200 con rechazo catalogado y `transactionLinkID` no string
+- Authorization HTTP 200 con rechazo terminal catalogado y `transactionLinkID` no string
   conserva `rejected` y omite el transaction link inválido;
 - Authorization HTTP 200 con `responseCode = 000` y `transactionLinkID` no
   string termina en `UNKNOWN`;
-- Authorization HTTP 400 con `PaymentError` catalogado se acepta
+- Authorization HTTP 400 con `PaymentError` terminal catalogado se acepta
   defensivamente como `rejected`;
 - Authorization HTTP 400 con `PaymentError` no catalogado se acepta
   defensivamente como `UNKNOWN`;
-- rechazo incluido en el catálogo termina en `rejected`;
+- `019` termina en `rejected` con `card_suspected_fraud`;
+- `028` termina en `rejected` con `provider_rejected` aunque no tenga categoría UX específica;
+- Authorization `000` seguida de Purchase `019` termina en `rejected` con `card_suspected_fraud`;
+- Authorization `000` seguida de Purchase `028` termina en `rejected` con `provider_rejected`;
+- rechazo incluido en el catálogo terminal termina en `rejected`;
 - código no incluido termina en `UNKNOWN`;
 - DNS o conexión fallida antes de Authorization terminan en `ERROR`;
 - timeout, redirect, `5xx` y JSON inválido terminan en `UNKNOWN`;

@@ -1,0 +1,19 @@
+name: Debug Prettier PR126
+
+on:
+  push:
+    branches:
+      - feat/DS-6330-unify-email-domain-validation
+
+permissions:
+  contents: read
+
+jobs:
+  prettier-diff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Format target file
+        run: npx --yes prettier@3.9.6 --write src/1.0.0/js/common/formsValidators.js
+      - name: Show exact diff
+        run: git diff --no-ext-diff -- src/1.0.0/js/common/formsValidators.js

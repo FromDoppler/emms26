@@ -25,10 +25,13 @@ class EmailValidationException extends InvalidArgumentException
 
 final class EmailAddressValidator
 {
-    private const KNOWN_DOMAIN_TYPOS = [
-        'gamil.com' => 'gmail.com',
-        'gmail.con' => 'gmail.com',
-        'homail.com' => 'hotmail.com',
+    private const COMMON_EMAIL_DOMAINS = [
+        'gmail.com',
+        'hotmail.com',
+        'outlook.com',
+        'yahoo.com',
+        'icloud.com',
+        'live.com',
     ];
 
     public static function isValid($email): bool
@@ -48,14 +51,100 @@ final class EmailAddressValidator
         }
 
         $domain = strtolower((string) substr(strrchr($email, '@'), 1));
-        if (isset(self::KNOWN_DOMAIN_TYPOS[$domain])) {
+        $suggestedDomain = self::findLikelyDomainTypo($domain);
+
+        if ($suggestedDomain !== null) {
             $localPart = substr($email, 0, strrpos($email, '@'));
             throw new EmailValidationException(
                 'known_domain_typo',
-                $localPart . '@' . self::KNOWN_DOMAIN_TYPOS[$domain]
+                $localPart . '@' . $suggestedDomain
             );
         }
 
         return $email;
+    }
+
+    private static function findLikelyDomainTypo(string $domain): ?string
+    {
+        if (in_array($domain, self::COMMON_EMAIL_DOMAINS, true)) {
+            return null;
+        }
+
+        $suggestions = [];
+        foreach (self::COMMON_EMAIL_DOMAINS as $knownDomain) {
+            // Keep the heuristic deliberately conservative. Different first
+            // characters are common across legitimate domains (for example
+            // mail.com vs gmail.com) and should not be treated as typos.
+            if ($domain[0] !== $knownDomain[0]) {
+                continue;
+            }
+
+            if (self::isSingleEditOrAdjacentTransposition($domain, $knownDomain)) {
+                $suggestions[] = $knownDomain;
+            }
+        }
+
+        return count($suggestions) === 1 ? $suggestions[0] : null;
+    }
+
+    private static function isSingleEditOrAdjacentTransposition(string $candidate, string $expected): bool
+    {
+        $candidateLength = strlen($candidate);
+        $expectedLength = strlen($expected);
+        $lengthDifference = $candidateLength - $expectedLength;
+
+        if (abs($lengthDifference) > 1) {
+            return false;
+        }
+
+        if ($lengthDifference === 0) {
+            $mismatches = [];
+            for ($i = 0; $i < $candidateLength; $i++) {
+                if ($candidate[$i] === $expected[$i]) {
+                    continue;
+                }
+
+                $mismatches[] = $i;
+                if (count($mismatches) > 2) {
+                    return false;
+                }
+            }
+
+            if (count($mismatches) === 1) {
+                return true;
+            }
+
+            if (count($mismatches) !== 2) {
+                return false;
+            }
+
+            [$first, $second] = $mismatches;
+            return $second === $first + 1
+                && $candidate[$first] === $expected[$second]
+                && $candidate[$second] === $expected[$first];
+        }
+
+        $shorter = $lengthDifference < 0 ? $candidate : $expected;
+        $longer = $lengthDifference < 0 ? $expected : $candidate;
+        $shorterIndex = 0;
+        $longerIndex = 0;
+        $skippedCharacter = false;
+
+        while ($shorterIndex < strlen($shorter) && $longerIndex < strlen($longer)) {
+            if ($shorter[$shorterIndex] === $longer[$longerIndex]) {
+                $shorterIndex++;
+                $longerIndex++;
+                continue;
+            }
+
+            if ($skippedCharacter) {
+                return false;
+            }
+
+            $skippedCharacter = true;
+            $longerIndex++;
+        }
+
+        return true;
     }
 }

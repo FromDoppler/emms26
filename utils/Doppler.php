@@ -1,4 +1,6 @@
 <?php
+require_once($_SERVER['DOCUMENT_ROOT'] . '/utils/DopplerApiException.php');
+
 class Doppler
 {
 
@@ -22,7 +24,7 @@ class Doppler
             $errno = curl_errno($ch);
             $error = curl_error($ch);
             curl_close($ch);
-            throw new Exception('Doppler: cURL error ' . $errno . ' - ' . $error);
+            throw new DopplerApiException('Doppler: cURL error ' . $errno . ' - ' . $error);
         }
 
         $httpStatus = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -43,11 +45,17 @@ class Doppler
             if (trim($rawBody) === '' && $httpStatus >= 200 && $httpStatus < 300) {
                 return;
             }
-            throw new Exception('Doppler: HTTP ' . $httpStatus . ' | invalid response: ' . substr($rawBody, 0, 200));
+            throw new DopplerApiException(
+                'Doppler: HTTP ' . $httpStatus . ' | invalid response: ' . substr($rawBody, 0, 200),
+                $httpStatus
+            );
         }
 
         if (!is_object($response) && !is_array($response)) {
-            throw new Exception('Doppler: HTTP ' . $httpStatus . ' | unexpected response type: ' . substr($rawBody, 0, 200));
+            throw new DopplerApiException(
+                'Doppler: HTTP ' . $httpStatus . ' | unexpected response type: ' . substr($rawBody, 0, 200),
+                $httpStatus
+            );
         }
 
         if (is_array($response)) {
@@ -61,7 +69,7 @@ class Doppler
                     }
                 }
                 $detail = !empty($messages) ? implode('; ', $messages) : substr($rawBody, 0, 200);
-                throw new Exception('Doppler: HTTP ' . $httpStatus . ' | ' . $detail);
+                throw new DopplerApiException('Doppler: HTTP ' . $httpStatus . ' | ' . $detail, $httpStatus);
             }
             return;
         }
@@ -80,17 +88,23 @@ class Doppler
                 }
                 $messages[] = $key . '->' . $detail;
             }
-            throw new Exception('Doppler: Error ' . implode('; ', $messages));
+            throw new DopplerApiException('Doppler: Error ' . implode('; ', $messages), $httpStatus);
         }
 
         if (isset($response->errorCode)) {
+            $errorCode = (int) $response->errorCode;
             $detail = isset($response->detail) ? $response->detail : 'Unknown error';
-            throw new Exception('Doppler: Error ' . $detail . ' | errorCode= ' . $response->errorCode);
+            throw new DopplerApiException(
+                'Doppler: Error ' . $detail . ' | errorCode= ' . $errorCode,
+                $httpStatus,
+                $errorCode,
+                $errorCode !== 9
+            );
         }
 
         if (isset($response->status) && (int) $response->status >= 400) {
             $detail = isset($response->detail) ? $response->detail : 'Unknown error';
-            throw new Exception('Doppler: Error ' . $detail);
+            throw new DopplerApiException('Doppler: Error ' . $detail, $httpStatus);
         }
 
         if ($httpStatus >= 400) {
@@ -102,7 +116,7 @@ class Doppler
             } elseif (isset($response->title)) {
                 $detail = $response->title;
             }
-            throw new Exception('Doppler: HTTP ' . $httpStatus . ' | ' . $detail);
+            throw new DopplerApiException('Doppler: HTTP ' . $httpStatus . ' | ' . $detail, $httpStatus);
         }
     }
 

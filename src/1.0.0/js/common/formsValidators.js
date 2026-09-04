@@ -2,6 +2,17 @@
 
 import { isPhoneValid } from "../intell-input/intell-input.js";
 
+const EMAIL_DOMAIN_SUGGESTION_CLASS = "email-domain-suggestion";
+
+const clearEmailValidationState = (inputEmail) => {
+  const parent = inputEmail?.closest(".holder");
+  if (!parent) return;
+
+  parent.classList.remove("error", "email-domain-warning");
+  parent.removeAttribute("data-error");
+  parent.querySelector(`.${EMAIL_DOMAIN_SUGGESTION_CLASS}`)?.remove();
+};
+
 const setErrorField = (elem, typeMsg) => {
   const objMessages = {
     required_es: "¡Ouch! El campo está vacío.",
@@ -24,10 +35,59 @@ const setEmailValidationError = (inputEmail, suggestion = null) => {
   const parent = inputEmail?.closest(".holder");
   if (!parent) return;
 
-  const message = suggestion ? `¡Ouch! ¿Quisiste escribir ${suggestion}?` : "¡Ouch! El dominio del Email no parece válido.";
+  clearEmailValidationState(inputEmail);
 
-  parent.classList.add("error");
-  parent.setAttribute("data-error", message);
+  if (!suggestion) {
+    parent.classList.add("error");
+    parent.setAttribute("data-error", "¡Ouch! El dominio del Email no parece válido.");
+    return;
+  }
+
+  const currentDomain = String(inputEmail.value || "").split("@").pop();
+  const suggestedDomain = String(suggestion).split("@").pop();
+
+  if (!currentDomain || !suggestedDomain) {
+    parent.classList.add("error");
+    parent.setAttribute("data-error", `¡Ouch! ¿Quisiste escribir ${suggestion}?`);
+    return;
+  }
+
+  const suggestionBox = document.createElement("div");
+  suggestionBox.className = EMAIL_DOMAIN_SUGGESTION_CLASS;
+  suggestionBox.setAttribute("role", "alert");
+
+  const comparison = document.createElement("div");
+  comparison.className = "email-domain-suggestion__comparison";
+
+  const currentDomainElement = document.createElement("span");
+  currentDomainElement.className = "email-domain-suggestion__invalid";
+  currentDomainElement.textContent = currentDomain;
+
+  const arrow = document.createElement("span");
+  arrow.className = "email-domain-suggestion__arrow";
+  arrow.setAttribute("aria-hidden", "true");
+  arrow.textContent = "→";
+
+  const suggestedDomainElement = document.createElement("strong");
+  suggestedDomainElement.className = "email-domain-suggestion__correct";
+  suggestedDomainElement.textContent = suggestedDomain;
+
+  const correctionButton = document.createElement("button");
+  correctionButton.type = "button";
+  correctionButton.className = "email-domain-suggestion__button";
+  correctionButton.textContent = "Corregir";
+  correctionButton.setAttribute("aria-label", `Corregir email a ${suggestion}`);
+  correctionButton.addEventListener("click", () => {
+    inputEmail.value = suggestion;
+    clearEmailValidationState(inputEmail);
+    inputEmail.dispatchEvent(new Event("input", { bubbles: true }));
+    inputEmail.dispatchEvent(new Event("change", { bubbles: true }));
+  });
+
+  comparison.append(currentDomainElement, arrow, suggestedDomainElement);
+  suggestionBox.append(comparison, correctionButton);
+  parent.classList.add("email-domain-warning");
+  parent.appendChild(suggestionBox);
 };
 
 const validatePolicyCheckbox = (policyCheckbox) => {
@@ -69,8 +129,7 @@ const validateEmptyField = (requiredField) => {
 };
 
 const resetErrorField = (e) => {
-  const parent = e.target.closest(".holder");
-  if (parent) parent.classList.remove("error");
+  clearEmailValidationState(e.target);
 };
 
 const activeFieldEventsValidator = (form) => {

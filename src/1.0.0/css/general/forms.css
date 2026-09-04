@@ -47,3 +47,77 @@
 .input-error {
   border: 1px solid #e34f45;
 }
+
+.email-domain-suggestion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 6px;
+  padding: 6px 8px;
+  border: 1px solid rgba(255, 77, 77, 0.22);
+  border-radius: 6px;
+  background: rgba(255, 77, 77, 0.05);
+  font-size: 11px;
+  line-height: 16px;
+  color: var(--color-text);
+}
+
+.email-domain-suggestion__comparison {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.email-domain-suggestion__invalid {
+  color: var(--color-error);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 2px;
+}
+
+.email-domain-suggestion__arrow {
+  color: var(--color-muted);
+}
+
+.email-domain-suggestion__correct {
+  color: var(--color-text);
+  font-weight: 700;
+}
+
+.email-domain-suggestion__button {
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 5px;
+  background: var(--color-primary);
+  color: #ffffff;
+  padding: 5px 9px;
+  font-family: inherit;
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.email-domain-suggestion__button:hover,
+.email-domain-suggestion__button:focus-visible {
+  background: var(--color-primary-hover);
+}
+
+.email-domain-suggestion__button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+@media (max-width: 420px) {
+  .email-domain-suggestion {
+    flex-wrap: wrap;
+  }
+
+  .email-domain-suggestion__button {
+    margin-left: auto;
+  }
+}

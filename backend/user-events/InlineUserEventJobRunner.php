@@ -3,6 +3,7 @@
 require_once($_SERVER['DOCUMENT_ROOT'] . '/utils/Logger.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/user-events/repositories/UserEventJobsRepository.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/user-events/UserEventJobHandlerRegistry.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/user-events/UserEventJobException.php');
 
 class InlineUserEventJobRunner
 {
@@ -110,12 +111,18 @@ class InlineUserEventJobRunner
                 $failed++;
                 $failedPersisted = false;
                 $failedPersistError = null;
+                $retryable = !($e instanceof UserEventJobException) || $e->isRetryable();
 
                 try {
-                    $failedPersisted = $this->jobsRepository->markFailed(
-                        (int) $job['id'],
-                        $this->truncateError($e->getMessage())
-                    );
+                    $failedPersisted = $retryable
+                        ? $this->jobsRepository->markFailed(
+                            (int) $job['id'],
+                            $this->truncateError($e->getMessage())
+                        )
+                        : $this->jobsRepository->markFailedTerminal(
+                            (int) $job['id'],
+                            $this->truncateError($e->getMessage())
+                        );
                 } catch (Throwable $persistError) {
                     $failedPersistError = $this->truncateError($persistError->getMessage());
 
@@ -126,6 +133,7 @@ class InlineUserEventJobRunner
                         'aggregate_id' => $aggregateId,
                         'job_id' => (int) $job['id'],
                         'job_type' => $job['job_type'],
+                        'retryable' => $retryable,
                         'error' => $failedPersistError,
                     ], 'USER_EVENT', Logger::ERROR);
                 }
@@ -147,6 +155,7 @@ class InlineUserEventJobRunner
                     'aggregate_id' => $aggregateId,
                     'job_id' => (int) $job['id'],
                     'job_type' => $job['job_type'],
+                    'retryable' => $retryable,
                     'error' => $this->truncateError($e->getMessage()),
                     'failed_persisted' => $failedPersisted,
                     'failed_persist_error' => $failedPersistError,

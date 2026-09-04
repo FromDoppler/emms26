@@ -1,6 +1,7 @@
 <?php
 
 require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/user-events/interfaces/UserEventJobHandler.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/user-events/UserEventJobException.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/utils/SpreadSheetGoogle.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/utils/Logger.php');
 
@@ -16,22 +17,22 @@ class SpreadsheetSaveJobHandler implements UserEventJobHandler
         $payload = $job['payload'];
 
         if (empty($payload['spreadsheetId'])) {
-            throw new InvalidArgumentException('Missing spreadsheetId in spreadsheet job payload');
+            throw UserEventJobException::terminal('Missing spreadsheetId in spreadsheet job payload');
         }
         if (empty($payload['user']) || !is_array($payload['user'])) {
-            throw new InvalidArgumentException('Missing or invalid user in spreadsheet job payload');
+            throw UserEventJobException::terminal('Missing or invalid user in spreadsheet job payload');
         }
 
         $requiredUserFields = ['promotions', 'privacy'];
         foreach ($requiredUserFields as $field) {
             if (!array_key_exists($field, $payload['user'])) {
-                throw new InvalidArgumentException('Missing user.' . $field . ' in spreadsheet job payload');
+                throw UserEventJobException::terminal('Missing user.' . $field . ' in spreadsheet job payload');
             }
         }
 
         $this->assertRequiredNonEmptyUserFields($payload['user'], ['firstname', 'email']);
         if (!filter_var($payload['user']['email'], FILTER_VALIDATE_EMAIL)) {
-            throw new InvalidArgumentException('Invalid user.email in spreadsheet job payload');
+            throw UserEventJobException::terminal('Invalid user.email in spreadsheet job payload');
         }
 
         $context = [
@@ -53,7 +54,7 @@ class SpreadsheetSaveJobHandler implements UserEventJobHandler
     {
         foreach ($fields as $field) {
             if (!array_key_exists($field, $user) || $user[$field] === null || $user[$field] === '') {
-                throw new InvalidArgumentException('Missing user.' . $field . ' in spreadsheet job payload');
+                throw UserEventJobException::terminal('Missing user.' . $field . ' in spreadsheet job payload');
             }
         }
     }

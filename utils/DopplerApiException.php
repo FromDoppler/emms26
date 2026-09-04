@@ -4,18 +4,18 @@ class DopplerApiException extends RuntimeException
 {
     private $httpStatus;
     private $errorCode;
-    private $retryable;
+    private $detail;
 
     public function __construct(
         string $message,
         ?int $httpStatus = null,
         ?int $errorCode = null,
-        bool $retryable = true
+        ?string $detail = null
     ) {
         parent::__construct($message);
         $this->httpStatus = $httpStatus;
         $this->errorCode = $errorCode;
-        $this->retryable = $retryable;
+        $this->detail = $detail;
     }
 
     public function getHttpStatus(): ?int
@@ -28,8 +28,8 @@ class DopplerApiException extends RuntimeException
         return $this->errorCode;
     }
 
-    public function isRetryable(): bool
+    public function getDetail(): ?string
     {
-        return $this->retryable;
+        return $this->detail;
     }
 }

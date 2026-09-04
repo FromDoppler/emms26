@@ -43,11 +43,26 @@ class DopplerListAddJobHandler implements UserEventJobHandler
                 $message .= ' - ' . $lastError;
             }
 
-            if ($dopplerHandler->isLastErrorRetryable()) {
-                throw UserEventJobException::retryable($message);
+            if ($this->isTerminalDopplerFailure($dopplerHandler->getLastApiException())) {
+                throw UserEventJobException::terminal($message);
             }
 
-            throw UserEventJobException::terminal($message);
+            throw UserEventJobException::retryable($message);
         }
+    }
+
+    private function isTerminalDopplerFailure(?DopplerApiException $error): bool
+    {
+        if ($error === null) {
+            return false;
+        }
+
+        if ($error->getErrorCode() === 12) {
+            return true;
+        }
+
+        return $error->getErrorCode() === 9
+            && $error->getDetail() !== null
+            && stripos($error->getDetail(), 'Internal Policies') !== false;
     }
 }

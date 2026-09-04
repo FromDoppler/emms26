@@ -12,28 +12,27 @@ class SubscriberDopplerList
     const RESULT_FAIL_DOUBLE_OPTIN = 'fail-doble-optin';
 
     private $lastError = null;
-    private $lastErrorRetryable = true;
+    private $lastApiException = null;
 
     public function getLastError(): ?string
     {
         return $this->lastError;
     }
 
-    public function isLastErrorRetryable(): bool
+    public function getLastApiException(): ?DopplerApiException
     {
-        return $this->lastErrorRetryable;
+        return $this->lastApiException;
     }
 
     public function saveSubscription($user)
     {
         $this->lastError = null;
-        $this->lastErrorRetryable = true;
+        $this->lastApiException = null;
         $email = $user['email'] ?? 'unknown';
         $list = $user['list'] ?? 'unknown';
 
         if (empty($user['email']) || empty($user['list'])) {
             $this->lastError = 'Missing email or list';
-            $this->lastErrorRetryable = false;
             Logger::error('doppler_subscription_invalid_user', [
                 'email' => $email,
                 'list' => $list,
@@ -50,8 +49,10 @@ class SubscriberDopplerList
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
             $this->lastError = $errorMessage;
-            $this->lastErrorRetryable = !($e instanceof DopplerApiException) || $e->isRetryable();
-            if (stripos($errorMessage, 'Unsubscribed') !== false) {
+            $this->lastApiException = $e instanceof DopplerApiException ? $e : null;
+
+            $detail = $this->lastApiException ? $this->lastApiException->getDetail() : null;
+            if (stripos($detail ?? $errorMessage, 'Unsubscribed') !== false) {
                 Logger::info('doppler_user_unsubscribed', ['email' => $email], 'USER_EVENT');
                 return $this->doubleOptin($user);
             }
@@ -87,7 +88,7 @@ class SubscriberDopplerList
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
             $this->lastError = $errorMessage;
-            $this->lastErrorRetryable = !($e instanceof DopplerApiException) || $e->isRetryable();
+            $this->lastApiException = $e instanceof DopplerApiException ? $e : null;
             Logger::error('doppler_double_optin_failed', [
                 'email' => $user['email'] ?? 'unknown',
                 'list' => $user['list'] ?? 'unknown',

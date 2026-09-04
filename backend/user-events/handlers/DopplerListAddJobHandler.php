@@ -53,7 +53,7 @@ class DopplerListAddJobHandler implements UserEventJobHandler
 
     private function isTerminalDopplerFailure(?DopplerApiException $error): bool
     {
-        if ($error === null) {
+        if ($error === null || $error->getHttpStatus() !== 400) {
             return false;
         }
 

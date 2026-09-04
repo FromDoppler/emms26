@@ -1,6 +1,7 @@
 <?php
 
 require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/user-events/interfaces/UserEventJobHandler.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/user-events/UserEventJobException.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/utils/SubscriberDopplerList.php');
 
 class DopplerListAddJobHandler implements UserEventJobHandler
@@ -15,16 +16,16 @@ class DopplerListAddJobHandler implements UserEventJobHandler
         $payload = $job['payload'];
 
         if (empty($payload['user']) || !is_array($payload['user'])) {
-            throw new InvalidArgumentException('Missing or invalid user in doppler_list job payload');
+            throw UserEventJobException::terminal('Missing or invalid user in doppler_list job payload');
         }
         if (empty($payload['user']['email'])) {
-            throw new InvalidArgumentException('Missing user.email in doppler_list job payload');
+            throw UserEventJobException::terminal('Missing user.email in doppler_list job payload');
         }
         if (!filter_var($payload['user']['email'], FILTER_VALIDATE_EMAIL)) {
-            throw new InvalidArgumentException('Invalid user.email in doppler_list job payload');
+            throw UserEventJobException::terminal('Invalid user.email in doppler_list job payload');
         }
         if (empty($payload['user']['list'])) {
-            throw new InvalidArgumentException('Missing user.list in doppler_list job payload');
+            throw UserEventJobException::terminal('Missing user.list in doppler_list job payload');
         }
 
         $dopplerHandler = new SubscriberDopplerList();
@@ -41,7 +42,12 @@ class DopplerListAddJobHandler implements UserEventJobHandler
             if ($lastError) {
                 $message .= ' - ' . $lastError;
             }
-            throw new Exception($message);
+
+            if ($dopplerHandler->isLastErrorRetryable()) {
+                throw UserEventJobException::retryable($message);
+            }
+
+            throw UserEventJobException::terminal($message);
         }
     }
 }

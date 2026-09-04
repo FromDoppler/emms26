@@ -1,8 +1,8 @@
 <?php
 $contentsPre = [
   '/' => [
-    'helloBarText' => 'Regístrate gratis y te regalamos un pase VIP.',
-    'helloBarCtaTxt' => 'Reserva tu lugar',
+    'helloBarText' => 'Cuenta regresiva. Accede a conferencias con grandes referentes del Marketing.',
+    'helloBarCtaTxt' => 'REGÍSTRATE GRATIS',
     'helloBarCtaLink' => '#registro',
   ],
   '/registrado' => [

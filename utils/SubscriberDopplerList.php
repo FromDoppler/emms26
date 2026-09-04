@@ -12,15 +12,22 @@ class SubscriberDopplerList
     const RESULT_FAIL_DOUBLE_OPTIN = 'fail-doble-optin';
 
     private $lastError = null;
+    private $lastApiException = null;
 
     public function getLastError(): ?string
     {
         return $this->lastError;
     }
 
+    public function getLastApiException(): ?DopplerApiException
+    {
+        return $this->lastApiException;
+    }
+
     public function saveSubscription($user)
     {
         $this->lastError = null;
+        $this->lastApiException = null;
         $email = $user['email'] ?? 'unknown';
         $list = $user['list'] ?? 'unknown';
 
@@ -42,7 +49,10 @@ class SubscriberDopplerList
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
             $this->lastError = $errorMessage;
-            if (stripos($errorMessage, 'Unsubscribed') !== false) {
+            $this->lastApiException = $e instanceof DopplerApiException ? $e : null;
+
+            $detail = $this->lastApiException ? $this->lastApiException->getDetail() : null;
+            if (stripos($detail ?? $errorMessage, 'Unsubscribed') !== false) {
                 Logger::info('doppler_user_unsubscribed', ['email' => $email], 'USER_EVENT');
                 return $this->doubleOptin($user);
             }
@@ -78,6 +88,7 @@ class SubscriberDopplerList
         } catch (Exception $e) {
             $errorMessage = $e->getMessage();
             $this->lastError = $errorMessage;
+            $this->lastApiException = $e instanceof DopplerApiException ? $e : null;
             Logger::error('doppler_double_optin_failed', [
                 'email' => $user['email'] ?? 'unknown',
                 'list' => $user['list'] ?? 'unknown',

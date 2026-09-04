@@ -1,6 +1,7 @@
 <?php
 
 require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/user-events/interfaces/UserEventJobHandler.php');
+require_once($_SERVER['DOCUMENT_ROOT'] . '/backend/user-events/UserEventJobException.php');
 require_once($_SERVER['DOCUMENT_ROOT'] . '/services/EmailService.php');
 
 class EmailSendJobHandler implements UserEventJobHandler
@@ -19,16 +20,16 @@ class EmailSendJobHandler implements UserEventJobHandler
         $payload = $job['payload'];
 
         if (empty($payload['user']) || !is_array($payload['user'])) {
-            throw new InvalidArgumentException('Missing or invalid user in email job payload');
+            throw UserEventJobException::terminal('Missing or invalid user in email job payload');
         }
         if (empty($payload['user']['email'])) {
-            throw new InvalidArgumentException('Missing user.email in email job payload');
+            throw UserEventJobException::terminal('Missing user.email in email job payload');
         }
         if (empty($payload['subject'])) {
-            throw new InvalidArgumentException('Missing subject in email job payload');
+            throw UserEventJobException::terminal('Missing subject in email job payload');
         }
         if (!filter_var($payload['user']['email'], FILTER_VALIDATE_EMAIL)) {
-            throw new InvalidArgumentException('Invalid user.email in email job payload');
+            throw UserEventJobException::terminal('Invalid user.email in email job payload');
         }
 
         $this->assertRequiredUserFields($payload['user'], ['type', 'encode_email']);
@@ -47,7 +48,7 @@ class EmailSendJobHandler implements UserEventJobHandler
 
         $phase = $user['form_id'] ?? null;
         if (!is_string($phase) || !in_array($phase, self::CHECKOUT_PHASES, true)) {
-            throw new InvalidArgumentException(
+            throw UserEventJobException::terminal(
                 'Missing or invalid user.form_id in checkout email job payload'
             );
         }
@@ -55,7 +56,7 @@ class EmailSendJobHandler implements UserEventJobHandler
         $ticketType = $user['ticketType'] ?? null;
         if ($eventType === self::CHECKOUT_FREE_EVENT_TYPE) {
             if ($ticketType !== null && $ticketType !== '') {
-                throw new InvalidArgumentException(
+                throw UserEventJobException::terminal(
                     'Unexpected user.ticketType in checkout FREE email job payload'
                 );
             }
@@ -64,7 +65,7 @@ class EmailSendJobHandler implements UserEventJobHandler
 
         $expectedTicketType = $this->resolveExpectedCheckoutVipTicketType($user['type'], $phase);
         if ($expectedTicketType === null || $ticketType !== $expectedTicketType) {
-            throw new InvalidArgumentException(
+            throw UserEventJobException::terminal(
                 'Missing or inconsistent user.ticketType in checkout VIP email job payload'
             );
         }
@@ -96,7 +97,7 @@ class EmailSendJobHandler implements UserEventJobHandler
     {
         foreach ($fields as $field) {
             if (!array_key_exists($field, $user) || $user[$field] === null || $user[$field] === '') {
-                throw new InvalidArgumentException('Missing user.' . $field . ' in email job payload');
+                throw UserEventJobException::terminal('Missing user.' . $field . ' in email job payload');
             }
         }
     }

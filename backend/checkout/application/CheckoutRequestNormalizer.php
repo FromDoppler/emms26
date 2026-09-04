@@ -1,5 +1,7 @@
 <?php
 
+require_once($_SERVER['DOCUMENT_ROOT'] . '/utils/EmailAddressValidator.php');
+
 final class CheckoutRequestNormalizer
 {
     private const CUSTOMER_TEXT_FIELDS = [
@@ -119,6 +121,11 @@ final class CheckoutRequestNormalizer
         if ($customerEmail === self::INVALID_VALUE) {
             return null;
         }
+        if ($customerEmail !== null
+            && $customerEmail !== ''
+            && !EmailAddressValidator::isValid($customerEmail)) {
+            return null;
+        }
 
         $origin = array_key_exists('origin', $input)
             ? self::normalizeOriginValue($input['origin'])
@@ -156,7 +163,7 @@ final class CheckoutRequestNormalizer
         if ($email === null
             || $email === ''
             || $email === self::INVALID_VALUE
-            || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            || !EmailAddressValidator::isValid($email)) {
             return null;
         }
 

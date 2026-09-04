@@ -35,6 +35,15 @@ try {
     $db->close();
 
     echo json_encode(['registered' => $isRegistered]);
+} catch (EmailValidationException $e) {
+    http_response_code(422);
+    echo json_encode([
+        'status' => 'error',
+        'code' => $e->getReason(),
+        'suggestion' => $e->getSuggestion(),
+        'message' => 'Invalid email address',
+    ]);
+    exit();
 } catch (Exception $e) {
     processError("checkRegistrationStatus", $e->getMessage(), ['email' => $email, 'event' => $currentEvent['freeId'] ?? null]);
     header($_SERVER['SERVER_PROTOCOL'] . ' 500 Internal Server Error', true, 500);

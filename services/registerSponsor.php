@@ -69,6 +69,15 @@ function setUserDataRequest($ip, $countryGeo)
         Validator::validateBool('privacy', $privacy);
         Validator::validateBool('promotions', $promotions);
         return $user;
+    } catch (EmailValidationException $e) {
+        http_response_code(422);
+        echo json_encode([
+            'status' => 'error',
+            'code' => $e->getReason(),
+            'suggestion' => $e->getSuggestion(),
+            'message' => 'Invalid email address',
+        ]);
+        exit();
     } catch (Exception $e) {
         processError("setDataRequest (Captura datos)", $e->getMessage(), ['user' => $user]);
         die();

@@ -2,7 +2,7 @@
 
 import { customError } from "./common/customsError.js";
 import { checkRegistrationStatus, submitFormFetch, redirectToRegisteredPage } from "./common/submitForm.js";
-import { validateEmailStep } from "./common/formsValidators.js";
+import { setEmailValidationError, validateEmailStep } from "./common/formsValidators.js";
 import { setEventInLocalStorage } from "./common/submitHelpers.js";
 import { toHex } from "./common/decodeEmail.js";
 
@@ -59,15 +59,20 @@ const handleEmailStep = async (form, stepOneEl, stepTwoEl, stepOneButton) => {
   const emailValue = emailInput.value;
 
   try {
-    const registered = await checkRegistrationStatus(emailValue);
+    const registrationStatus = await checkRegistrationStatus(emailValue);
 
-    if (registered === true) {
+    if (registrationStatus?.validationError) {
+      setEmailValidationError(emailInput, registrationStatus.validationError.suggestion);
+      return;
+    }
+
+    if (registrationStatus === true) {
       setEventInLocalStorage(window.APP.EVENTS.CURRENT.freeId, toHex(emailValue));
       redirectToRegisteredPage();
       return;
     }
 
-    // false OR null (fail-open): reveal step 2
+    // false OR null (fail-open for availability errors): reveal step 2
     await goToStepTwo(form, stepOneEl, stepTwoEl);
   } finally {
     setButtonLoading(stepOneButton, false);

@@ -1,4 +1,6 @@
 <?php
+require_once($_SERVER['DOCUMENT_ROOT'] . '/utils/EmailAddressValidator.php');
+
 class Validator {
 
     public static function validateEmail($value) {
@@ -6,10 +8,8 @@ class Validator {
         if(empty($value)) {
             throw new Exception('Validator: Error Field Required Email');
         }
-        elseif(!filter_var($value, FILTER_VALIDATE_EMAIL)) {
-            throw new Exception('Validator: Error Field Email Invalid');
-        }
-        return $value;
+
+        return EmailAddressValidator::assertValid($value);
     }
 
     public static function validateRequired($key, $value) {

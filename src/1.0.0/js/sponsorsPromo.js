@@ -1,6 +1,6 @@
 "use strict";
 
-import { customError, validateForm } from "./common/index.js";
+import { customError, setEmailValidationError, validateForm } from "./common/index.js";
 import { getPhoneNumber, initPhoneInputs } from "./intell-input/intell-input.js";
 
 const initSponsorsPromo = () => {
@@ -62,6 +62,10 @@ const initSponsorsPromo = () => {
         body: JSON.stringify(sponsorData),
       });
       const resp = await fetchResp.json();
+      if (fetchResp.status === 422 && resp?.code) {
+        setEmailValidationError(sponsorsPromoForm.querySelector('input[name="email"]'), resp.suggestion);
+        return;
+      }
       if (resp === 200) {
         sponsorsPromoForm.reset();
         toggleMessage(resp);

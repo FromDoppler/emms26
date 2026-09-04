@@ -1,6 +1,6 @@
 "use strict";
 
-import { validateForm } from "./formsValidators.js";
+import { setEmailValidationError, validateForm } from "./formsValidators.js";
 import { toHex, fromHex } from "./decodeEmail.js";
 import { buildUserData, getEventsWithEvent, setEventInLocalStorage, extractFormData, toggleButtonLoading, trackMetaPixel } from "./submitHelpers.js";
 import { initPhoneInputs } from "../intell-input/intell-input.js";
@@ -28,10 +28,13 @@ const checkRegistrationStatus = async (email) => {
       body: JSON.stringify({ email }),
     });
 
-    if (!fetchResp.ok) return null;
-
     const data = await fetchResp.json().catch(() => null);
 
+    if (fetchResp.status === 422 && data?.code) {
+      return { validationError: data };
+    }
+
+    if (!fetchResp.ok) return null;
     if (!data || typeof data.registered !== "boolean") return null;
     return data.registered;
   } catch (error) {
@@ -104,6 +107,11 @@ const submitFormFetch = async (form, fetchType) => {
   toggleButtonLoading(form, false);
 
   if (!result) return result;
+
+  if (result.fetchResp.status === 422 && result.data?.code) {
+    setEmailValidationError(form.querySelector('input[name="email"]'), result.data.suggestion);
+    return;
+  }
 
   assertRegistrationConfirmed(result);
   setEventInLocalStorage(fetchType, encodedEmail);

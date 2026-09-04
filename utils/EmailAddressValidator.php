@@ -25,15 +25,27 @@ class EmailValidationException extends InvalidArgumentException
 
 final class EmailAddressValidator
 {
+    private const KNOWN_TLD_TYPOS = [
+        'con' => 'com',
+    ];
+
     private const KNOWN_DOMAIN_TYPOS = [
         'gamil.com' => 'gmail.com',
         'gmai.com' => 'gmail.com',
         'gmial.com' => 'gmail.com',
-        'gmail.con' => 'gmail.com',
+        'gnail.com' => 'gmail.com',
+        'gmil.com' => 'gmail.com',
+        'gmsil.com' => 'gmail.com',
+        'gmal.com' => 'gmail.com',
+        'gmaill.com' => 'gmail.com',
+        'gmail.comm' => 'gmail.com',
+        'hormail.com' => 'hotmail.com',
         'homail.com' => 'hotmail.com',
         'hotmsil.com' => 'hotmail.com',
         'htomail.com' => 'hotmail.com',
-        'hotmail.con' => 'hotmail.com',
+        'hotmai.com' => 'hotmail.com',
+        'hotmail.cim' => 'hotmail.com',
+        'outook.com' => 'outlook.com',
     ];
 
     public static function isValid($email): bool
@@ -53,14 +65,42 @@ final class EmailAddressValidator
         }
 
         $domain = strtolower((string) substr(strrchr($email, '@'), 1));
-        if (isset(self::KNOWN_DOMAIN_TYPOS[$domain])) {
+        $suggestedDomain = self::findSuggestedDomain($domain);
+
+        if ($suggestedDomain !== null) {
             $localPart = substr($email, 0, strrpos($email, '@'));
             throw new EmailValidationException(
                 'known_domain_typo',
-                $localPart . '@' . self::KNOWN_DOMAIN_TYPOS[$domain]
+                $localPart . '@' . $suggestedDomain
             );
         }
 
         return $email;
+    }
+
+    private static function findSuggestedDomain(string $domain): ?string
+    {
+        $candidateDomain = self::correctKnownTldTypo($domain) ?? $domain;
+
+        if (isset(self::KNOWN_DOMAIN_TYPOS[$candidateDomain])) {
+            return self::KNOWN_DOMAIN_TYPOS[$candidateDomain];
+        }
+
+        return $candidateDomain !== $domain ? $candidateDomain : null;
+    }
+
+    private static function correctKnownTldTypo(string $domain): ?string
+    {
+        $lastDotPosition = strrpos($domain, '.');
+        if ($lastDotPosition === false) {
+            return null;
+        }
+
+        $tld = substr($domain, $lastDotPosition + 1);
+        if (!isset(self::KNOWN_TLD_TYPOS[$tld])) {
+            return null;
+        }
+
+        return substr($domain, 0, $lastDotPosition + 1) . self::KNOWN_TLD_TYPOS[$tld];
     }
 }

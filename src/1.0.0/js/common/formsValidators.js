@@ -39,7 +39,10 @@ const setEmailValidationError = (inputEmail, suggestion = null) => {
 
   if (!suggestion) {
     parent.classList.add("error");
-    parent.setAttribute("data-error", "¡Ouch! El dominio del Email no parece válido.");
+    parent.setAttribute(
+      "data-error",
+      "¡Ouch! El dominio del Email no parece válido.",
+    );
     return;
   }
 
@@ -48,7 +51,10 @@ const setEmailValidationError = (inputEmail, suggestion = null) => {
 
   if (!currentDomain || !suggestedDomain) {
     parent.classList.add("error");
-    parent.setAttribute("data-error", `¡Ouch! ¿Quisiste escribir ${suggestion}?`);
+    parent.setAttribute(
+      "data-error",
+      `¡Ouch! ¿Quisiste escribir ${suggestion}?`,
+    );
     return;
   }
 
@@ -76,7 +82,10 @@ const setEmailValidationError = (inputEmail, suggestion = null) => {
   correctionButton.type = "button";
   correctionButton.className = "email-domain-suggestion__button";
   correctionButton.textContent = "Corregir";
-  correctionButton.setAttribute("aria-label", `Corregir email a ${suggestion}`);
+  correctionButton.setAttribute(
+    "aria-label",
+    `Corregir email a ${suggestion}`,
+  );
   correctionButton.addEventListener("click", () => {
     inputEmail.value = suggestion;
     clearEmailValidationState(inputEmail);

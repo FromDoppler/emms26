@@ -39,10 +39,7 @@ const setEmailValidationError = (inputEmail, suggestion = null) => {
 
   if (!suggestion) {
     parent.classList.add("error");
-    parent.setAttribute(
-      "data-error",
-      "¡Ouch! El dominio del Email no parece válido.",
-    );
+    parent.setAttribute("data-error", "¡Ouch! El dominio del Email no parece válido.");
     return;
   }
 
@@ -51,10 +48,7 @@ const setEmailValidationError = (inputEmail, suggestion = null) => {
 
   if (!currentDomain || !suggestedDomain) {
     parent.classList.add("error");
-    parent.setAttribute(
-      "data-error",
-      `¡Ouch! ¿Quisiste escribir ${suggestion}?`,
-    );
+    parent.setAttribute("data-error", `¡Ouch! ¿Quisiste escribir ${suggestion}?`);
     return;
   }
 

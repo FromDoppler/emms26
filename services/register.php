@@ -23,8 +23,19 @@ date_default_timezone_set('America/Argentina/Buenos_Aires');
 function setDataRequest($ip, $countryGeo, $db)
 {
   $postData = getPostData();
-  $eventsData = processEvents(json_decode($postData['events'], true));
 
+  try {
+    validateRequest($postData);
+  } catch (EmailValidationException $e) {
+    throw $e;
+  } catch (Exception $e) {
+    processError("setDataRequest (Captura datos)", $e->getMessage(), [
+      'email' => $postData['email'] ?? null,
+    ]);
+    return null;
+  }
+
+  $eventsData = processEvents(json_decode($postData['events'], true));
   $firstname = getFirstName($postData, $db);
   $privacy = getPrivacy($postData);
   $promotions = $postData['acceptPromotions'];
@@ -35,16 +46,7 @@ function setDataRequest($ip, $countryGeo, $db)
   $subject = getSubjectEmail($type, $phase);
   $formOrigin = $postData['formOrigin'];
 
-  $user = buildUserArray($postData, $eventsData, $firstname, $privacy, $promotions, $utmData, $ip, $countryGeo, $type, $phase, $list, $subject, $formOrigin);
-
-  try {
-    validateRequest($postData, $privacy, $promotions);
-    return $user;
-  } catch (EmailValidationException $e) {
-    throw $e;
-  } catch (Exception $e) {
-    processError("setDataRequest (Captura datos)", $e->getMessage(), ['user' => $user]);
-  }
+  return buildUserArray($postData, $eventsData, $firstname, $privacy, $promotions, $utmData, $ip, $countryGeo, $type, $phase, $list, $subject, $formOrigin);
 }
 
 function getPostData()
@@ -149,11 +151,11 @@ function buildUserArray($postData, $eventsData, $firstname, $privacy, $promotion
   ];
 }
 
-function validateRequest($postData, $privacy, $promotions)
+function validateRequest($postData)
 {
   Validator::validateEmail($postData['email']);
-  Validator::validateBool('privacy', $privacy);
-  Validator::validateBool('promotions', $promotions);
+  Validator::validateBool('privacy', $postData['acceptPolicies']);
+  Validator::validateBool('promotions', $postData['acceptPromotions']);
 }
 
 function getSubjectEmail($type, $phase)

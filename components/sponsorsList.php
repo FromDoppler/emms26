@@ -13,13 +13,13 @@ function getSponsorsContent($url, $isPost)
 
   $blocks = [
     '/digital-trends' => [
-      'title' => 'Nos acompañan en esta edición',
+      'title' => '',
     ],
     '/digital-trends-registrado' => [
       'title' => 'Apoyan el EMMS Digital Trends',
     ],
     '/*' => [
-      'title' => 'Nos acompañan en esta edición',
+      'title' => '',
     ],
   ];
 
@@ -58,7 +58,9 @@ foreach ($sponsorTypes as $type => $config) {
       </div>
     </div>
 
-    <h2 class="companies__title emms__fade-in"><?= $content['title'] ?></h2>
+    <?php if (!empty($content['title'])): ?>
+      <h2 class="companies__title emms__fade-in"><?= $content['title'] ?></h2>
+    <?php endif; ?>
 
     <?php foreach ($sponsorTypes as $type => $config): ?>
       <?php if (!empty($sponsorsByType[$type])): ?>
